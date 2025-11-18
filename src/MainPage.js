@@ -20,7 +20,7 @@ const MainPage = () => {
   const isEssSwitch = useUserStore((state) => state.isEssSwitch);
   const isGas = useUserStore((state) => state.isGas);
   const handleTesSwitch = useUserStore((state) => state.handleTesSwitch);
-  const mode = useSettingsStore((state) => state.interfaceMode);
+  const themeMode = useSettingsStore((state) => state.themeMode); // Use themeMode for theme, not interfaceMode
   const gasInfo = useTgsSwitchStore((state) => state.gasInfo);
   const electricalInfo = useTgsSwitchStore((state) => state.electricalInfo);
   const settings = useTgsSwitchStore((state) => state.settings);
@@ -43,13 +43,13 @@ const MainPage = () => {
   }, [systemConfiguration, handleTesSwitch]);
 
   return (
-    <ThemeProvider theme={mode ? lightTheme : darkTheme}>
+    <ThemeProvider theme={themeMode === 'light' ? lightTheme : darkTheme}>
       <GlobalStyle />
       <Wrapper>
         <Header />
         <Title
           src={
-            mode
+            themeMode === 'light'
               ? "/static/images/blueUmbrellaName.svg"
               : "/static/images/embrellaTitle-sm.svg"
           }

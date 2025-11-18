@@ -39,12 +39,12 @@ const useSettingsStore = create(
   devtools(
     persist(
       (set, get) => ({
-        // === THEME (from themeSlice) ===
-        themeMode: 'light',
+        // === THEME (color scheme: light/dark) ===
+        themeMode: 'light', // 'light' or 'dark'
         themeColors: themeColors.light,
 
-        // === INTERFACE ===
-        interfaceMode: INTERFACE_MODE.BASIC,
+        // === INTERFACE (UI complexity: basic/advanced) ===
+        interfaceMode: INTERFACE_MODE.BASIC, // 'basic' or 'advanced'
 
         // === SETTINGS OPTIONS (BEFORE: 5 booleans, NOW: 1 string) ===
         currentOption: SETTINGS_OPTIONS.UNITS,
@@ -80,21 +80,30 @@ const useSettingsStore = create(
 
         // ===== ACTIONS =====
 
-        // Theme (from themeSlice)
+        // Theme Management (instant switching, persisted to localStorage)
         toggleTheme: () =>
           set((state) => {
             const newMode = state.themeMode === 'light' ? 'dark' : 'light';
+            // Persist immediately
+            localStorage.setItem('themeMode', newMode);
             return {
               themeMode: newMode,
               themeColors: themeColors[newMode],
             };
           }),
 
-        setTheme: (mode) =>
+        setTheme: (mode) => {
+          const validMode = mode === 'dark' ? 'dark' : 'light';
+          localStorage.setItem('themeMode', validMode);
           set({
-            themeMode: mode,
-            themeColors: themeColors[mode],
-          }),
+            themeMode: validMode,
+            themeColors: themeColors[validMode],
+          });
+        },
+
+        // Helper methods
+        isDarkMode: () => get().themeMode === 'dark',
+        isLightMode: () => get().themeMode === 'light',
 
         // Interface Mode
         setInterfaceMode: (mode) => set({ interfaceMode: mode }),
@@ -193,6 +202,16 @@ const useSettingsStore = create(
           unitsMeasurement: state.unitsMeasurement,
           currentOption: state.currentOption,
         }),
+        // Load saved theme on app start
+        onRehydrateStorage: () => (state) => {
+          if (state) {
+            const savedTheme = localStorage.getItem('themeMode');
+            if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
+              state.themeMode = savedTheme;
+              state.themeColors = themeColors[savedTheme];
+            }
+          }
+        },
       }
     ),
     { name: 'SettingsStore' }
