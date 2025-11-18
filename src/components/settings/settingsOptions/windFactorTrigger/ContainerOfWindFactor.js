@@ -12,6 +12,7 @@ import {
   useTgsSettingsStore,
   useUserStore
 } from '../../../../store/zustand';
+import { BUTTON_STATE } from '../../../../constants/storeConstants';
 import { flexboxCenter } from '../../../../styles/commonStyles';
 import InputKeyPad from '../../../keyboard/InputKeyPad';
 import SettingAppliedMessage from '../../../userMessages/SettingAppliedMessage';
@@ -56,7 +57,7 @@ function ContainerOfWindFactor() {
   const { windFactor, setWindFactor } = useContext(SettingsContext);
   // const { windInputValue, setWindInputValue } = useContext(SettingsContext);
   // the 3 buttons
-  const buttonsName = ['edit', 'cancel', 'apply'];
+  const buttonsName = [BUTTON_STATE.EDIT, BUTTON_STATE.CANCEL, BUTTON_STATE.APPLY];
   // for invisible div
   const height = '150px';
   // useState
@@ -69,7 +70,7 @@ function ContainerOfWindFactor() {
   // Zustand
   const unitsMeasurement = useSettingsStore((state) => state.unitsMeasurement);
   const buttonState = useSettingsStore((state) => state.buttonState);
-  const settingsEditButton = buttonState === 'edit';
+  const settingsEditButton = buttonState === BUTTON_STATE.EDIT;
   const setSettingsEditButton = useSettingsStore((state) => state.setSettingsEditButton);
   const setSettingsCancelButton = useSettingsStore((state) => state.setSettingsCancelButton);
   const setResetAllSettingsButtons = useSettingsStore((state) => state.setResetAllSettingsButtons);

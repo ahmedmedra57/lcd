@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useSettingsStore } from '../../../../store/zustand';
+import { BUTTON_STATE } from '../../../../constants/storeConstants';
 import styled from 'styled-components';
 import SettingClearOkMessage from './SettingClearOkMessage';
 
 function ApplyButtonInvisibleDiv() {
   // zustand
   const buttonState = useSettingsStore((state) => state.buttonState);
-  const clearState = buttonState === 'idle';
+  const clearState = buttonState === BUTTON_STATE.IDLE;
   const setSettingsCancelButton = useSettingsStore((state) => state.setSettingsCancelButton);
 
   const [display, setDisplay] = useState(false);

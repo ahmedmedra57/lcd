@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 import { flexboxCenter } from '../../../../../styles/commonStyles';
 import { useSettingsStore } from '../../../../../store/zustand';
+import { BUTTON_STATE } from '../../../../../constants/storeConstants';
 
 const MessageButton = ({ name, buttonHandler }) => {
   const mode = useSettingsStore((state) => state.interfaceMode);
   const buttonState = useSettingsStore((state) => state.buttonState);
-  const editState = buttonState === 'edit';
+  const editState = buttonState === BUTTON_STATE.EDIT;
 
   return (
     <WrapperHole onClick={editState && buttonHandler}>

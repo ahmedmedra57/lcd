@@ -8,6 +8,7 @@ import {
   useForceAndCommandStore,
   useTgsSwitchStore
 } from '../../../../store/zustand';
+import { BUTTON_STATE } from '../../../../constants/storeConstants';
 import SystemHeaderForceAndCommand from './SysHeaderForceAndCommand';
 import SelectAts from './selectArts/SelectAts';
 import SelectTc from './selectTc/SelectTc';
@@ -49,15 +50,15 @@ function ContainerOfForceAndCommand() {
   ];
 
   // the names of 3 main buttons to make changes
-  const buttonsName = ['edit', 'cancel', 'apply'];
+  const buttonsName = [BUTTON_STATE.EDIT, BUTTON_STATE.CANCEL, BUTTON_STATE.APPLY];
 
   // zustand
   const essSwitch = useUserStore((state) => state.isEssSwitch);
   const tesSwitch = useUserStore((state) => state.isTesSwitch);
   const mode = useSettingsStore((state) => state.interfaceMode);
   const buttonState = useSettingsStore((state) => state.buttonState);
-  const settingsEditButton = buttonState === 'edit';
-  const settingsApplyButton = buttonState === 'apply';
+  const settingsEditButton = buttonState === BUTTON_STATE.EDIT;
+  const settingsApplyButton = buttonState === BUTTON_STATE.APPLY;
   const atsEssState = useSettingsStore((state) => state.selectAtsState);
   const atsTesState = useTgsSettingsStore((state) => state.allSelects.selectAtsTesState);
   const atsTgsState = useTgsSettingsStore((state) => state.allSelects.selectAtsTgsState);

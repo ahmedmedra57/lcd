@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../../../../styles/commonStyles';
 import { useContext, useEffect, useState } from 'react';
 import { useSettingsStore, useUserStore, useTgsSwitchStore } from '../../../../../store/zustand';
+import { BUTTON_STATE } from '../../../../../constants/storeConstants';
 import RadioBox from '../RadioBox';
 import TcConfirmButton from '../TcConfirmButton';
 import { SettingsContext } from '../../../../../context/ContextOfSettings';
@@ -20,7 +21,7 @@ function OutsideTemperature({
   checkedBoxes
 }) {
   const tempMeasurementSelection = ['internet', 'thermocouple'];
-  
+
 
   // useContext
   const { temperatureSelection, setTemperatureSelection } =
@@ -39,7 +40,7 @@ function OutsideTemperature({
   const essSwitch = useUserStore((state) => state.isEssSwitch);
   const settings = useTgsSwitchStore((state) => state.settings);
   const buttonState = useSettingsStore((state) => state.buttonState);
-  const editState = buttonState === 'edit';
+  const editState = buttonState === BUTTON_STATE.EDIT;
 
   const essOutsideTemp = selectTcState.essOutsideTemp.select;
   const tgsTesOutsideTemp = selectTcState.tgsTesOutsideTemp.select;

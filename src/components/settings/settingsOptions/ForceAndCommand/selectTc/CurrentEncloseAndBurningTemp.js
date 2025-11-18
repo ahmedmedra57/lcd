@@ -3,6 +3,7 @@ import { flexboxCenter } from '../../../../../styles/commonStyles';
 import RadioBox from '../RadioBox';
 import TcConfirmButton from '../TcConfirmButton';
 import { useSettingsStore, useTgsSwitchStore, useUserStore } from '../../../../../store/zustand';
+import { BUTTON_STATE } from '../../../../../constants/storeConstants';
 import { useState, useCallback } from 'react';
 
 let types = {
@@ -35,7 +36,7 @@ function CurrentEncloseAndBurningTemp({
   const isEssSwitch = useUserStore((state) => state.isEssSwitch);
   // zustand
   const buttonState = useSettingsStore((state) => state.buttonState);
-  const editState = buttonState === 'edit';
+  const editState = buttonState === BUTTON_STATE.EDIT;
   const settings = useTgsSwitchStore((state) => state.settings);
   // redux state for radioBox Selection
   const tgsTesEncloseTemp = selectTcState.tgsTesEncloseTemp.select;

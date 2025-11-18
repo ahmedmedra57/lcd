@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { flexboxCenter } from '../../../../../src/styles/commonStyles';
 import { useSettingsStore } from '../../../../store/zustand';
+import { BUTTON_STATE } from '../../../../constants/storeConstants';
 
 function ImperialMetricMeasurementReader({
   value,
@@ -13,7 +14,7 @@ function ImperialMetricMeasurementReader({
   const is360 = backgroundColor === '360';
   const mode = useSettingsStore((state) => state.interfaceMode);
   const buttonState = useSettingsStore((state) => state.buttonState);
-  const settingsEditButton = buttonState === 'edit';
+  const settingsEditButton = buttonState === BUTTON_STATE.EDIT;
 
   return (
     <div>

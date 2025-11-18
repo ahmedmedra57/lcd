@@ -5,6 +5,7 @@ import { convertCelsiusToFahrenheit } from '../../../../helpers/helpers';
 import { useSettingsStore } from '../../../../store/zustand';
 import { useTgsSwitchStore } from '../../../../store/zustand';
 import { useUserStore } from '../../../../store/zustand';
+import { BUTTON_STATE } from '../../../../constants/storeConstants';
 import { flexboxCenter } from '../../../../styles/commonStyles';
 import InputKeyPad from '../../../keyboard/InputKeyPad';
 import InvisibleDivForEditButton from '../editAndApplyMessageBoxes/InvisibleDivForEditButton';
@@ -32,7 +33,7 @@ function SnowFactor({
   const settings = useTgsSwitchStore((state) => state.settings);
   const defaultTemp = useTgsSwitchStore((state) => state.snowSensor.defaultTemp);
   const buttonState = useSettingsStore((state) => state.buttonState);
-  const settingsEditButton = buttonState === 'edit';
+  const settingsEditButton = buttonState === BUTTON_STATE.EDIT;
   const mode = useSettingsStore((state) => state.interfaceMode);
   const tesSwitch = useUserStore((state) => state.isTesSwitch);
   const essSwitch = useUserStore((state) => state.isEssSwitch);

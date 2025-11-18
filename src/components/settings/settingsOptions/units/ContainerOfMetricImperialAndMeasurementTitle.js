@@ -4,6 +4,7 @@ import TitleOfSelectUnitsOfMeasurement from './TitleOfSelectUnitsOfMeasurement';
 import ImperialMetricMeasurementReader from './ImperialMetricMeasurementReader';
 import { useSettingsStore } from '../../../../store/zustand';
 import { useTgsSwitchStore } from '../../../../store/zustand';
+import { BUTTON_STATE } from '../../../../constants/storeConstants';
 import { useEffect } from 'react';
 
 import { useContext } from 'react';
@@ -35,7 +36,7 @@ function ContainerOfMetricImperialAndMeasurementTitle() {
     },
   ];
 
-  const buttonsName = ['edit', 'cancel', 'apply'];
+  const buttonsName = [BUTTON_STATE.EDIT, BUTTON_STATE.CANCEL, BUTTON_STATE.APPLY];
   const height = '230px';
 
   // useContext
@@ -48,9 +49,9 @@ function ContainerOfMetricImperialAndMeasurementTitle() {
   // Zustand
   const mode = useSettingsStore((state) => state.interfaceMode);
   const buttonState = useSettingsStore((state) => state.buttonState);
-  const settingsEditButton = buttonState === 'edit';
+  const settingsEditButton = buttonState === BUTTON_STATE.EDIT;
   const unitsMeasurement = useSettingsStore((state) => state.unitsMeasurement);
-  const cancelState = buttonState === 'cancel';
+  const cancelState = buttonState === BUTTON_STATE.CANCEL;
   const setSettingsEditButton = useSettingsStore((state) => state.setSettingsEditButton);
   const setSettingsCancelButton = useSettingsStore((state) => state.setSettingsCancelButton);
   const setSettingsApplyUnitsButton = useSettingsStore((state) => state.setSettingsApplyUnitsButton);

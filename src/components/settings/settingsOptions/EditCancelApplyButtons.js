@@ -1,13 +1,14 @@
 import styled, { css } from 'styled-components';
 import { useSettingsStore } from '../../../store/zustand';
+import { BUTTON_STATE } from '../../../constants/storeConstants';
 import Button from './Button';
 import ApplyButtonInvisibleDiv from './editAndApplyMessageBoxes/ApplyButtonInvisibleDiv';
 
 function EditCancelApplyButtons({ handleClick, buttonsName }) {
   const mode = useSettingsStore((state) => state.interfaceMode);
   const buttonState = useSettingsStore((state) => state.buttonState);
-  const editState = buttonState === 'edit';
-  const settingsApplyButton = buttonState === 'apply';
+  const editState = buttonState === BUTTON_STATE.EDIT;
+  const settingsApplyButton = buttonState === BUTTON_STATE.APPLY;
 
   return (
     <ContainerButtons mode={mode}>

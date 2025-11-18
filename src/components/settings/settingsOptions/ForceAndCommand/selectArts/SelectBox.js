@@ -1,4 +1,5 @@
 import { useSettingsStore } from '../../../../../store/zustand';
+import { BUTTON_STATE } from '../../../../../constants/storeConstants';
 import styled from 'styled-components';
 import { flexboxCenter } from '../../../../../styles/commonStyles';
 
@@ -14,7 +15,7 @@ function SelectBox({
 }) {
   // zustand
   const buttonState = useSettingsStore((state) => state.buttonState);
-  const editState = buttonState === 'edit';
+  const editState = buttonState === BUTTON_STATE.EDIT;
 
   return (
     <div>

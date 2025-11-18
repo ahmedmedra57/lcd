@@ -6,6 +6,7 @@ import {
   useTgsSwitchStore,
   useUserStore
 } from "../../store/zustand";
+import { BUTTON_STATE } from "../../constants/storeConstants";
 
 import { flexboxCenter } from "../../styles/commonStyles";
 import ApplyButtonInvisibleDiv from "../settings/settingsOptions/editAndApplyMessageBoxes/ApplyButtonInvisibleDiv";
@@ -21,7 +22,7 @@ const Sidebar = () => {
   const { interfaceMode, buttonState } = useSettingsStore();
   const { settings, electricalFaults, gasFaults } = useTgsSwitchStore();
   const mode = interfaceMode;
-  const applyState = buttonState === 'apply';
+  const applyState = buttonState === BUTTON_STATE.APPLY;
   const tesSwitch = isTesSwitch;
   const essSwitch = isEssSwitch;
   const initialState = isEssSwitch

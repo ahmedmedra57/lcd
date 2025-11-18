@@ -1,4 +1,5 @@
 import { useSettingsStore } from '../../../../../store/zustand';
+import { BUTTON_STATE } from '../../../../../constants/storeConstants';
 import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../../../../styles/commonStyles';
 
@@ -9,7 +10,7 @@ function Thermocouple({
 }) {
   // zustand
   const buttonState = useSettingsStore((state) => state.buttonState);
-  const editState = buttonState === 'edit';
+  const editState = buttonState === BUTTON_STATE.EDIT;
 
   return (
     <WrapperLeftSwitch>

@@ -8,6 +8,7 @@ import {
   useTgsSettingsStore,
   useTgsSwitchStore
 } from '../../../../store/zustand';
+import { BUTTON_STATE } from '../../../../constants/storeConstants';
 import { SettingsContext } from '../../../../context/ContextOfSettings';
 import InvisibleDivForEditButton from '../editAndApplyMessageBoxes/InvisibleDivForEditButton';
 import EditCancelApplyButtons from '../EditCancelApplyButtons';
@@ -18,7 +19,7 @@ function ContainerOfSnowSensor() {
   const ess = ['ess-snow sensor trigger'];
   const temp = ['350'];
 
-  const buttonsName = ['edit', 'cancel', 'apply'];
+  const buttonsName = [BUTTON_STATE.EDIT, BUTTON_STATE.CANCEL, BUTTON_STATE.APPLY];
 
   // useContext
 
@@ -44,9 +45,9 @@ function ContainerOfSnowSensor() {
   const tesSwitch = useUserStore((state) => state.isTesSwitch);
   const essSwitch = useUserStore((state) => state.isEssSwitch);
   const buttonState = useSettingsStore((state) => state.buttonState);
-  const editState = buttonState === 'edit';
+  const editState = buttonState === BUTTON_STATE.EDIT;
   const mode = useSettingsStore((state) => state.interfaceMode);
-  const settingsEditButton = buttonState === 'edit';
+  const settingsEditButton = buttonState === BUTTON_STATE.EDIT;
   const unitsState = useSettingsStore((state) => state.unitsMeasurement);
   const { essTemp, isFEss } = useSettingsStore((state) => state.snowSensorTemp);
   const { tgsTemp, tesTemp, isFTgsTes, tgsTempOnly, isFTgs } = useTgsSettingsStore((state) => state.snowSensorTemp);

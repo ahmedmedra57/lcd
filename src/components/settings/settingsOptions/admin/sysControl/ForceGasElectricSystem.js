@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import styled from 'styled-components';
 import { useSettingsStore } from '../../../../../store/zustand';
+import { BUTTON_STATE } from '../../../../../constants/storeConstants';
 import { flexboxCenter } from '../../../../../styles/commonStyles';
 import SaveButton from './SaveButton';
 import { updateDeviceInfo } from '../../../../../helpers/helpers';
@@ -12,7 +13,7 @@ function ForceGasElectricSystem({
   buttonColor,
 }) {
   const buttonState = useSettingsStore((state) => state.buttonState);
-  const editState = buttonState === 'edit';
+  const editState = buttonState === BUTTON_STATE.EDIT;
 
   useEffect(() => {
     handleSave(false);

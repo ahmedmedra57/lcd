@@ -8,6 +8,7 @@ import {
   useEssSwitchStore,
   useTgsSwitchStore
 } from '../../../store/zustand';
+import { BUTTON_STATE } from '../../../constants/storeConstants';
 import { flexboxCenter } from '../../../styles/commonStyles';
 import TitleOfSettingsOptions from './TitleOfSettingsOptions';
 import AllTheSelectionsOfSettingsOptions from './AllTheSelectionsOfSettingsOptions';
@@ -35,13 +36,13 @@ function ContainerOfAllSettingsSelectOptionsAndButtons() {
   } = useContext(SettingsContext);
 
   // useState
-  const buttonsName = ['edit', 'cancel', 'apply'];
+  const buttonsName = [BUTTON_STATE.EDIT, BUTTON_STATE.CANCEL, BUTTON_STATE.APPLY];
   const [settingsState, setSettingsState] = useState('units');
 
   // zustand
   const mode = useSettingsStore((state) => state.interfaceMode);
   const buttonState = useSettingsStore((state) => state.buttonState);
-  const applyState = buttonState === 'apply';
+  const applyState = buttonState === BUTTON_STATE.APPLY;
   const essState = useUserStore((state) => state.isEssSwitch);
   const tesState = useUserStore((state) => state.isTesSwitch);
   const essHeaterTemp = useForceAndCommandStore((state) => state.essHeaterTemp);

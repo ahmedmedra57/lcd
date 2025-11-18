@@ -7,6 +7,7 @@ import {
 } from '../../../../styles/commonStyles';
 import { useContext, useEffect, useState } from 'react';
 import { useSettingsStore, useUserStore, useTgsSwitchStore, useHeaterStatusStore, useTgsSettingsStore } from '../../../../store/zustand';
+import { BUTTON_STATE } from '../../../../constants/storeConstants';
 import SystemHeader from './SystemHeader';
 // import Control from './sysControl/Control';
 import ContainerLogin from '../../../adminPassword/ContainerLogin';
@@ -62,12 +63,12 @@ function ContainerOfAdmin() {
   const { addElementToBank } = useHeaterStatusStore();
   const { gasType, valveInputs, setGasType, setValveInputs, setThermocouple } = useTgsSettingsStore();
 
-  const settingsEditButton = buttonState === 'edit';
-  const settingsApplyButton = buttonState === 'apply';
+  const settingsEditButton = buttonState === BUTTON_STATE.EDIT;
+  const settingsApplyButton = buttonState === BUTTON_STATE.APPLY;
   const sysIdentificationData = settings?.switch_panels?.[0] || {};
 
   // the names of 3 main buttons to make changes
-  const buttonsName = ['edit', 'cancel', 'apply'];
+  const buttonsName = [BUTTON_STATE.EDIT, BUTTON_STATE.CANCEL, BUTTON_STATE.APPLY];
   // the height of invisible div for editing
 
   const tgsHeight = '235px';

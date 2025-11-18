@@ -8,6 +8,7 @@ import {
   useTgsSettingsStore,
   useUserStore
 } from '../../../../../store/zustand';
+import { BUTTON_STATE } from '../../../../../constants/storeConstants';
 import InputKeyPad from '../../../../keyboard/InputKeyPad';
 import { SettingsContext } from '../../../../../context/ContextOfSettings';
 import { updateDeviceInfo } from '../../../../../helpers/helpers';
@@ -33,7 +34,7 @@ function ValveSettings({ setWarningMessage, setInputValue, inputValue }) {
 
   const mode = useSettingsStore((state) => state.interfaceMode);
   const buttonState = useSettingsStore((state) => state.buttonState);
-  const editState = buttonState === 'edit';
+  const editState = buttonState === BUTTON_STATE.EDIT;
   const { locationName, switchName, application, switchSize, heatingSystem } = useSystemIdentificationStore((state) => state.sysIdentification);
   const gasType = useTgsSettingsStore((state) => state.gasType);
   const isEssSwitch = useUserStore((state) => state.isEssSwitch);

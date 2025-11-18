@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { flexboxCenter } from '../../../../../styles/commonStyles';
 import { useSettingsStore } from '../../../../../store/zustand';
 import { useUserStore } from '../../../../../store/zustand';
+import { BUTTON_STATE } from '../../../../../constants/storeConstants';
 import ConfirmButton from '../../ConfirmButton';
 import { useContext } from 'react';
 import { SettingsContext } from '../../../../../context/ContextOfSettings';
@@ -15,7 +16,7 @@ function SystemConfiguration() {
   // Zustand
   const mode = useSettingsStore((state) => state.interfaceMode);
   const buttonState = useSettingsStore((state) => state.buttonState);
-  const editState = buttonState === 'edit';
+  const editState = buttonState === BUTTON_STATE.EDIT;
   const tesState = useUserStore((state) => state.isTesSwitch);
 
   // useContext

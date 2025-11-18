@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSettingsStore, useHeaterStatusStore } from '../../../../store/zustand';
+import { BUTTON_STATE } from '../../../../constants/storeConstants';
 
 import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../../../styles/commonStyles';
@@ -37,7 +38,7 @@ const AddElementToBank = () => {
   // Zustand
   const mode = useSettingsStore((state) => state.interfaceMode);
   const buttonState = useSettingsStore((state) => state.buttonState);
-  const settingsEditButton = buttonState === 'edit';
+  const settingsEditButton = buttonState === BUTTON_STATE.EDIT;
 
   useEffect(() => {
     return setActivateKeypad(false), setActivateKeyboard(false);
