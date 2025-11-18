@@ -25,8 +25,8 @@ function ChartContainer( { mode, ...rest } ) {
   const location = useLocation();
   // const [faultsMessages, setFaultsMessages] = useState([]);
 
-  const essFault = ess.message.length > 0;
-  const tgsFault = tgs.message.length > 0;
+  const essFault = ess.messages.length > 0;
+  const tgsFault = tgs.messages.length > 0;
 
   const isFaults =
     rest?.deviceType === 'electrical'

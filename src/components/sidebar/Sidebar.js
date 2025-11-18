@@ -15,13 +15,13 @@ import SidebarButton from "./SidebarButton";
 const Sidebar = () => {
   const { ess, tgs } = useFaultsStore();
   const faults =
-    ess.message.length > 0 || tgs.message.length > 0;
+    ess.messages.length > 0 || tgs.messages.length > 0;
 
   const { isTesSwitch, isEssSwitch } = useUserStore();
-  const { interfaceMode, buttonsOfSettings } = useSettingsStore();
+  const { interfaceMode, buttonState } = useSettingsStore();
   const { settings, electricalFaults, gasFaults } = useTgsSwitchStore();
   const mode = interfaceMode;
-  const applyState = buttonsOfSettings.settingsApplyButton;
+  const applyState = buttonState === 'apply';
   const tesSwitch = isTesSwitch;
   const essSwitch = isEssSwitch;
   const initialState = isEssSwitch

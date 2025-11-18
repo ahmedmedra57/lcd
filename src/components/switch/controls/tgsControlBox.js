@@ -32,13 +32,13 @@ const TgsControlBox = ({ ...rest }) => {
 
   const faultsState = useFaultsStore();
   const mode = useSettingsStore((state) => state.interfaceMode);
-  const unitsMeasurement = useSettingsStore((state) => state.buttonsOfSettings.unitsMeasurement);
+  const unitsMeasurement = useSettingsStore((state) => state.unitsMeasurement);
   const location = useLocation();
 
   const essFault =
-    faultsState.ess.message.length > 0;
+    faultsState.ess.messages.length > 0;
   const tgsFault =
-    faultsState.tgs.message.length > 0;
+    faultsState.tgs.messages.length > 0;
 
   const isFaults =
     rest?.deviceType === 'electrical'
