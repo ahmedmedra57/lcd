@@ -6,23 +6,20 @@ import ToggleSWitch from './ToggleSwitch';
 import Select from './Select';
 import SSRInfoContainer from './SSRInfoContainer';
 import SwitchNameSelector from './SwitchNameSelector';
-import { changeSwitchName } from '../../../store/slices/heaterStatusSlice';
-import { useDispatch } from 'react-redux';
+import useHeaterStatusStore from '../../../store/zustand/heaterStatusStore';
 
 const SSRDetail = ({ data, id, isSelected, handleOpenSelectBox, switchNamesList, localHeaters, setLocalHeaters, isUpdating, setIsUpdating }) => {
-  const dispatch = useDispatch();
+  const { setSSRSwitchName } = useHeaterStatusStore();
   const [isSettingOpen, setIsSettingOpen] = useState(false);
   const isEnable =
     data.buttonStatus === 'flt' ? false : data.buttonStatus ? true : false;
 
   useEffect(() => {
-    dispatch(
-      changeSwitchName({
-        id: `ssr${id}`,
-        name: data?.name && data.size ? `${data?.name} ${data?.size}` : '',
-      })
+    setSSRSwitchName(
+      `ssr${id}`,
+      data?.name && data.size ? `${data?.name} ${data?.size}` : ''
     );
-  }, [data?.name, data.size]);
+  }, [data?.name, data.size, id, setSSRSwitchName]);
 
   return (
     <Wrapper>

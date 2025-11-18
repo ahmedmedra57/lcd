@@ -1,11 +1,10 @@
 import { useState, useEffect, useContext, useCallback } from 'react';
-import { useSelector } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { SettingsContext } from '../../../../context/ContextOfSettings';
 import { convertCelsiusToFahrenheit } from '../../../../helpers/helpers';
-import { selectSettingsOfEss } from '../../../../store/slices/settingsOfEssSlice';
-import { selectTgsSwitch } from '../../../../store/slices/tgsSwitchSlice';
-import { selectUserState } from '../../../../store/slices/userSlice';
+import { useSettingsStore } from '../../../../store/zustand';
+import { useTgsSwitchStore } from '../../../../store/zustand';
+import { useUserStore } from '../../../../store/zustand';
 import { flexboxCenter } from '../../../../styles/commonStyles';
 import InputKeyPad from '../../../keyboard/InputKeyPad';
 import InvisibleDivForEditButton from '../editAndApplyMessageBoxes/InvisibleDivForEditButton';
@@ -29,16 +28,13 @@ function SnowFactor({
     essSnowSensor,
   } = useContext(SettingsContext);
 
-  // redux
-  const devicesState = useSelector(selectTgsSwitch);
-  const { settings, snowSensor } = devicesState;
-  const { defaultTemp } = snowSensor;
-  const settingsEssState = useSelector(selectSettingsOfEss);
-  const { settingsEditButton } = settingsEssState.buttonsOfSettings;
-  const mode = settingsEssState.interfaceMode;
-  const state = useSelector(selectUserState);
-  const tesSwitch = state.isTesSwitch;
-  const essSwitch = state.isEssSwitch;
+  // Zustand
+  const settings = useTgsSwitchStore((state) => state.settings);
+  const defaultTemp = useTgsSwitchStore((state) => state.snowSensor.defaultTemp);
+  const settingsEditButton = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const mode = useSettingsStore((state) => state.interfaceMode);
+  const tesSwitch = useUserStore((state) => state.isTesSwitch);
+  const essSwitch = useUserStore((state) => state.isEssSwitch);
   // useState
   const [activateKeypad, setActivateKeypad] = useState(false);
   const [inputFocus, setInputFocus] = useState(null);

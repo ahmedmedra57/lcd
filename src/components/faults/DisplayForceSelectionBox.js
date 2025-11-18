@@ -1,16 +1,14 @@
 import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { selectFaults } from '../../store/slices/faultsSlice';
+import { useFaultsStore } from '../../store/faultsStore';
+import { useTgsSwitchStore } from '../../store/tgsSwitchStore';
 import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../styles/commonStyles';
 import { countdownTimer } from '../../helpers/helpers';
-import { selectTgsSwitch } from '../../store/slices/tgsSwitchSlice';
 
 const DisplayForceSelectionBox = ({ visibility }) => {
-  const faultsState = useSelector(selectFaults);
-  const { electricalInfo } = useSelector(selectTgsSwitch)
-  const { receivedThermocoupleSetting: thermocoupleSetting } = faultsState;
+  const { receivedThermocoupleSetting: thermocoupleSetting } = useFaultsStore();
+  const { electricalInfo } = useTgsSwitchStore();
   const [countdown, setCountdown] = useState(null);
   const [faultsDetails, setFaultsDetails] = useState([]);
   const [faultsWithoutSystemOff, setFaultsWithoutSystemOff] = useState([]);

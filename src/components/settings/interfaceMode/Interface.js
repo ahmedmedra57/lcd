@@ -2,16 +2,13 @@ import styled from 'styled-components';
 import Button from '../settingsOptions/Button';
 import { flexboxCenter } from '../../../styles/commonStyles';
 import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { setInterfaceMode } from '../../../store/slices/settingsOfEssSlice';
-import { selectSettingsOfEss } from '../../../store/slices/settingsOfEssSlice';
+import { useSettingsStore } from '../../../store/zustand';
 
 function Interface() {
   const modesData = ['light mode', 'dark mode'];
-  // redux
-  const dispatch = useDispatch();
-  const state = useSelector(selectSettingsOfEss);
-  const mode = state.interfaceMode;
+  // zustand
+  const mode = useSettingsStore((state) => state.interfaceMode);
+  const setInterfaceMode = useSettingsStore((state) => state.setInterfaceMode);
   // states - initialize based on current theme mode
   const [interfaceModeButton, setInterfaceModeButton] = useState(mode ? 0 : 1);
 
@@ -25,11 +22,11 @@ function Interface() {
   };
 
   const handleMode = () => {
-    // Redux reducer will automatically save to localStorage
+    // Zustand store will automatically save to localStorage
     if (interfaceModeButton === 0) {
-      return dispatch(setInterfaceMode(true));
+      return setInterfaceMode(true);
     } else {
-      return dispatch(setInterfaceMode(false));
+      return setInterfaceMode(false);
     }
   };
 

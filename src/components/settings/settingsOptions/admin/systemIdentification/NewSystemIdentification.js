@@ -7,22 +7,20 @@ import {
 } from '../../../../../styles/commonStyles';
 import { useCallback, useState } from 'react';
 import SelectBox from './SelectBox';
-import { useDispatch, useSelector } from 'react-redux';
-import { handleLocationsSystemIdentification, selectSelectSystemUOS } from '../../../../../store/slices/settingsSelectSystemUOSSlice';
+import { useSelectSystemUOSStore } from '../../../../../store/zustand';
+import { useUserStore } from '../../../../../store/zustand';
+import { useSSRDescriptionStore } from '../../../../../store/zustand';
+import { useChartStore } from '../../../../../store/zustand';
 import { useEffect } from 'react';
-import { selectUserState } from '../../../../../store/slices/userSlice';
 import { getNoLinkedBlowerDevices, getNoLinkedElectricalDevices } from '../../../../../services/systemIdentification';
 import { async } from 'q';
 import { SettingsContext } from '../../../../../context/ContextOfSettings';
 import { useContext } from 'react';
-import { selectDescription } from '../../../../../store/slices/ssrDescriptionSlice';
-import { selectChart } from '../../../../../store/slices/chartSlice';
 
 const NewSystemIdentification = ({
   setSysIdentification,
   sysIdentification,
 }) => {
-  const dispatch=useDispatch()
   const [select, setSelect] = useState({});
   const [openSelectBox, setOpenSelectBox] = useState(false);
   const [data, setData] = useState([]);
@@ -33,16 +31,15 @@ const NewSystemIdentification = ({
   const [heatLoadConfigData, setHeatLoadConfigData] = useState([]);
   const [devices,setDevices]=useState([]);
   const [greenContour, setGreenContour] = useState(false);
-  const userState = useSelector(selectUserState);
-  const { isEssSwitch } = userState;
+  const isEssSwitch = useUserStore((state) => state.isEssSwitch);
   const { setInputData } = useContext(SettingsContext)
-  const { elementsOptions } = useSelector(selectDescription);
+  const elementsOptions = useSSRDescriptionStore((state) => state.elementsOptions);
   const mode = JSON.parse(localStorage.getItem("themeMode"));
 
-  // redux
-  const allLocations = useSelector(selectSelectSystemUOS);
-  const state = useSelector(selectChart);
-  const { wifiState } = state;
+  // Zustand
+  const allLocations = useSelectSystemUOSStore((state) => state);
+  const wifiState = useChartStore((state) => state.wifiState);
+  const handleLocationsSystemIdentification = useSelectSystemUOSStore((state) => state.handleLocationsSystemIdentification);
 
   const getNoLinkedDevices = useCallback(() => {
     const fetchDataFunction = isEssSwitch
@@ -60,13 +57,11 @@ const NewSystemIdentification = ({
   }, [getNoLinkedDevices, wifiState]);
   
   useEffect(() => {
-    dispatch(
-      handleLocationsSystemIdentification({
-        data: devices,
-        heaterSpecs: elementsOptions,
-      })
-    );
-  }, [devices, dispatch, elementsOptions]);
+    handleLocationsSystemIdentification({
+      data: devices,
+      heaterSpecs: elementsOptions,
+    });
+  }, [devices, handleLocationsSystemIdentification, elementsOptions]);
 
   useEffect(() => {
     setData(allLocations.locations);

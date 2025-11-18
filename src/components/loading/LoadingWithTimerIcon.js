@@ -1,14 +1,12 @@
 import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../styles/commonStyles';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { selectTgsSwitch } from '../../store/slices/tgsSwitchSlice';
+import useTgsSwitchStore from '../../store/zustand/tgsSwitchStore';
 import { calculatedTime } from '../../helpers/helpers';
 
 const LoadingIcon = ({ isCenterPosition }) => {
 
-  const systemData = useSelector(selectTgsSwitch);
-  const { gasInfo } = systemData;
+  const { gasInfo } = useTgsSwitchStore();
   const [timeRemaining, setTimeRemaining] = useState(); // 4.5 minutes in seconds
   
   useEffect(() => {

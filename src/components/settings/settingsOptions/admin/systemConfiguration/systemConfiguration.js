@@ -1,11 +1,10 @@
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { flexboxCenter } from '../../../../../styles/commonStyles';
-import { selectSettingsOfEss } from '../../../../../store/slices/settingsOfEssSlice';
+import { useSettingsStore } from '../../../../../store/zustand';
+import { useUserStore } from '../../../../../store/zustand';
 import ConfirmButton from '../../ConfirmButton';
 import { useContext } from 'react';
 import { SettingsContext } from '../../../../../context/ContextOfSettings';
-import { selectUserState } from '../../../../../store/slices/userSlice';
 
 function SystemConfiguration() {
   const tgsTesDescription = [
@@ -13,12 +12,10 @@ function SystemConfiguration() {
     'tes-typhoon electric system',
   ];
 
-  // redux
-  const state = useSelector(selectSettingsOfEss);
-  const mode = state.interfaceMode;
-  const editState = state.buttonsOfSettings.settingsEditButton;
-  const userState = useSelector(selectUserState);
-  const tesState = userState.isTesSwitch;
+  // Zustand
+  const mode = useSettingsStore((state) => state.interfaceMode);
+  const editState = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const tesState = useUserStore((state) => state.isTesSwitch);
 
   // useContext
   const {

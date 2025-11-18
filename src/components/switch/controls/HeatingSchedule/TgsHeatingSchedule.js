@@ -1,17 +1,8 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useMemo, useState } from 'react';
 
-import {
-  activateTgsConflictMessage,
-  activatedisplayTGSScheduleModal,
-  deActivatedisplayTGSScheduleModal,
-  selectTgsSwitch,
-  tgsAddHeatingSchedule,
-  tgsHeatingScheduleBeReady,
-  tgsHeatingScheduleClear,
-} from '../../../../store/slices/tgsSwitchSlice';
-import { selectSettingsOfEss } from '../../../../store/slices/settingsOfEssSlice';
-import { selectEssSwitch } from '../../../../store/slices/essSwitchSlice';
+import { useTgsSwitchStore } from '../../../../store/tgsSwitchStore';
+import { useSettingsStore } from '../../../../store/settingsStore';
+import { useEssSwitchStore } from '../../../../store/essSwitchStore';
 
 import styled, { css } from 'styled-components';
 import {
@@ -27,21 +18,18 @@ import ScheduleCalendar from './ScheduleCalendar';
 
 const TgsHeatingSchedule = ({ isDisabled, setDisplayModeFaultMessageBox }) => {
   // Global states
-  const state = useSelector(selectTgsSwitch);
-  const { heatingScheduleList, gasInfo,displayTgsScheduleModal } = state;
+  const { heatingScheduleList, gasInfo, displayTgsScheduleModal, activateTgsConflictMessage, activatedisplayTGSScheduleModal, deActivatedisplayTGSScheduleModal, tgsAddHeatingSchedule, tgsHeatingScheduleBeReady, tgsHeatingScheduleClear } = useTgsSwitchStore();
 
   // const firstHeatingSchedule = heatingScheduleList[0];
   // const { start, end } = firstHeatingSchedule;
 
-  const esState = useSelector(selectEssSwitch);
-  const { isEsSwitchActivated } = esState;
+  const { isEsSwitchActivated } = useEssSwitchStore();
 
-  const unitsState = useSelector(selectSettingsOfEss);
-  const { unitsMeasurement } = unitsState.buttonsOfSettings;
+  const { buttonsOfSettings } = useSettingsStore();
+  const { unitsMeasurement } = buttonsOfSettings;
 
   // Local
   const IMG_SRC = '/static/images/heating-Schedule-Program-Logo.svg';
-  const dispatch = useDispatch();
   const [displayScheduler, setDisplayScheduler] = useState(false);
   const [tempInput, setTempInput] = useState('');
 
@@ -57,16 +45,16 @@ const TgsHeatingSchedule = ({ isDisabled, setDisplayModeFaultMessageBox }) => {
   useEffect(() => {
     if (!isEsSwitchActivated) {
       if (heatingScheduleList[0].start.date) {
-        dispatch(tgsHeatingScheduleBeReady(true));
+        tgsHeatingScheduleBeReady(true);
       } else {
-        dispatch(tgsHeatingScheduleBeReady(false));
+        tgsHeatingScheduleBeReady(false);
       }
     } else {
       // Activate Conflict Message Box
-      dispatch(tgsHeatingScheduleBeReady(false));
-      dispatch(activateTgsConflictMessage());
+      tgsHeatingScheduleBeReady(false);
+      activateTgsConflictMessage();
     }
-  }, [heatingScheduleList[0].start.date]);
+  }, [heatingScheduleList[0].start.date, isEsSwitchActivated, tgsHeatingScheduleBeReady, activateTgsConflictMessage]);
 
   // const handleDispatch = (temp) => {
   //   if (!isEsSwitchActivated) {
@@ -90,7 +78,7 @@ const TgsHeatingSchedule = ({ isDisabled, setDisplayModeFaultMessageBox }) => {
   const handleClear = (index) => {
     // delete
     if (heatingScheduleList[index].start.date) {
-      dispatch(tgsHeatingScheduleClear(index));
+      tgsHeatingScheduleClear(index);
     } else {
       return;
     }
@@ -98,21 +86,19 @@ const TgsHeatingSchedule = ({ isDisabled, setDisplayModeFaultMessageBox }) => {
 
   const handleClose = () => {
     setDisplayScheduler(false);
-    dispatch(deActivatedisplayTGSScheduleModal())
+    deActivatedisplayTGSScheduleModal();
   };
 
   const handleSetNewSchedule = (data, index) => {
     // data :object / index === schedule list's index
     // Add schedule to the slice
-    dispatch(
-      tgsAddHeatingSchedule({
-        start: data.start,
-        end: data.end,
-        index,
-        inputTemp: tempInput,
-        id: data.id,
-      })
-    );
+    tgsAddHeatingSchedule({
+      start: data.start,
+      end: data.end,
+      index,
+      inputTemp: tempInput,
+      id: data.id,
+    });
   };
 
   const handleDisplayScheduler = () => {
@@ -121,7 +107,7 @@ const TgsHeatingSchedule = ({ isDisabled, setDisplayModeFaultMessageBox }) => {
       return;
     }
     setDisplayScheduler(true);
-    dispatch(activatedisplayTGSScheduleModal())
+    activatedisplayTGSScheduleModal();
   };
 
   return (

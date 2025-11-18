@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { selectUserState } from '../../../store/slices/userSlice';
+import useUserStore from '../../../store/zustand/userStore';
 import { flexboxCenter } from '../../../styles/commonStyles';
 import HoverMessageBox from './HoverMessageBox';
 
@@ -12,8 +11,7 @@ const SettingButton = ({
   id,
   openPasswordBox,
 }) => {
-  const userState = useSelector(selectUserState);
-  const { isAdministrator } = userState;
+  const { isAdministrator } = useUserStore();
   const [displayHiddenMessage, setDisplayHiddenMessage] = useState(false);
 
   const firstMessage = openPasswordBox

@@ -1,11 +1,9 @@
 import styled from "styled-components";
 import { flexboxCenter } from "../../../../../src/styles/commonStyles";
-import { useSelector } from "react-redux";
-import { selectSettingsOfEss } from "../../../../store/slices/settingsOfEssSlice";
+import { useSettingsStore } from "../../../../store/zustand";
 
 function TitleOfSelectUnitsOfMeasurement() {
-  const state = useSelector(selectSettingsOfEss);
-  const mode = state.interfaceMode;
+  const mode = useSettingsStore((state) => state.interfaceMode);
 
   return (
     <>

@@ -2,14 +2,8 @@ import styled from 'styled-components';
 import { flexboxCenter } from '../../../../../src/styles/commonStyles';
 import TitleOfSelectUnitsOfMeasurement from './TitleOfSelectUnitsOfMeasurement';
 import ImperialMetricMeasurementReader from './ImperialMetricMeasurementReader';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  selectSettingsOfEss,
-  setResetAllSettingsButtons,
-  setSettingsApplyUnitsButton,
-  setSettingsCancelButton,
-  setSettingsEditButton,
-} from '../../../../store/slices/settingsOfEssSlice';
+import { useSettingsStore } from '../../../../store/zustand';
+import { useTgsSwitchStore } from '../../../../store/zustand';
 import { useEffect } from 'react';
 
 import { useContext } from 'react';
@@ -18,12 +12,10 @@ import InvisibleDivForEditButton from '../editAndApplyMessageBoxes/InvisibleDivF
 import EditCancelApplyButtons from '../EditCancelApplyButtons';
 import { useState } from 'react';
 import SettingAppliedMessage from '../../../userMessages/SettingAppliedMessage';
-import { selectTgsSwitch } from '../../../../store/slices/tgsSwitchSlice';
 import { updateSettingsValue } from '../../../../helpers/helpers';
 
 function ContainerOfMetricImperialAndMeasurementTitle() {
-  const devicesStates = useSelector(selectTgsSwitch);
-  const { electricalInfo, gasInfo, settings } = devicesStates;
+  const { electricalInfo, gasInfo, settings } = useTgsSwitchStore((state) => state);
   const measurementsArr = [
     {
       title: 'Imperial',
@@ -53,13 +45,15 @@ function ContainerOfMetricImperialAndMeasurementTitle() {
   const [messageBox, setMessageBox] = useState(false);
   const [messageBoxContent, setMessageBoxContent] = useState({});
   const [metricImperialToggle, setMetricImperialToggle] = useState(0);
-  // redux
-  const state = useSelector(selectSettingsOfEss);
-  const mode = state.interfaceMode;
-  const dispatch = useDispatch();
-  const settingsEditButton = state.buttonsOfSettings.settingsEditButton;
-  const unitsMeasurement = state.buttonsOfSettings.unitsMeasurement;
-  const cancelState = state.buttonsOfSettings.settingsCancelButton;
+  // Zustand
+  const mode = useSettingsStore((state) => state.interfaceMode);
+  const settingsEditButton = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const unitsMeasurement = useSettingsStore((state) => state.buttonsOfSettings.unitsMeasurement);
+  const cancelState = useSettingsStore((state) => state.buttonsOfSettings.settingsCancelButton);
+  const setSettingsEditButton = useSettingsStore((state) => state.setSettingsEditButton);
+  const setSettingsCancelButton = useSettingsStore((state) => state.setSettingsCancelButton);
+  const setSettingsApplyUnitsButton = useSettingsStore((state) => state.setSettingsApplyUnitsButton);
+  const setResetAllSettingsButtons = useSettingsStore((state) => state.setResetAllSettingsButtons);
 
   // // keeps track and render last state saved either to imperial or metric
   // useEffect(() => {
@@ -103,10 +97,10 @@ function ContainerOfMetricImperialAndMeasurementTitle() {
     const buttonsIndex = Number(value);
     switch (buttonsIndex) {
       case 0:
-        dispatch(setSettingsEditButton());
+        setSettingsEditButton();
         break;
       case 1:
-        dispatch(setSettingsCancelButton());
+        setSettingsCancelButton();
         setMetricImperialToggle(settings.unit === 'f' ? 0 : 1);
         break;
       case 2:
@@ -115,10 +109,10 @@ function ContainerOfMetricImperialAndMeasurementTitle() {
         };
         // send new unit value for settings
         updateSettingsValue(settings, 'unit', unitValue(metricImperialToggle));
-        dispatch(setSettingsApplyUnitsButton(selectUnitsState));
+        setSettingsApplyUnitsButton(selectUnitsState);
         setMessageBox(true);
         handleEssSysMessageBox();
-        dispatch(setResetAllSettingsButtons());
+        setResetAllSettingsButtons();
         break;
       default:
         return;

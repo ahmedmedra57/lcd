@@ -1,30 +1,26 @@
 import React,{useMemo} from "react";
-import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { electricalFaultsList, gasFaultsList } from "../../../helpers/helpers";
-import { selectChart } from "../../../store/slices/chartSlice";
-import { selectFaults } from "../../../store/slices/faultsSlice";
-import { selectTgsSwitch } from "../../../store/slices/tgsSwitchSlice";
-import { selectUserState } from "../../../store/slices/userSlice";
+import useChartStore from "../../../store/zustand/chartStore";
+import useFaultsStore from "../../../store/zustand/faultsStore";
+import useTgsSwitchStore from "../../../store/zustand/tgsSwitchStore";
+import useUserStore from "../../../store/zustand/userStore";
 import { flexboxCenter } from "../../../styles/commonStyles";
 
 const electrical = "electrical";
 const gas = "gas";
 
 function ChartTitles({ deviceInfo, deviceType }) {
-  const state = useSelector(selectChart);
-  const { gpState, ebpState, wifiState } = state;
- const mode = JSON.parse(localStorage.getItem("themeMode"));
-  const faultsState = useSelector(selectFaults);
-  const userState = useSelector(selectUserState);
-  const systemData = useSelector(selectTgsSwitch);
-  const { settings } = systemData;
-  const { isEssSwitch } = userState;
+  const { gpState, ebpState, wifiState } = useChartStore();
+  const mode = JSON.parse(localStorage.getItem("themeMode"));
+  const { ess, tgs } = useFaultsStore();
+  const { isEssSwitch } = useUserStore();
+  const { settings } = useTgsSwitchStore();
   const location = useLocation();
 
-  const essFaults = faultsState.ess.message.length > 0;
-  const tgsFaults = faultsState.tgs.message.length > 0;
+  const essFaults = ess.messages.length > 0;
+  const tgsFaults = tgs.messages.length > 0;
   const alarmSrc = useMemo(() => {
     // if (essFaults) {
     //   return location.pathname === "/";

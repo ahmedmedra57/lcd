@@ -1,27 +1,18 @@
 import { useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { forceFaultHandler } from '../../helpers/helpers';
-import { handleTurnOffTheHeater } from '../../store/slices/essSwitchSlice';
-import {
-  handleDisplayForceMessageBox,
-  handleDisplayForceStatusBox,
-  handleForceButtonActivated,
-  handleForceSelection,
-  handleMaxHeatWithTimerOn,
-  handleTimerDescription,
-  selectFaults,
-} from '../../store/slices/faultsSlice';
-import { handleTimer } from '../../store/slices/timerSlice';
+import { useEssSwitchStore } from '../../store/essSwitchStore';
+import { useFaultsStore } from '../../store/faultsStore';
+import { useTimerStore } from '../../store/timerStore';
 
 import { flexboxCenter } from '../../styles/commonStyles';
 
 import MessageButton from '../userMessages/MessageButton';
 
 const SelectForce = ({ title, handleClose, selectedTcNo }) => {
-  const faultsState = useSelector(selectFaults);
-  const { receivedThermocoupleSetting } = faultsState;
-  const dispatch = useDispatch();
+  const { receivedThermocoupleSetting, handleDisplayForceMessageBox, handleDisplayForceStatusBox, handleForceButtonActivated, handleForceSelection, handleMaxHeatWithTimerOn, handleTimerDescription } = useFaultsStore();
+  const { handleTurnOffTheHeater } = useEssSwitchStore();
+  const { handleTimer } = useTimerStore();
 
   const options = useMemo(() => {
     const result = [];
@@ -54,31 +45,31 @@ const SelectForce = ({ title, handleClose, selectedTcNo }) => {
   };
 
   const handleConfirm = () => {
-    dispatch(handleForceSelection(selectedOne));
+    handleForceSelection(selectedOne);
     switch (selectedOne) {
       case options[0]: {
         // Max heat for 3 days => max heat display box
         // 1. call the timer with 72 hours
-        dispatch(handleTimer(72));
+        handleTimer(72);
         // 2.display the box, timer on with time set
-        dispatch(handleMaxHeatWithTimerOn(selectedOne));
+        handleMaxHeatWithTimerOn(selectedOne);
         // sets the description of timer at Ess or Tes for either 12 hours or 3 days
-        dispatch(handleTimerDescription());
+        handleTimerDescription();
         break;
       }
       case options[1]: {
         // Max heat with 12 hrs timer
         // display the box, timer on with time set
-        dispatch(handleTimer(12));
+        handleTimer(12);
         // 2.display the box, timer on with time set
-        dispatch(handleMaxHeatWithTimerOn(selectedOne));
+        handleMaxHeatWithTimerOn(selectedOne);
         break;
       }
       case options[2]: {
         // turn off all electric heater and show the message
-        dispatch(handleTurnOffTheHeater());
+        handleTurnOffTheHeater();
         // Display force status box
-        dispatch(handleDisplayForceStatusBox(true));
+        handleDisplayForceStatusBox(true);
 
         break;
       }
@@ -96,7 +87,7 @@ const SelectForce = ({ title, handleClose, selectedTcNo }) => {
           ? 2
           : 3,
     });
-    dispatch(handleForceButtonActivated(true));
+    handleForceButtonActivated(true);
     handleClose(handleDisplayForceMessageBox(false));
   };
 

@@ -85,6 +85,21 @@ const useTgsSettingsStore = create(
           windFactorTemp: { low, med, high, extreme, unit },
         }),
 
+      setWindFactorFromSocket: (data) => {
+        // Handle socket format: { windFactor: { lowWind, medWind, highWind, extremeWind } }
+        if (data?.windFactor) {
+          set({
+            windFactorTemp: {
+              low: data.windFactor.lowWind,
+              med: data.windFactor.medWind,
+              high: data.windFactor.highWind,
+              extreme: data.windFactor.extremeWind,
+              unit: TEMP_UNIT.FAHRENHEIT, // Default unit from socket
+            },
+          });
+        }
+      },
+
       // Snow Sensor
       applySnowSensorSettings: (tgsTemp, tesTemp, unit) =>
         set({
@@ -132,10 +147,30 @@ const useTgsSettingsStore = create(
         })),
 
       // Valve Settings
-      setValveInputs: (start, min, max) =>
-        set({
-          valveInputs: { start, min, max },
-        }),
+      setValveInputs: (valveData) => {
+        // Support both object and individual parameters for compatibility
+        if (typeof valveData === 'object' && valveData !== null) {
+          // Handle { first, second, third } format from socket
+          if ('first' in valveData || 'second' in valveData || 'third' in valveData) {
+            set({
+              valveInputs: {
+                start: valveData.first ?? null,
+                min: valveData.second ?? null,
+                max: valveData.third ?? null,
+              },
+            });
+          } else {
+            // Handle { start, min, max } format
+            set({
+              valveInputs: {
+                start: valveData.start ?? null,
+                min: valveData.min ?? null,
+                max: valveData.max ?? null,
+              },
+            });
+          }
+        }
+      },
 
       // Gas Type
       setGasType: (gasType) => set({ gasType }),

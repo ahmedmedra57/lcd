@@ -1,13 +1,11 @@
-import { useSelector } from 'react-redux';
+import { useSettingsStore } from '../../../../../store/zustand';
 import styled from 'styled-components';
 import { flexboxCenter } from '../../../../../styles/commonStyles';
-import { selectSettingsOfEss } from '../../../../../store/slices/settingsOfEssSlice';
 
 function SelectGasType({ gasType, gasSelection, handleSelect, handleToggle }) {
-  // redux
-  const state = useSelector(selectSettingsOfEss);
-  const mode = state.interfaceMode;
-  const editState = state.buttonsOfSettings.settingsEditButton;
+  // zustand
+  const mode = useSettingsStore((state) => state.interfaceMode);
+  const editState = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
 
   return (
     <Wrapper>

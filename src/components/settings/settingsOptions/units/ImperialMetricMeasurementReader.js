@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { flexboxCenter } from '../../../../../src/styles/commonStyles';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectSettingsOfEss } from '../../../../store/slices/settingsOfEssSlice';
+import { useSettingsStore } from '../../../../store/zustand';
 
 function ImperialMetricMeasurementReader({
   value,
@@ -12,10 +11,8 @@ function ImperialMetricMeasurementReader({
 }) {
   const { title, temp, energy, measure, gas, backgroundColor } = value;
   const is360 = backgroundColor === '360';
-  const state = useSelector(selectSettingsOfEss);
-  const mode = state.interfaceMode;
-
-  const { settingsEditButton } = state.buttonsOfSettings;
+  const mode = useSettingsStore((state) => state.interfaceMode);
+  const settingsEditButton = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
 
   return (
     <div>

@@ -1,24 +1,19 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { flexboxCenter } from '../../../styles/commonStyles';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  selectSettingsOfEss,
-  setSettingsOptionsUnits,
-  setSettingsOptionsWindFactor,
-  setSettingsOptionsSnowFactor,
-  setSettingsOptionsForceAndCommand,
-  setSettingsOptionsAdmin,
-} from '../../../store/slices/settingsOfEssSlice';
+import { useSettingsStore } from '../../../store/zustand';
 
 function AllTheSelectionsOfSettingsOptions({
   settingsData,
 
   setSettingsState,
 }) {
-  const dispatch = useDispatch();
-  const state = useSelector(selectSettingsOfEss);
-  const mode = state.interfaceMode;
+  const mode = useSettingsStore((state) => state.interfaceMode);
+  const setSettingsOptionsUnits = useSettingsStore((state) => state.setSettingsOptionsUnits);
+  const setSettingsOptionsWindFactor = useSettingsStore((state) => state.setSettingsOptionsWindFactor);
+  const setSettingsOptionsSnowFactor = useSettingsStore((state) => state.setSettingsOptionsSnowFactor);
+  const setSettingsOptionsForceAndCommand = useSettingsStore((state) => state.setSettingsOptionsForceAndCommand);
+  const setSettingsOptionsAdmin = useSettingsStore((state) => state.setSettingsOptionsAdmin);
 
   const [options, setOptions] = useState(0);
 
@@ -26,23 +21,23 @@ function AllTheSelectionsOfSettingsOptions({
 
   switch (options) {
     case 0: {
-      dispatch(setSettingsOptionsUnits());
+      setSettingsOptionsUnits();
       break;
     }
     case 1: {
-      dispatch(setSettingsOptionsWindFactor());
+      setSettingsOptionsWindFactor();
       break;
     }
     case 2: {
-      dispatch(setSettingsOptionsSnowFactor());
+      setSettingsOptionsSnowFactor();
       break;
     }
     case 3: {
-      dispatch(setSettingsOptionsForceAndCommand());
+      setSettingsOptionsForceAndCommand();
       break;
     }
     case 4: {
-      dispatch(setSettingsOptionsAdmin());
+      setSettingsOptionsAdmin();
       break;
     }
     default:

@@ -1,6 +1,5 @@
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { selectFaults } from '../../store/slices/faultsSlice';
+import { useFaultsStore } from '../../store/faultsStore';
 import FaultsDetailButton from './FaultsDetailButton';
 import { useMemo } from 'react';
 
@@ -14,8 +13,8 @@ const FaultsDetailButtonContainer = ({
     () => (name === 'tgs' ? ['reset', 'attend'] : ['force', 'reset', 'attend']),
     [name]
   );
-  const faultsState = useSelector(selectFaults);
-  const { faultsTypes } = name === 'tgs' ? faultsState.tgs : faultsState.ess;
+  const { tgs, ess } = useFaultsStore();
+  const { faultsTypes } = name === 'tgs' ? tgs : ess;
 
   // logic for detecting faults type
   const data = faultContents.split(' ');

@@ -1,11 +1,6 @@
-import { selectSettingsOfEss } from '../../../store/slices/settingsOfEssSlice';
+import useSettingsStore from '../../../store/zustand/settingsStore';
 import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  handlePasswordPropagation,
-  selectUserState,
-  setAdminAccess,
-} from '../../../store/slices/userSlice';
+import useUserStore from '../../../store/zustand/userStore';
 
 import { flexboxCenter } from '../../../styles/commonStyles';
 import styled, { css } from 'styled-components';
@@ -15,23 +10,21 @@ import AdminSSRItemDetails from './AdminSSRItemDetails';
 import SSRItemDetails from './SSRItemDetails';
 
 const SSRInfoContainer = ({ data, id, isSettingOpen, setIsSettingOpen }) => {
-  const userState = useSelector(selectUserState);
-  const { isAdministrator, isPasswordOpen } = userState;
+  const { isAdministrator, isPasswordOpen, setAdminAccess, openPasswordModal, closePasswordModal } = useUserStore();
   const [openPasswordBox, setOpenPasswordBox] = useState(false);
 
-  const unitsState = useSelector(selectSettingsOfEss);
-  const { unitsMeasurement } = unitsState.buttonsOfSettings;
+  const { unitsMeasurement } = useSettingsStore();
 
   // Compare current and currentCurrent
   const [isOverAmp, setIsOverAmp] = useState(false);
 
   useEffect(() => {
-    openPasswordBox
-      ? dispatch(handlePasswordPropagation(true))
-      : dispatch(handlePasswordPropagation(false));
-  }, [openPasswordBox]);
-
-  const dispatch = useDispatch();
+    if (openPasswordBox) {
+      openPasswordModal();
+    } else {
+      closePasswordModal();
+    }
+  }, [openPasswordBox, openPasswordModal, closePasswordModal]);
 
   useEffect(() => {
     if (isAdministrator) {
@@ -78,7 +71,7 @@ const SSRInfoContainer = ({ data, id, isSettingOpen, setIsSettingOpen }) => {
     } else {
       // id === 2  Close the setting and logout
       setIsSettingOpen(false);
-      dispatch(setAdminAccess(false));
+      setAdminAccess(false);
     }
   };
 

@@ -1,27 +1,17 @@
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
 import { flexboxCenter } from '../../../../../styles/commonStyles'
 import CurrentEncloseAndBurningTemp from './CurrentEncloseAndBurningTemp';
 import OutsideTemperature from './OutsideTemperature';
-import { selectUserState } from '../../../../../store/slices/userSlice';
+import { useUserStore, useForceAndCommandStore, useTgsSwitchStore } from '../../../../../store/zustand';
 import { useState, useMemo, useEffect } from 'react';
 
-import { useDispatch } from 'react-redux';
-import {
-  setEssTcTemp,
-  selectForceAndCommand,
-  setTgsTesTcTemp,
-} from '../../../../../store/slices/forceAndCommandSlice';
-import { selectTgsSwitch } from '../../../../../store/slices/tgsSwitchSlice';
-
 function SelectTc({ ess, tgs, checkedBoxes, setCheckedBoxes }) {
-  const dispatch = useDispatch();
-  const state = useSelector(selectUserState);
-  const tesSwitch = state.isTesSwitch;
-  const selectTcState = useSelector(selectForceAndCommand);
-  const systemData = useSelector(selectTgsSwitch);
-  const essSwitch = state.isEssSwitch;
-  const { settings } = systemData;
+  const tesSwitch = useUserStore((state) => state.isTesSwitch);
+  const selectTcState = useForceAndCommandStore((state) => state);
+  const essSwitch = useUserStore((state) => state.isEssSwitch);
+  const settings = useTgsSwitchStore((state) => state.settings);
+  const setEssTcTemp = useForceAndCommandStore((state) => state.setEssTcTemp);
+  const setTgsTesTcTemp = useForceAndCommandStore((state) => state.setTgsTesTcTemp);
 
   const essData = [
     { title: `current ${ess} heater temperature`, selection: 'select t/c' },
@@ -147,11 +137,11 @@ function SelectTc({ ess, tgs, checkedBoxes, setCheckedBoxes }) {
     }
   };
 
-  // this will dispatch the local state above of saved selections and send it to force and command slice. the setState setIsClicked will handle the closure of dropdown
+  // this will dispatch the local state above of saved selections and send it to force and command store. the setState setIsClicked will handle the closure of dropdown
   const onConfirmCurrentEssHeaterTempHandler = (id) => {
     essSwitch
-      ? dispatch(setEssTcTemp({ id: id, data: checked }))
-      : dispatch(setTgsTesTcTemp({ id: id, data: checked }));
+      ? setEssTcTemp({ id: id, data: checked })
+      : setTgsTesTcTemp({ id: id, data: checked });
 
     setIsClicked(() => ({
       essOutsideTemp: false,

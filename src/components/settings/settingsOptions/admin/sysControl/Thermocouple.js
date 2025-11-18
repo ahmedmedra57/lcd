@@ -1,6 +1,5 @@
-import { useSelector } from 'react-redux';
+import { useSettingsStore } from '../../../../../store/zustand';
 import styled, { css } from 'styled-components';
-import { selectSettingsOfEss } from '../../../../../store/slices/settingsOfEssSlice';
 import { flexboxCenter } from '../../../../../styles/commonStyles';
 
 function Thermocouple({
@@ -8,9 +7,8 @@ function Thermocouple({
   toggleLeftEnableDisable,
   changeButtonColor,
 }) {
-  // redux
-  const state = useSelector(selectSettingsOfEss);
-  const editState = state.buttonsOfSettings.settingsEditButton;
+  // zustand
+  const editState = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
 
   return (
     <WrapperLeftSwitch>

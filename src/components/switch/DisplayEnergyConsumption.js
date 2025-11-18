@@ -1,29 +1,28 @@
-import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
-import { selectEssSwitch } from '../../store/slices/essSwitchSlice';
-import { selectSettingsOfEss } from '../../store/slices/settingsOfEssSlice';
-import { selectTgsSwitch } from '../../store/slices/tgsSwitchSlice';
-import { selectUserState } from '../../store/slices/userSlice';
+import { useEssSwitchStore } from '../../store/essSwitchStore';
+import { useSettingsStore } from '../../store/settingsStore';
+import { useTgsSwitchStore } from '../../store/tgsSwitchStore';
+import { useUserStore } from '../../store/userStore';
 
 import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../styles/commonStyles';
 
 const DisplayEnergyConsumption = ({ deviceType, deviceInfo }) => {
-  const ssState = useSelector(selectEssSwitch);
-  const gsState = useSelector(selectTgsSwitch);
-  const userState = useSelector(selectUserState);
-  const unitsState = useSelector(selectSettingsOfEss);
-  const { unitsMeasurement } = unitsState.buttonsOfSettings;
+  const ssState = useEssSwitchStore();
+  const gsState = useTgsSwitchStore();
+  const { isEssSwitch } = useUserStore();
+  const { buttonsOfSettings } = useSettingsStore();
+  const { unitsMeasurement } = buttonsOfSettings;
   const location = useLocation();
 
-  // const energyConsumption = userState.isEssSwitch
+  // const energyConsumption = isEssSwitch
   //   ? ssState.energyConsumption
   //   : location.pathname === '/'
   //   ? gsState.energyConsumption
   //   : ssState.energyConsumption;
 
-  const title = userState.isEssSwitch
+  const title = isEssSwitch
     ? 'energy'
     : location.pathname === '/'
     ? 'gas'
@@ -44,7 +43,7 @@ const DisplayEnergyConsumption = ({ deviceType, deviceInfo }) => {
           </Title>
           <EnergyConsumption>
             {!isNaN(energyConsumption) ? energyConsumption : ''}{' '}
-            {userState.isEssSwitch ? (
+            {isEssSwitch ? (
               <EnergyConsumption option={true}>kw</EnergyConsumption>
             ) : location.pathname !== '/' ? (
               <EnergyConsumption option={true}>Kw</EnergyConsumption>

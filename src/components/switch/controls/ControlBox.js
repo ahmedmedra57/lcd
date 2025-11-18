@@ -1,13 +1,8 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useMemo, useState } from 'react';
-import {
-  activateTgsSwitchStatus,
-  deActivatedisplayTGSScheduleModal,
-  deactivateTgsConflictMessage,
-  selectTgsSwitch,
-} from '../../../store/slices/tgsSwitchSlice';
-import { selectUserState } from '../../../store/slices/userSlice';
-import { selectFaults } from '../../../store/slices/faultsSlice';
+import useTgsSwitchStore from '../../../store/zustand/tgsSwitchStore';
+import useUserStore from '../../../store/zustand/userStore';
+import useFaultsStore from '../../../store/zustand/faultsStore';
+import useSettingsStore from '../../../store/zustand/settingsStore';
 import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../../styles/commonStyles';
 import ConstantHeat from './optionalConstantTemp/ConstantHeat';
@@ -25,29 +20,32 @@ import {
   updateDeviceInfo,
   updateSchedule,
 } from '../../../helpers/helpers';
-import { selectSettingsOfEss } from '../../../store/slices/settingsOfEssSlice';
 import { useLocation } from 'react-router-dom';
 
 const ControlBox = ({ ...rest }) => {
-  const userState = useSelector(selectUserState);
-  const { isEssSwitch, isGas } = userState;
-  const unitsState = useSelector(selectSettingsOfEss);
-  const mode = unitsState.interfaceMode;
-  const { unitsMeasurement } = unitsState.buttonsOfSettings;
+  const { isEssSwitch, isGas } = useUserStore();
+  const { interfaceMode: mode, unitsMeasurement } = useSettingsStore();
   const location = useLocation();
 
-  const systemData = useSelector(selectTgsSwitch);
   const {
     displayConflictMessage,
     devicesConflicts,
     electricalInfo,
     gasInfo,
     settings,
-  } = systemData;
-  const faultsState = useSelector(selectFaults);
+    instantHeat,
+    fanOnly,
+    snowSensor,
+    heatingSchedule,
+    windFactor,
+    activateSwitch,
+    hideConflictMessage,
+    closeScheduleCalendar,
+  } = useTgsSwitchStore();
+  const { ess, tgs } = useFaultsStore();
 
-  const essFault = faultsState.ess.message.length > 0;
-  const tgsFault = faultsState.tgs.message.length > 0;
+  const essFault = ess.messages.length > 0;
+  const tgsFault = tgs.messages.length > 0;
 
   const isFaults =
     rest?.deviceType === 'electrical'
@@ -66,39 +64,23 @@ const ControlBox = ({ ...rest }) => {
     );
   }, [electricalInfo]);
 
-  const tgsState = useSelector(selectTgsSwitch);
-  const {
-    instantHeat,
-    fanOnly,
-    snowSensor,
-    optionalConstantTemp,
-    heatingSchedule,
-    windFactor,
-  } = tgsState;
-
-  const dispatch = useDispatch();
-
   const [disabledBox, setDisabledBox] = useState(false);
   const [displayModeFaultMessageBox, setDisplayModeFaultMessageBox] =
     useState(false);
 
   // Check if tgs is activated
   useEffect(() => {
-    instantHeat.isActivated && dispatch(activateTgsSwitchStatus());
-    fanOnly && dispatch(activateTgsSwitchStatus());
-    // snowSensor.isReady && dispatch(activateTgsSwitchStatus());
-    snowSensor.isActivated && dispatch(activateTgsSwitchStatus());
-    optionalConstantTemp.isActivated && dispatch(activateTgsSwitchStatus());
-    // heatingSchedule.isReady && dispatch(activateTgsSwitchStatus());
-    heatingSchedule.isActivated && dispatch(activateTgsSwitchStatus());
-    // windFactor.isReady && dispatch(activateTgsSwitchStatus());
-    windFactor.isActivated && dispatch(activateTgsSwitchStatus());
-  }, [tgsState]);
+    if (instantHeat.isActivated || fanOnly.isActivated ||
+        snowSensor.state !== 'disabled' || heatingSchedule.state !== 'disabled' ||
+        windFactor.state !== 'disabled') {
+      activateSwitch();
+    }
+  }, [instantHeat, fanOnly, snowSensor, heatingSchedule, windFactor, activateSwitch]);
 
   // Conflict message handlers
   const handleCancelConflictMessage = () => {
     // change display conflict message state into false
-    dispatch(deactivateTgsConflictMessage());
+    hideConflictMessage();
   };
 
   const handleConfirmConflictMessage = () => {
@@ -138,8 +120,8 @@ const ControlBox = ({ ...rest }) => {
         : updateSchedule(devicesConflicts?.extraData);
     }
 
-    dispatch(deactivateTgsConflictMessage());
-    dispatch(deActivatedisplayTGSScheduleModal());
+    hideConflictMessage();
+    closeScheduleCalendar();
   };
 
   const isThermocouple = useMemo(() => {

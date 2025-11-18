@@ -1,7 +1,5 @@
-import { useSelector } from 'react-redux';
 import styled, { css } from 'styled-components';
-import { selectSettingsOfEss } from '../../../store/slices/settingsOfEssSlice';
-import { selectUnitsState } from '../../../store/slices/unitsSlice';
+import { useSettingsStore } from '../../../store/zustand';
 import {
   flexboxCenter,
   DisableApplyButtonBG,
@@ -9,8 +7,7 @@ import {
 } from '../../../styles/commonStyles';
 
 const InputTemp = ({ isEnable, setTemp }) => {
-  const unitsState = useSelector(selectSettingsOfEss);
-  const { unitsMeasurement } = unitsState.buttonsOfSettings;
+  const unitsMeasurement = useSettingsStore((state) => state.buttonsOfSettings.unitsMeasurement);
 
   const handleOnChange = (event) => {
     const value = event.target.value;

@@ -1,8 +1,7 @@
 import { useContext } from 'react';
-import { useSelector } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { SettingsContext } from '../../../../context/ContextOfSettings';
-import { selectSettingsOfEss } from '../../../../store/slices/settingsOfEssSlice';
+import { useSettingsStore } from '../../../../store/zustand';
 import { flexboxCenter } from '../../../../styles/commonStyles';
 
 function WindFactor({
@@ -14,9 +13,8 @@ function WindFactor({
   handleInputs,
 }) {
   const { windFactor } = useContext(SettingsContext);
-  // redux
-  const settingsEssState = useSelector(selectSettingsOfEss);
-  const mode = settingsEssState.interfaceMode;
+  // Zustand
+  const mode = useSettingsStore((state) => state.interfaceMode);
 
   const inputValue =
     index === 0

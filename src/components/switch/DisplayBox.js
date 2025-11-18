@@ -1,19 +1,17 @@
-import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-import { selectSettingsOfEss } from '../../store/slices/settingsOfEssSlice';
-import { selectTgsSwitch } from '../../store/slices/tgsSwitchSlice';
+import { useSettingsStore } from '../../store/settingsStore';
+import { useTgsSwitchStore } from '../../store/tgsSwitchStore';
 
-import { selectUserState } from '../../store/slices/userSlice';
+import { useUserStore } from '../../store/userStore';
 import { flexboxCenter } from '../../styles/commonStyles';
 
 const DisplayBox = ({ currData, label, unit, name, option }) => {
-  const unitsState = useSelector(selectSettingsOfEss);
-  const { unitsMeasurement } = unitsState.buttonsOfSettings;
+  const { buttonsOfSettings } = useSettingsStore();
+  const { unitsMeasurement } = buttonsOfSettings;
 
-  const userState = useSelector(selectUserState);
-  const { settings } = useSelector(selectTgsSwitch);
-  const { isEssSwitch } = userState;
+  const { isEssSwitch } = useUserStore();
+  const { settings } = useTgsSwitchStore();
   const location = useLocation();
 
   const labelArr = label.split(' ');

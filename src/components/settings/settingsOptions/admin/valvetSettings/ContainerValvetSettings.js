@@ -3,8 +3,7 @@ import ValveSettings from './ValveSettings';
 import SelectGasType from '../selectGasType/ContainerSelectGasType';
 import { useEffect, useState } from 'react';
 import InputValveSettingsMessage from './InputValveSettingsMessage';
-import { useSelector } from 'react-redux';
-import { selectSettingsOfTgsTes } from '../../../../../store/slices/settingsOfTgsTesSlice';
+import { useTgsTesSettingsStore } from '../../../../../store/zustand';
 import { useContext } from 'react';
 import { SettingsContext } from '../../../../../context/ContextOfSettings';
 
@@ -17,8 +16,8 @@ function ContainerValveSettings() {
   const { inputValue, setInputValue } = useContext(SettingsContext);
   const [warningMessage, setWarningMessage] = useState(false);
 
-  // redux from settingsTesTgs
-  const { valveInputs } = useSelector(selectSettingsOfTgsTes);
+  // Zustand from settingsTesTgs
+  const valveInputs = useTgsTesSettingsStore((state) => state.valveInputs);
 
   // sets back the previous entered data
   useEffect(() => {

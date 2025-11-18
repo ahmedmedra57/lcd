@@ -1,22 +1,17 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import styled, { css } from "styled-components";
 
 import { flexboxCenter } from "../../../styles/commonStyles";
 import { updateSettingsValues } from "../../../helpers/helpers";
-import {
-  selectTgsSwitch,
-  setSSRSettings,
-} from "../../../store/slices/tgsSwitchSlice";
+import useTgsSwitchStore from "../../../store/zustand/tgsSwitchStore";
+import useHeaterStatusStore from "../../../store/zustand/heaterStatusStore";
 import { useEffect } from "react";
-import { toggle } from "../../../store/slices/heaterStatusSlice";
 
 const ToggleSWitch = ({ data, id, localHeaters, setLocalHeaters, isUpdating, setIsUpdating }) => {
   const { buttonStatus, switchName, reset, switch_system_id } = data;
-  const systemData = useSelector(selectTgsSwitch);
-  const dispatch = useDispatch();
+  const { settings, ssrSettings: ssr_setting, setSSRSettings } = useTgsSwitchStore();
+  const { toggleSSR } = useHeaterStatusStore();
   const [isDisabled, setIsDisabled] = useState(false);
-  const { settings, ssr_setting } = systemData;
   // true || false || 'flt
 
   let swtName = "";
@@ -63,8 +58,8 @@ const ToggleSWitch = ({ data, id, localHeaters, setLocalHeaters, isUpdating, set
     const newList = ssr_setting.map((item, index) =>
       index === id - 1 ? { ...item, active: !buttonStatus } : item
     );
-    dispatch(setSSRSettings(newList));
-    dispatch(toggle("ssr" + id));
+    setSSRSettings(newList);
+    toggleSSR("ssr" + id);
 
  setTimeout(()=>{
       setIsUpdating(false);

@@ -1,21 +1,16 @@
-import { useSelector } from 'react-redux';
-import { selectUserState } from '../store/slices/userSlice';
-
 import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../styles/commonStyles';
-import { selectSettingsOfEss } from '../store/slices/settingsOfEssSlice';
-import { selectTgsSwitch } from '../store/slices/tgsSwitchSlice';
+import useUserStore from '../store/zustand/userStore';
+import useSettingsStore from '../store/zustand/settingsStore';
+import useTgsSwitchStore from '../store/zustand/tgsSwitchStore';
 import { useMemo } from 'react';
 import { convertCelsiusToFahrenheit } from '../helpers/helpers'
 
 const DateAndWeather = () => {
-  // redux
-  const state = useSelector(selectSettingsOfEss);
-  const userState = useSelector(selectUserState);
-  const mode = state.interfaceMode;
-  const { date, weather, iconSrc } = userState.dateAndWeather;
-  const devicInfo = useSelector(selectTgsSwitch);
-  const { settings } = devicInfo;
+  // zustand
+  const { interfaceMode: mode } = useSettingsStore();
+  const { dateAndWeather: { date, weather, iconSrc } } = useUserStore();
+  const { settings } = useTgsSwitchStore();
 
   const imageDash = mode
     ? '/static/images/long-dash_light.svg'

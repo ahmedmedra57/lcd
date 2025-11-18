@@ -1,13 +1,7 @@
 import { useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { isAnotherSystemRunning, updateDeviceInfo } from '../../../../helpers/helpers';
-import {
-  activateTgsConflictMessage,
-  fanOnlyToggler,
-  selectTgsSwitch,
-  setDevicesConflicts,
-} from '../../../../store/slices/tgsSwitchSlice';
+import { useTgsSwitchStore } from '../../../../store/zustand';
 import {
   activeHole,
   activeLayer1,
@@ -17,9 +11,10 @@ import {
 import InputTempMessage from '../../../userMessages/InputTempMessage';
 
 const FanOnly = ({ isDisabled }) => {
-  const dispatch = useDispatch();
-  const systemData = useSelector(selectTgsSwitch);
-  const { gasInfo, currentRunSystem, EBP } = systemData;
+  const gasInfo = useTgsSwitchStore((state) => state.gasInfo);
+  const currentRunSystem = useTgsSwitchStore((state) => state.currentRunSystem);
+  const EBP = useTgsSwitchStore((state) => state.EBP);
+  const fanOnlyToggler = useTgsSwitchStore((state) => state.fanOnlyToggler);
   const [displayMessageBox, setDisplayMessageBox] = useState(false);
   const [message, setMessage] = useState(['']);
 
@@ -39,7 +34,7 @@ const FanOnly = ({ isDisabled }) => {
     }
     const newValue = gasInfo?.fan === 1 ? 0 : 1;
     updateDeviceInfo('fan', newValue, 'gas_command');
-    dispatch(fanOnlyToggler());
+    fanOnlyToggler();
   };
   
   return (

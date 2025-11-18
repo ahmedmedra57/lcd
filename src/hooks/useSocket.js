@@ -1,74 +1,86 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { disconnectSocket, initiateSocket, socket } from "../adapters/socket";
 import { electricalFaultsList, gasFaultsList, readableTime } from "../helpers/helpers";
-import { setWifiState } from "../store/slices/chartSlice";
-import { addHeatingSchedule } from "../store/slices/essSwitchSlice";
 import {
-  handleESSFaultsMessages,
-  handleForceSelection,
-  handleTimerCountdown,
-  handleTGSFaultsMessages,
-  setReceivedThermocoupleSetting,
-  selectFaults,
-} from "../store/slices/faultsSlice";
-import { setSettingsApplyUnitsButton } from "../store/slices/settingsOfEssSlice";
-import { setTgsTesSettingsApplyWindFactor, setValveInputs } from "../store/slices/settingsOfTgsTesSlice";
-import { handleAdditionalSystemIdentification } from "../store/slices/settingSystemIdentificationSlice";
-import {
-  handleAddNewElement,
-  handleConfirmAddNewElement,
-} from "../store/slices/ssrDescriptionSlice";
-import {
-  setTgsInfo,
-  setTesInfo,
-  setSettings,
-  setTesGraphData,
-  setGasGraphData,
-  handleTgsSnowSensorDefaultTemp,
-  setSSRSettings,
-  setSSRUpdate,
-  setOutsideGraphData,
-  setEnclosureGraphData,
-  setHeaterGraphData,
-  tgsAddHeatingSchedule,
-  setCurrentRunSystem,
-  setEBP,
-  selectTgsSwitch,
-} from "../store/slices/tgsSwitchSlice";
-import { setIsEssSwitch } from "../store/slices/userSlice";
+  useChartStore,
+  useEssSwitchStore,
+  useFaultsStore,
+  useHeaterStatusStore,
+  useSettingsStore,
+  useTgsSettingsStore,
+  useTgsSwitchStore,
+  useUserStore,
+  useSystemIdentificationStore,
+} from "../store/zustand";
 
 export default function useSocket() {
-  const dispatch = useDispatch();
-  const { ssr_setting, settings } = useSelector(selectTgsSwitch);
-  const { receivedThermocoupleSetting } = useSelector(selectFaults);
+  // Zustand store selectors
+  const setWifiState = useChartStore((state) => state.setWifiState);
+  const setEBP = useChartStore((state) => state.setEBP);
+
+  const addEssSchedule = useEssSwitchStore((state) => state.addSchedule);
+
+  const setEssFaultMessages = useFaultsStore((state) => state.setEssFaultMessages);
+  const setTgsFaultMessages = useFaultsStore((state) => state.setTgsFaultMessages);
+  const setEssSelectedForce = useFaultsStore((state) => state.setEssSelectedForce);
+  const setEssCountDownTime = useFaultsStore((state) => state.setEssCountDownTime);
+  const addThermocoupleSetting = useFaultsStore((state) => state.addThermocoupleSetting);
+  const receivedThermocoupleSetting = useFaultsStore((state) => state.receivedThermocoupleSetting);
+
+  const setUnitsMeasurementFromBoolean = useSettingsStore((state) => state.setUnitsMeasurementFromBoolean);
+
+  const setWindFactorFromSocket = useTgsSettingsStore((state) => state.setWindFactorFromSocket);
+  const setValveInputs = useTgsSettingsStore((state) => state.setValveInputs);
+
+  const setGasInfo = useTgsSwitchStore((state) => state.setGasInfo);
+  const setElectricalInfo = useTgsSwitchStore((state) => state.setElectricalInfo);
+  const setSettings = useTgsSwitchStore((state) => state.setSettings);
+  const setTesGraphData = useTgsSwitchStore((state) => state.setTesGraphData);
+  const setGasGraphData = useTgsSwitchStore((state) => state.setGasGraphData);
+  const setSnowSensorDefaultTemp = useTgsSwitchStore((state) => state.setSnowSensorDefaultTemp);
+  const setSSRSettings = useTgsSwitchStore((state) => state.setSSRSettings);
+  const setSSRUpdate = useTgsSwitchStore((state) => state.setSSRUpdate);
+  const setOutsideGraphData = useTgsSwitchStore((state) => state.setOutsideGraphData);
+  const setEnclosureGraphData = useTgsSwitchStore((state) => state.setEnclosureGraphData);
+  const setHeaterGraphData = useTgsSwitchStore((state) => state.setHeaterGraphData);
+  const addTgsSchedule = useTgsSwitchStore((state) => state.addSchedule);
+  const setCurrentRunSystem = useTgsSwitchStore((state) => state.setCurrentRunSystem);
+  const ssrSettings = useTgsSwitchStore((state) => state.ssrSettings);
+  const settings = useTgsSwitchStore((state) => state.settings);
+
+  const setEssSwitch = useUserStore((state) => state.setEssSwitch);
+
+  const setSystemIdentification = useSystemIdentificationStore((state) => state.setSystemIdentification);
+
+  const loadElementBank = useHeaterStatusStore((state) => state.loadElementBank);
+  const addElementToBank = useHeaterStatusStore((state) => state.addElementToBank);
 
   const updateSettings = (data) => {
-    dispatch(setSettings(data));
-    dispatch(setIsEssSwitch(data.device_type === "switches"));
-    dispatch(setCurrentRunSystem(data.current_run));
-    dispatch(handleTgsSnowSensorDefaultTemp(data.blower_snow_threshold));
-    dispatch(setWifiState(data.cloud_connection));
-    dispatch(setSettingsApplyUnitsButton(data.unit === "f")); //this value for unit
-    dispatch(setEBP(data.EBP))
-    dispatch(setTgsTesSettingsApplyWindFactor({
+    setSettings(data);
+    setEssSwitch(data.device_type === "switches");
+    setCurrentRunSystem(data.current_run);
+    setSnowSensorDefaultTemp(data.blower_snow_threshold);
+    setWifiState(data.cloud_connection);
+    setUnitsMeasurementFromBoolean(data.unit === "f"); //this value for unit
+    setEBP(data.EBP);
+    setWindFactorFromSocket({
       windFactor: {
         lowWind: data?.wind_threshold[0],
         medWind: data?.wind_threshold[1],
         highWind: data?.wind_threshold[2],
         extremeWind: data?.wind_threshold[3],
       }
-    }));
+    });
   };
 
   const updateElectrical = (data) => {
-    dispatch(setTesInfo(data));
-    dispatch(handleESSFaultsMessages(electricalFaultsList(data, settings, ssr_setting, receivedThermocoupleSetting).faultsList));
+    setElectricalInfo(data);
+    setEssFaultMessages(electricalFaultsList(data, settings, ssrSettings, receivedThermocoupleSetting).faultsList);
   };
 
   const updateGas = (data) => {
-    dispatch(setTgsInfo(data));
-    dispatch(handleTGSFaultsMessages(gasFaultsList(data, settings).faultsList));
+    setGasInfo(data);
+    setTgsFaultMessages(gasFaultsList(data, settings).faultsList);
   };
 
   const updateSchedule = (data) => {
@@ -82,16 +94,16 @@ export default function useSocket() {
           inputTemp: threshold,
           id,
         }
-        dispatch(addHeatingSchedule(schedule));
+        addEssSchedule(schedule);
       })
     }else{
-      dispatch(addHeatingSchedule({
+      addEssSchedule({
         index: 0,
         start: { date: null, time: null },
         end: { date: null, time: null },
         inputTemp: null,
         id: null,
-      }));
+      });
     }
   }
 
@@ -106,16 +118,16 @@ export default function useSocket() {
           inputTemp: threshold,
           id,
         }
-        dispatch(tgsAddHeatingSchedule(schedule));
+        addTgsSchedule(schedule);
       })
     }else{
-      dispatch(tgsAddHeatingSchedule({
+      addTgsSchedule({
         index: 0,
         start: { date: null, time: null },
         end: { date: null, time: null },
         inputTemp: null,
         id: null,
-      }));
+      });
     }
   }
 
@@ -141,48 +153,48 @@ export default function useSocket() {
           updateSettings(data.settings_update);
         }
         if (data.hasOwnProperty("update_system_id")) {
-          dispatch(handleAdditionalSystemIdentification(data.update_system_id));
+          setSystemIdentification(data.update_system_id);
         }
         if (data.hasOwnProperty("electrical_graph")) {
-          dispatch(setTesGraphData(data.electrical_graph.graph));
+          setTesGraphData(data.electrical_graph.graph);
         }
         if (data.hasOwnProperty("gas_graph")) {
-          dispatch(setGasGraphData(data.gas_graph.graph));
+          setGasGraphData(data.gas_graph.graph);
         }
         if (data.hasOwnProperty("outside_graph")) {
-          dispatch(setOutsideGraphData(data.outside_graph.graph));
+          setOutsideGraphData(data.outside_graph.graph);
         }
         if (data.hasOwnProperty("enclosure_graph")) {
-          dispatch(setEnclosureGraphData(data.enclosure_graph.graph));
+          setEnclosureGraphData(data.enclosure_graph.graph);
         }
         if (data.hasOwnProperty("heater_graph")) {
-          dispatch(setHeaterGraphData(data.heater_graph.graph));
+          setHeaterGraphData(data.heater_graph.graph);
         }
         if (data.hasOwnProperty("admin_heaters")) {
-          dispatch(handleAddNewElement(data.admin_heaters));
+          loadElementBank(data.admin_heaters);
         }
         if (data.hasOwnProperty("received_admin")) {
-          dispatch(handleConfirmAddNewElement(data.received_admin.Add_Heater));
+          addElementToBank(data.received_admin.Add_Heater);
           if (data.received_admin.hasOwnProperty("gas_valve")) {
-            dispatch(setValveInputs({
+            setValveInputs({
               first: data.received_admin.gas_valve.initial_open,
               second: data.received_admin.gas_valve.min_open,
               third: data.received_admin.gas_valve.max_open,
-            }));
+            });
           }
         }
         if (data.hasOwnProperty("ssr_setting")) {
-          dispatch(setSSRSettings(data.ssr_setting));
+          setSSRSettings(data.ssr_setting);
         }
         if (data.hasOwnProperty("ssr_update")) {
-          const newSsrSetting = ssr_setting?.map((item) =>
+          const newSsrSetting = ssrSettings?.map((item) =>
           item?.No === data.ssr_update?.No ? data.ssr_update : item
         );
-        dispatch(setSSRSettings(newSsrSetting));
-          dispatch(setSSRUpdate(data.ssr_update));
+        setSSRSettings(newSsrSetting);
+          setSSRUpdate(data.ssr_update);
         }
         if (data.hasOwnProperty("received_thermocouple_setting")) {
-          dispatch(setReceivedThermocoupleSetting(data.received_thermocouple_setting));
+          addThermocoupleSetting(data.received_thermocouple_setting);
           const { fault_mode, count_down_time } = data.received_thermocouple_setting;
           const message = {
             ["1"]: "max heat for 12 h",
@@ -190,8 +202,8 @@ export default function useSocket() {
             ["3"]: "change and replace t/c",
           };
           if(message[fault_mode]){
-            dispatch(handleForceSelection(message[fault_mode]));
-            dispatch(handleTimerCountdown(count_down_time));
+            setEssSelectedForce(message[fault_mode]);
+            setEssCountDownTime(count_down_time);
           }
         }
         if (data.hasOwnProperty("electrical")) {
@@ -206,6 +218,6 @@ export default function useSocket() {
         socket.removeEventListener("message", event);
       };
     }
-  }, [settings, ssr_setting, receivedThermocoupleSetting]);
+  }, [settings, ssrSettings, receivedThermocoupleSetting]);
   return {};
 }

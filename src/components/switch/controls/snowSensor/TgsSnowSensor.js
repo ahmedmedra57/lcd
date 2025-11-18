@@ -1,12 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectEssSwitch } from '../../../../store/slices/essSwitchSlice';
-import {
-  selectTgsSwitch,
-  FanOnlyActivator,
-  activateTgsConflictMessage,
-  setDevicesConflicts,
-} from '../../../../store/slices/tgsSwitchSlice';
+import { useTgsSwitchStore } from '../../../../store/zustand';
 
 import {
   activeHole,
@@ -23,14 +16,16 @@ import {
   isTargetAlreadyRunning,
   updateDeviceInfo,
 } from '../../../../helpers/helpers';
-import { selectUserState } from '../../../../store/slices/userSlice';
+import { useUserStore } from '../../../../store/zustand';
 
 const TgsSnowSensor = () => {
-  const dispatch = useDispatch();
-  const state = useSelector(selectTgsSwitch);
-  const { gasInfo, settings, currentRunSystem } = state;
-  const userState = useSelector(selectUserState);
-  const { isGas } = userState;
+  const gasInfo = useTgsSwitchStore((state) => state.gasInfo);
+  const settings = useTgsSwitchStore((state) => state.settings);
+  const currentRunSystem = useTgsSwitchStore((state) => state.currentRunSystem);
+  const activateTgsConflictMessage = useTgsSwitchStore((state) => state.activateTgsConflictMessage);
+  const setDevicesConflicts = useTgsSwitchStore((state) => state.setDevicesConflicts);
+
+  const isGas = useUserStore((state) => state.isGas);
 
   const IMG_SRC = '/static/images/snow-Sensor-Program-Logo.svg';
 
@@ -53,15 +48,13 @@ const TgsSnowSensor = () => {
       return;
     }
     if (isAnotherSystemRunning('electrical', currentRunSystem)) {
-      dispatch(activateTgsConflictMessage());
-      dispatch(
-        setDevicesConflicts({
-          currentSwitch: 'tes-typhoon electric system',
-          DesiredSwitch: 'tgs-typhoon gas system',
-          systemTarget: 'gas',
-          commandTarget: 'snow_enabled',
-        })
-      );
+      activateTgsConflictMessage();
+      setDevicesConflicts({
+        currentSwitch: 'tes-typhoon electric system',
+        DesiredSwitch: 'tgs-typhoon gas system',
+        systemTarget: 'gas',
+        commandTarget: 'snow_enabled',
+      });
       return;
     }
     updateDeviceInfo('snow_enabled', newValue, 'gas_command');

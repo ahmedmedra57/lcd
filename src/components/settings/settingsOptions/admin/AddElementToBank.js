@@ -1,27 +1,22 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectSettingsOfEss } from '../../../../store/slices/settingsOfEssSlice';
+import { useSettingsStore } from '../../../../store/zustand';
+import { useSSRDescriptionStore } from '../../../../store/zustand';
 
 import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../../../styles/commonStyles';
 import { act } from '@testing-library/react';
 import InputKeyboard from '../../../keyboard/InputKeyboard';
 import InputKeyPad from '../../../keyboard/InputKeyPad';
-import {
-  handleAddNewElement,
-  selectDescription,
-} from '../../../../store/slices/ssrDescriptionSlice';
 import { SettingsContext } from '../../../../context/ContextOfSettings';
 import { useContext } from 'react';
 import SettingConfirmedMessage from '../../../userMessages/SettingConfirmedMessage';
 
 const AddElementToBank = () => {
   // Global states
-  const unitsState = useSelector(selectSettingsOfEss);
-  const { unitsMeasurement } = unitsState.buttonsOfSettings;
-  const descriptionState = useSelector(selectDescription);
-  const { partNumberSuggestions, lastAddedElement } = descriptionState;
-  const ssrPartsDescription = useSelector(selectDescription);
+  const unitsMeasurement = useSettingsStore((state) => state.buttonsOfSettings.unitsMeasurement);
+  const partNumberSuggestions = useSSRDescriptionStore((state) => state.partNumberSuggestions);
+  const lastAddedElement = useSSRDescriptionStore((state) => state.lastAddedElement);
+  const ssrPartsDescription = useSSRDescriptionStore((state) => state);
 
   // useContext
   const {
@@ -40,10 +35,9 @@ const AddElementToBank = () => {
   const [elementToBankDuplicatedMessage, setAddElementToBankDuplicatedMessage] =
     useState(false);
   const [messageBoxForBankInputs, setMessageBoxForBankInput] = useState(false);
-  // redux
-  const state = useSelector(selectSettingsOfEss);
-  const mode = state.interfaceMode;
-  const { settingsEditButton } = state.buttonsOfSettings;
+  // Zustand
+  const mode = useSettingsStore((state) => state.interfaceMode);
+  const settingsEditButton = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
 
   useEffect(() => {
     return setActivateKeypad(false), setActivateKeyboard(false);

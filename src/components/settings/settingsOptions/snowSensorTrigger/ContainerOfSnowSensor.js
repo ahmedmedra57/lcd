@@ -1,31 +1,17 @@
 import styled, { css } from 'styled-components';
 import { useEffect, useMemo, useState, useContext } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { flexboxCenter } from '../../../../styles/commonStyles';
 import SnowFactor from './SnowFactor';
-import {
-  setResetAllSettingsButtons,
-  setSettingsApplySnowSensorTriggerButton,
-  setSettingsCancelButton,
-  setSettingsEditButton,
-} from '../../../../store/slices/settingsOfEssSlice';
-import { selectUserState } from '../../../../store/slices/userSlice';
-import { selectSettingsOfEss } from '../../../../store/slices/settingsOfEssSlice';
+import { useSettingsStore } from '../../../../store/zustand';
+import { useUserStore } from '../../../../store/zustand';
+import { useTgsTesSettingsStore } from '../../../../store/zustand';
+import { useTgsSettingsStore } from '../../../../store/zustand';
+import { useTgsSwitchStore } from '../../../../store/zustand';
 import { SettingsContext } from '../../../../context/ContextOfSettings';
 import InvisibleDivForEditButton from '../editAndApplyMessageBoxes/InvisibleDivForEditButton';
 import EditCancelApplyButtons from '../EditCancelApplyButtons';
-import {
-  selectSettingsOfTgsTes,
-  setTgsTesSettingsApplySnowSensorButton,
-} from '../../../../store/slices/settingsOfTgsTesSlice';
-
 import SettingAppliedMessage from '../../../userMessages/SettingAppliedMessage';
-import {
-  SelectSettingsOfTgs,
-  setTgsSettingsApplySnowSensorButton,
-} from '../../../../store/slices/settingsOfTgsSlice';
 import { convertFahrenheitToCelsius,convertCelsiusToFahrenheit, updateSnowSensorSettingstempreture, updateSettingsValue } from '../../../../helpers/helpers';
-import { selectTgsSwitch } from '../../../../store/slices/tgsSwitchSlice';
 
 function ContainerOfSnowSensor() {
   const ess = ['ess-snow sensor trigger'];
@@ -52,26 +38,26 @@ function ContainerOfSnowSensor() {
   const [tempWarningContent, setTempWarningContent] = useState({});
   const [options, setOptions] = useState('');
 
-  // redux
-  const dispatch = useDispatch();
-  const state = useSelector(selectUserState);
-  const essState = useSelector(selectSettingsOfEss);
-  const tgsTesState = useSelector(selectSettingsOfTgsTes);
-  const tgsState = useSelector(SelectSettingsOfTgs);
-  const devicesState = useSelector(selectTgsSwitch);
-  const { settings } = devicesState;
-  const tesSwitch = state.isTesSwitch;
-  const essSwitch = state.isEssSwitch;
-  const editState = essState.buttonsOfSettings.settingsEditButton;
-  const mode = essState.interfaceMode;
-  const settingsEditButton = essState.buttonsOfSettings.settingsEditButton;
-  const unitsState = essState.buttonsOfSettings.unitsMeasurement;
-  const { essTemp, isFEss } = essState.snowSensorTemp;
-  const { tgsTemp, tesTemp, isFTgsTes } = tgsTesState.snowSensorTemp;
-  const { tgsTempOnly, isFTgs } = tgsState.snowSensorTemp;
+  // Zustand
+  const settings = useTgsSwitchStore((state) => state.settings);
+  const tesSwitch = useUserStore((state) => state.isTesSwitch);
+  const essSwitch = useUserStore((state) => state.isEssSwitch);
+  const editState = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const mode = useSettingsStore((state) => state.interfaceMode);
+  const settingsEditButton = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const unitsState = useSettingsStore((state) => state.buttonsOfSettings.unitsMeasurement);
+  const { essTemp, isFEss } = useSettingsStore((state) => state.snowSensorTemp);
+  const { tgsTemp, tesTemp, isFTgsTes } = useTgsTesSettingsStore((state) => state.snowSensorTemp);
+  const { tgsTempOnly, isFTgs } = useTgsSettingsStore((state) => state.snowSensorTemp);
+  const setResetAllSettingsButtons = useSettingsStore((state) => state.setResetAllSettingsButtons);
+  const setSettingsEditButton = useSettingsStore((state) => state.setSettingsEditButton);
+  const setSettingsCancelButton = useSettingsStore((state) => state.setSettingsCancelButton);
+  const setSettingsApplySnowSensorTriggerButton = useSettingsStore((state) => state.setSettingsApplySnowSensorTriggerButton);
+  const setTgsTesSettingsApplySnowSensorButton = useTgsTesSettingsStore((state) => state.setTgsTesSettingsApplySnowSensorButton);
+  const setTgsSettingsApplySnowSensorButton = useTgsSettingsStore((state) => state.setTgsSettingsApplySnowSensorButton);
   // sets back previous data entered in the input fields either in imperial or metric. if it was metric before and user changes the units, the input(s) will be converted.
   useEffect(() => {
-    dispatch(setResetAllSettingsButtons());
+    setResetAllSettingsButtons();
     if (essSwitch) {
       if (essTemp > 0) {
         if (unitsState === isFEss) {
@@ -154,10 +140,10 @@ function ContainerOfSnowSensor() {
     const buttonsIndex = Number(value);
     switch (buttonsIndex) {
       case 0:
-        dispatch(setSettingsEditButton());
+        setSettingsEditButton();
         break;
       case 1:
-        dispatch(setSettingsCancelButton());
+        setSettingsCancelButton();
         setEssSnowSensor(settings?.electrical_snow_threshold || '');
         break;
       case 2:
@@ -172,13 +158,11 @@ function ContainerOfSnowSensor() {
             return;
           }
           updateSettingsValue(settings, "electrical_snow_threshold", tempValue(essSnowSensor,settings?.unit))
-          dispatch(
-            setSettingsApplySnowSensorTriggerButton({
-              essSnowSensor,
-              isF: unitsState,
-            })
-          );
-          dispatch(setResetAllSettingsButtons());
+          setSettingsApplySnowSensorTriggerButton({
+            essSnowSensor,
+            isF: unitsState,
+          });
+          setResetAllSettingsButtons();
         }
         setMessageBox(true);
         handleSnowSensorMessageBox();
@@ -199,10 +183,10 @@ function ContainerOfSnowSensor() {
     const buttonsIndex = Number(value);
     switch (buttonsIndex) {
       case 0:
-        dispatch(setSettingsEditButton());
+        setSettingsEditButton();
         break;
       case 1:
-        dispatch(setSettingsCancelButton());
+        setSettingsCancelButton();
         setTesSnowSensor(settings?.electrical_snow_threshold || '');
         setTgsSnowSensor(settings?.blower_snow_threshold || '');
         break;
@@ -234,14 +218,12 @@ function ContainerOfSnowSensor() {
           updateSnowSensorSettingstempreture(settings,"blower_snow_threshold","electrical_snow_threshold",tempValue(tgsSnowSensor,settings?.unit),tempValue(tesSnowSensor,settings?.unit))
         }
         if(tgsSnowSensor||tesSnowSensor){
-          dispatch(setResetAllSettingsButtons());
-          dispatch(
-            setTgsTesSettingsApplySnowSensorButton({
-              tgsSnowSensor,
-              tesSnowSensor,
-              isF: unitsState,
-            })
-          );
+          setResetAllSettingsButtons();
+          setTgsTesSettingsApplySnowSensorButton({
+            tgsSnowSensor,
+            tesSnowSensor,
+            isF: unitsState,
+          });
         setMessageBox(true);
         handleSnowSensorMessageBox();
         }
@@ -256,22 +238,20 @@ function ContainerOfSnowSensor() {
     const buttonsIndex = Number(value);
     switch (buttonsIndex) {
       case 0:
-        dispatch(setSettingsEditButton());
+        setSettingsEditButton();
         break;
       case 1:
-        dispatch(setSettingsCancelButton());
+        setSettingsCancelButton();
         setTesSnowSensor('');
         setTgsSnowSensor('');
         break;
       case 2:
         if (typeof tgsSnowSensor === 'number') {
-          dispatch(setResetAllSettingsButtons());
-          dispatch(
-            setTgsSettingsApplySnowSensorButton({
-              tgsSnowSensor,
-              isF: unitsState,
-            })
-          );
+          setResetAllSettingsButtons();
+          setTgsSettingsApplySnowSensorButton({
+            tgsSnowSensor,
+            isF: unitsState,
+          });
         }
         setMessageBox(true);
         handleSnowSensorMessageBox();

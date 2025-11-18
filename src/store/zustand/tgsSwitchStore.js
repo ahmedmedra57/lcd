@@ -79,6 +79,24 @@ const useTgsSwitchStore = create(
         'tc-11',
       ],
 
+      // === SYSTEM INFO & TELEMETRY ===
+      gasInfo: {},
+      electricalInfo: {},
+      settings: {
+        heater_thermocouple_map: [7, 3, 1, 3, 1, 3, 1, 3],
+      },
+      ssrSettings: [],
+      ssrUpdate: null,
+      currentRunSystem: null,
+      ebp: null,
+
+      // === GRAPH DATA ===
+      tesGraphData: null,
+      gasGraphData: null,
+      outsideGraphData: null,
+      enclosureGraphData: null,
+      heaterGraphData: null,
+
       // ===== ACTIONS =====
 
       // Expand/Collapse
@@ -234,6 +252,34 @@ const useTgsSwitchStore = create(
 
       // Telemetry Updates
       updateTelemetry: (updates) => set(updates),
+
+      // System Info
+      setGasInfo: (info) => set({ gasInfo: info }),
+      setElectricalInfo: (info) => set({ electricalInfo: info }),
+      setSettings: (settings) => set({ settings }),
+      setCurrentRunSystem: (system) => set({ currentRunSystem: system }),
+      setEBP: (ebp) => set({ ebp }),
+
+      // SSR Settings
+      setSSRSettings: (settings) => {
+        if (settings?.[0]) {
+          const formattedData = settings.map(({ Heaters, ...restProps }) => ({
+            Heaters: Heaters.map((heater) =>
+              typeof heater === 'string' ? heater : heater?.heater
+            ),
+            ...restProps,
+          }));
+          set({ ssrSettings: formattedData });
+        }
+      },
+      setSSRUpdate: (update) => set({ ssrUpdate: update }),
+
+      // Graph Data
+      setTesGraphData: (data) => set({ tesGraphData: data }),
+      setGasGraphData: (data) => set({ gasGraphData: data }),
+      setOutsideGraphData: (data) => set({ outsideGraphData: data }),
+      setEnclosureGraphData: (data) => set({ enclosureGraphData: data }),
+      setHeaterGraphData: (data) => set({ heaterGraphData: data }),
 
       // Complete Reset
       resetAllFeatures: () =>

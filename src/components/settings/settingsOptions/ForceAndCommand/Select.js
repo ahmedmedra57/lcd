@@ -1,25 +1,22 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { selector } from '../../../store/slices/heaterStatusSlice';
-import { selectEssSwitch } from '../../../../store/slices/essSwitchSlice';
+import { useEssSwitchStore } from '../../../../store/zustand';
+import { useHeaterStatusStore } from '../../../../store/zustand';
 
 import styled from 'styled-components';
 import { flexboxCenter } from '../../../styles/commonStyles';
 
 import RadioBox from './RadioBox';
 import ConfirmButton from './ConfirmButton';
-import { useSelector } from 'react-redux';
 
 const Select = ({ data, id }) => {
-  const dispatch = useDispatch();
   const mode = JSON.parse(localStorage.getItem("themeMode"));
 
-  const state = useSelector(selectEssSwitch);
-  const { select } = state;
+  const select = useEssSwitchStore((state) => state.select);
+  const selector = useHeaterStatusStore((state) => state.selector);
 
   const [isClicked, setIsClicked] = useState(false);
   const [checked, setChecked] = useState(select[0]);
-  
+
   const handleChecked = (elem) => {
     setChecked(elem);
   };
@@ -28,7 +25,7 @@ const Select = ({ data, id }) => {
   };
 
   const onConfirmHandler = () => {
-    dispatch(selector({ id: `ssr${id}`, data: checked }));
+    selector({ id: `ssr${id}`, data: checked });
 
     displayOptions();
   };

@@ -1,6 +1,3 @@
-import { Provider as ProviderRedux } from 'react-redux';
-import store from './store/store';
-
 import styled from 'styled-components';
 
 import App from './App';
@@ -21,10 +18,8 @@ function RootApp() {
             event.preventDefault();
           }}
         >
-          
-          <ProviderRedux store={store}>
-            <App />
-          </ProviderRedux>
+          {/* Zustand doesn't require a Provider wrapper */}
+          <App />
         </Wrapper>
       </ErrorBoundary>
     </Provider>
