@@ -32,7 +32,8 @@ function ValveSettings({ setWarningMessage, setInputValue, inputValue }) {
   const [options, setOptions] = useState('');
 
   const mode = useSettingsStore((state) => state.interfaceMode);
-  const editState = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const buttonState = useSettingsStore((state) => state.buttonState);
+  const editState = buttonState === 'edit';
   const { locationName, switchName, application, switchSize, heatingSystem } = useSystemIdentificationStore((state) => state.sysIdentification);
   const gasType = useTgsSettingsStore((state) => state.gasType);
   const isEssSwitch = useUserStore((state) => state.isEssSwitch);

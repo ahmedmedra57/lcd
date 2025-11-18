@@ -5,7 +5,8 @@ import { flexboxCenter } from '../../../../../styles/commonStyles';
 function SelectGasType({ gasType, gasSelection, handleSelect, handleToggle }) {
   // zustand
   const mode = useSettingsStore((state) => state.interfaceMode);
-  const editState = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const buttonState = useSettingsStore((state) => state.buttonState);
+  const editState = buttonState === 'edit';
 
   return (
     <Wrapper>

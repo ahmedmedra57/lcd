@@ -24,7 +24,7 @@ import { useNavigate } from 'react-router-dom';
 const ConstantHeat = ({ isDisabled, setDisplayModeFaultMessageBox }) => {
   // Global states
   const thermocouple = useTgsSettingsStore((state) => state.thermocouple);
-  const unitsMeasurement = useSettingsStore((state) => state.buttonsOfSettings.unitsMeasurement);
+  const unitsMeasurement = useSettingsStore((state) => state.unitsMeasurement);
   const isTgsSwitchActivated = useTgsSwitchStore((state) => state.isTgsSwitchActivated);
   const settings = useTgsSwitchStore((state) => state.settings);
   const electricalInfo = useTgsSwitchStore((state) => state.electricalInfo);

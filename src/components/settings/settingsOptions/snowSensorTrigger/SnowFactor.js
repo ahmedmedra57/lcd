@@ -31,7 +31,8 @@ function SnowFactor({
   // Zustand
   const settings = useTgsSwitchStore((state) => state.settings);
   const defaultTemp = useTgsSwitchStore((state) => state.snowSensor.defaultTemp);
-  const settingsEditButton = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const buttonState = useSettingsStore((state) => state.buttonState);
+  const settingsEditButton = buttonState === 'edit';
   const mode = useSettingsStore((state) => state.interfaceMode);
   const tesSwitch = useUserStore((state) => state.isTesSwitch);
   const essSwitch = useUserStore((state) => state.isEssSwitch);

@@ -12,7 +12,7 @@ import SettingConfirmedMessage from '../../../userMessages/SettingConfirmedMessa
 
 const AddElementToBank = () => {
   // Global states
-  const unitsMeasurement = useSettingsStore((state) => state.buttonsOfSettings.unitsMeasurement);
+  const unitsMeasurement = useSettingsStore((state) => state.unitsMeasurement);
   const partNumberSuggestions = useHeaterStatusStore((state) => state.description?.partNumberSuggestions);
   const lastAddedElement = useHeaterStatusStore((state) => state.description?.lastAddedElement);
   const ssrPartsDescription = useHeaterStatusStore((state) => state.description);
@@ -36,7 +36,8 @@ const AddElementToBank = () => {
   const [messageBoxForBankInputs, setMessageBoxForBankInput] = useState(false);
   // Zustand
   const mode = useSettingsStore((state) => state.interfaceMode);
-  const settingsEditButton = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const buttonState = useSettingsStore((state) => state.buttonState);
+  const settingsEditButton = buttonState === 'edit';
 
   useEffect(() => {
     return setActivateKeypad(false), setActivateKeyboard(false);

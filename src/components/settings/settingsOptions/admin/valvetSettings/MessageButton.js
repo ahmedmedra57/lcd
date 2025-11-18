@@ -4,7 +4,8 @@ import { useSettingsStore } from '../../../../../store/zustand';
 
 const MessageButton = ({ name, buttonHandler }) => {
   const mode = useSettingsStore((state) => state.interfaceMode);
-  const editState = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const buttonState = useSettingsStore((state) => state.buttonState);
+  const editState = buttonState === 'edit';
 
   return (
     <WrapperHole onClick={editState && buttonHandler}>

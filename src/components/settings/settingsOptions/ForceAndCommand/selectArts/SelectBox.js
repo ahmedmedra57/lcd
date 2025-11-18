@@ -13,7 +13,8 @@ function SelectBox({
   essSwitch,
 }) {
   // zustand
-  const editState = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const buttonState = useSettingsStore((state) => state.buttonState);
+  const editState = buttonState === 'edit';
 
   return (
     <div>

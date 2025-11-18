@@ -67,8 +67,9 @@ function ContainerOfWindFactor() {
   const [messageBoxContent, setMessageBoxContent] = useState({});
 
   // Zustand
-  const unitsMeasurement = useSettingsStore((state) => state.buttonsOfSettings.unitsMeasurement);
-  const settingsEditButton = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const unitsMeasurement = useSettingsStore((state) => state.unitsMeasurement);
+  const buttonState = useSettingsStore((state) => state.buttonState);
+  const settingsEditButton = buttonState === 'edit';
   const setSettingsEditButton = useSettingsStore((state) => state.setSettingsEditButton);
   const setSettingsCancelButton = useSettingsStore((state) => state.setSettingsCancelButton);
   const setResetAllSettingsButtons = useSettingsStore((state) => state.setResetAllSettingsButtons);

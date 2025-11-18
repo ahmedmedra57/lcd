@@ -12,7 +12,8 @@ function ImperialMetricMeasurementReader({
   const { title, temp, energy, measure, gas, backgroundColor } = value;
   const is360 = backgroundColor === '360';
   const mode = useSettingsStore((state) => state.interfaceMode);
-  const settingsEditButton = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const buttonState = useSettingsStore((state) => state.buttonState);
+  const settingsEditButton = buttonState === 'edit';
 
   return (
     <div>

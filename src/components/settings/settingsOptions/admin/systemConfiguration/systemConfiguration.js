@@ -14,7 +14,8 @@ function SystemConfiguration() {
 
   // Zustand
   const mode = useSettingsStore((state) => state.interfaceMode);
-  const editState = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const buttonState = useSettingsStore((state) => state.buttonState);
+  const editState = buttonState === 'edit';
   const tesState = useUserStore((state) => state.isTesSwitch);
 
   // useContext

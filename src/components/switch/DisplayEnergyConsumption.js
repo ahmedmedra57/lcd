@@ -14,8 +14,7 @@ const DisplayEnergyConsumption = ({ deviceType, deviceInfo }) => {
   const ssState = useEssSwitchStore();
   const gsState = useTgsSwitchStore();
   const { isEssSwitch } = useUserStore();
-  const { buttonsOfSettings } = useSettingsStore();
-  const { unitsMeasurement } = buttonsOfSettings;
+  const unitsMeasurement = useSettingsStore((state) => state.unitsMeasurement);
   const location = useLocation();
 
   // const energyConsumption = isEssSwitch

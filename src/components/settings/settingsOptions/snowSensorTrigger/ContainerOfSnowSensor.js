@@ -43,10 +43,11 @@ function ContainerOfSnowSensor() {
   const settings = useTgsSwitchStore((state) => state.settings);
   const tesSwitch = useUserStore((state) => state.isTesSwitch);
   const essSwitch = useUserStore((state) => state.isEssSwitch);
-  const editState = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const buttonState = useSettingsStore((state) => state.buttonState);
+  const editState = buttonState === 'edit';
   const mode = useSettingsStore((state) => state.interfaceMode);
-  const settingsEditButton = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
-  const unitsState = useSettingsStore((state) => state.buttonsOfSettings.unitsMeasurement);
+  const settingsEditButton = buttonState === 'edit';
+  const unitsState = useSettingsStore((state) => state.unitsMeasurement);
   const { essTemp, isFEss } = useSettingsStore((state) => state.snowSensorTemp);
   const { tgsTemp, tesTemp, isFTgsTes, tgsTempOnly, isFTgs } = useTgsSettingsStore((state) => state.snowSensorTemp);
   const setResetAllSettingsButtons = useSettingsStore((state) => state.setResetAllSettingsButtons);

@@ -14,8 +14,7 @@ import { useMemo } from 'react';
 
 const DisplayStatus = ({ deviceInfo, deviceType }) => {
   // Add conditional statement to assignment values
-  const { buttonsOfSettings } = useSettingsStore();
-  const { unitsMeasurement } = buttonsOfSettings;
+  const unitsMeasurement = useSettingsStore((state) => state.unitsMeasurement);
   const { settings } = useTgsSwitchStore();
   const { isEssSwitch } = useUserStore();
   const location = useLocation();

@@ -5,8 +5,9 @@ import ApplyButtonInvisibleDiv from './editAndApplyMessageBoxes/ApplyButtonInvis
 
 function EditCancelApplyButtons({ handleClick, buttonsName }) {
   const mode = useSettingsStore((state) => state.interfaceMode);
-  const editState = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
-  const settingsApplyButton = useSettingsStore((state) => state.buttonsOfSettings.settingsApplyButton);
+  const buttonState = useSettingsStore((state) => state.buttonState);
+  const editState = buttonState === 'edit';
+  const settingsApplyButton = buttonState === 'apply';
 
   return (
     <ContainerButtons mode={mode}>

@@ -34,7 +34,7 @@ const TempAndButton = ({
   const [message, setMessage] = useState(null);
   const [temp, setTemp] = useState(false);
   const settings = useTgsSwitchStore((state) => state.settings);
-  const unitsMeasurement = useSettingsStore((state) => state.buttonsOfSettings.unitsMeasurement);
+  const unitsMeasurement = useSettingsStore((state) => state.unitsMeasurement);
   const thermocouple = useTgsSettingsStore((state) => state.thermocouple);
   const isEssSwitch = useUserStore((state) => state.isEssSwitch);
   const location = useLocation();

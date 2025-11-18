@@ -40,7 +40,8 @@ function ContainerOfAllSettingsSelectOptionsAndButtons() {
 
   // zustand
   const mode = useSettingsStore((state) => state.interfaceMode);
-  const applyState = useSettingsStore((state) => state.buttonsOfSettings.settingsApplyButton);
+  const buttonState = useSettingsStore((state) => state.buttonState);
+  const applyState = buttonState === 'apply';
   const essState = useUserStore((state) => state.isEssSwitch);
   const tesState = useUserStore((state) => state.isTesSwitch);
   const essHeaterTemp = useForceAndCommandStore((state) => state.essHeaterTemp);

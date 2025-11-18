@@ -22,8 +22,7 @@ import ScheduleCalendar from './ScheduleCalendar';
 const HeatingSchedule = ({ isDisabled, setDisplayModeFaultMessageBox }) => {
   const { heatingScheduleList, heatingScheduleBeReady, heatingScheduleClear, activateEsConflictMessage, addHeatingSchedule } = useEssSwitchStore();
   const { isTgsSwitchActivated, electricalInfo, displayTgsScheduleModal, activatedisplayTGSScheduleModal, deActivatedisplayTGSScheduleModal } = useTgsSwitchStore();
-  const { buttonsOfSettings } = useSettingsStore();
-  const { unitsMeasurement } = buttonsOfSettings;
+  const unitsMeasurement = useSettingsStore((state) => state.unitsMeasurement);
 
   // local
   const IMG_SRC = '/static/images/heating-Schedule-Program-Logo.svg';

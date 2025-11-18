@@ -23,8 +23,7 @@ import { convertCelsiusToFahrenheit } from '../../../helpers/helpers';
 import { useTheme } from 'styled-components';
 
 const Chart = () => {
-  const { buttonsOfSettings } = useSettingsStore();
-  const { unitsMeasurement } = buttonsOfSettings;
+  const unitsMeasurement = useSettingsStore((state) => state.unitsMeasurement);
   const { outsideGraphData, enclosureGraphData, heaterGraphData, gasGraphData, settings } = useTgsSwitchStore();
   const { sysIdentification } = useSystemIdentificationStore();
   const { isGas } = useUserStore();

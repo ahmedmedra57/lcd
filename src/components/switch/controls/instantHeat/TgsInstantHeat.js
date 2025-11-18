@@ -38,7 +38,7 @@ const TgsInstantHeat = () => {
   const inputRef = useRef();
   const navigate = useNavigate();
 
-  const unitsMeasurement = useSettingsStore((state) => state.buttonsOfSettings.unitsMeasurement);
+  const unitsMeasurement = useSettingsStore((state) => state.unitsMeasurement);
   const isEsSwitchActivated = useEssSwitchStore((state) => state.isEsSwitchActivated);
   const isEssSwitch = useUserStore((state) => state.isEssSwitch);
 

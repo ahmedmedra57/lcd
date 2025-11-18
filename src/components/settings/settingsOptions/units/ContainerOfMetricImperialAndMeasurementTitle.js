@@ -47,9 +47,10 @@ function ContainerOfMetricImperialAndMeasurementTitle() {
   const [metricImperialToggle, setMetricImperialToggle] = useState(0);
   // Zustand
   const mode = useSettingsStore((state) => state.interfaceMode);
-  const settingsEditButton = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
-  const unitsMeasurement = useSettingsStore((state) => state.buttonsOfSettings.unitsMeasurement);
-  const cancelState = useSettingsStore((state) => state.buttonsOfSettings.settingsCancelButton);
+  const buttonState = useSettingsStore((state) => state.buttonState);
+  const settingsEditButton = buttonState === 'edit';
+  const unitsMeasurement = useSettingsStore((state) => state.unitsMeasurement);
+  const cancelState = buttonState === 'cancel';
   const setSettingsEditButton = useSettingsStore((state) => state.setSettingsEditButton);
   const setSettingsCancelButton = useSettingsStore((state) => state.setSettingsCancelButton);
   const setSettingsApplyUnitsButton = useSettingsStore((state) => state.setSettingsApplyUnitsButton);

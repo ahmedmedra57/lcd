@@ -34,7 +34,8 @@ function CurrentEncloseAndBurningTemp({
   const [selectBoxCss, setSelectBoxCss] = useState(false)
   const isEssSwitch = useUserStore((state) => state.isEssSwitch);
   // zustand
-  const editState = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const buttonState = useSettingsStore((state) => state.buttonState);
+  const editState = buttonState === 'edit';
   const settings = useTgsSwitchStore((state) => state.settings);
   // redux state for radioBox Selection
   const tgsTesEncloseTemp = selectTcState.tgsTesEncloseTemp.select;

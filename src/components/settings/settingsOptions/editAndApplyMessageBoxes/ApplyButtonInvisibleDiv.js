@@ -5,7 +5,8 @@ import SettingClearOkMessage from './SettingClearOkMessage';
 
 function ApplyButtonInvisibleDiv() {
   // zustand
-  const clearState = useSettingsStore((state) => state.buttonsOfSettings.settingsClearButton);
+  const buttonState = useSettingsStore((state) => state.buttonState);
+  const clearState = buttonState === 'idle';
   const setSettingsCancelButton = useSettingsStore((state) => state.setSettingsCancelButton);
 
   const [display, setDisplay] = useState(false);

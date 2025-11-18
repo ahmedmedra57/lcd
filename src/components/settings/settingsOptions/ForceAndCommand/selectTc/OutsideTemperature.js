@@ -38,7 +38,8 @@ function OutsideTemperature({
   const greyTriangle = mode? './static/images/greyTriangle_light.svg':'./static/images/greyTriangle.svg';
   const essSwitch = useUserStore((state) => state.isEssSwitch);
   const settings = useTgsSwitchStore((state) => state.settings);
-  const editState = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const buttonState = useSettingsStore((state) => state.buttonState);
+  const editState = buttonState === 'edit';
 
   const essOutsideTemp = selectTcState.essOutsideTemp.select;
   const tgsTesOutsideTemp = selectTcState.tgsTesOutsideTemp.select;

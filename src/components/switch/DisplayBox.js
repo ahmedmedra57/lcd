@@ -9,8 +9,7 @@ import {
 import { flexboxCenter } from '../../styles/commonStyles';
 
 const DisplayBox = ({ currData, label, unit, name, option }) => {
-  const { buttonsOfSettings } = useSettingsStore();
-  const { unitsMeasurement } = buttonsOfSettings;
+  const unitsMeasurement = useSettingsStore((state) => state.unitsMeasurement);
 
   const { isEssSwitch } = useUserStore();
   const { settings } = useTgsSwitchStore();

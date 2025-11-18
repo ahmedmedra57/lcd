@@ -7,7 +7,7 @@ import {
 } from '../../../styles/commonStyles';
 
 const InputTemp = ({ isEnable, setTemp }) => {
-  const unitsMeasurement = useSettingsStore((state) => state.buttonsOfSettings.unitsMeasurement);
+  const unitsMeasurement = useSettingsStore((state) => state.unitsMeasurement);
 
   const handleOnChange = (event) => {
     const value = event.target.value;

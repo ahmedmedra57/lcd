@@ -55,8 +55,9 @@ function ContainerOfForceAndCommand() {
   const essSwitch = useUserStore((state) => state.isEssSwitch);
   const tesSwitch = useUserStore((state) => state.isTesSwitch);
   const mode = useSettingsStore((state) => state.interfaceMode);
-  const settingsEditButton = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
-  const settingsApplyButton = useSettingsStore((state) => state.buttonsOfSettings.settingsApplyButton);
+  const buttonState = useSettingsStore((state) => state.buttonState);
+  const settingsEditButton = buttonState === 'edit';
+  const settingsApplyButton = buttonState === 'apply';
   const atsEssState = useSettingsStore((state) => state.selectAtsState);
   const atsTesState = useTgsSettingsStore((state) => state.allSelects.selectAtsTesState);
   const atsTgsState = useTgsSettingsStore((state) => state.allSelects.selectAtsTgsState);
