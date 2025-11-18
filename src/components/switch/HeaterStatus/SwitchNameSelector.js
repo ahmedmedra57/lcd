@@ -5,7 +5,6 @@ import { flexboxCenter } from "../../../styles/commonStyles";
 import InputKeyboard from "../../keyboard/InputKeyboard";
 import SwitchNameButton from "./SwitchNameButton";
 import SwitchNameRadioBox from "./SwitchNameRadioBox";
-import { switchNameSelect } from "../../../store/slices/constantData";
 import { updateHeaterSSr } from "../../../helpers/helpers";
 
 const SwitchNameSelector = ({ id, data, switchNamesList }) => {
