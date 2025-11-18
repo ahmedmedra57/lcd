@@ -1,26 +1,17 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useLoaderData, useLocation } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-import { selectSettingsOfEss } from '../../../store/slices/settingsOfEssSlice';
-import { selectSettingsOfTgsTes } from '../../../store/slices/settingsOfTgsTesSlice';
-import { selectTgsSwitch } from '../../../store/slices/tgsSwitchSlice';
-import { selectUnitsState } from '../../../store/slices/unitsSlice';
-import { selectUserState } from '../../../store/slices/userSlice';
+import { useSettingsStore, useTgsSettingsStore, useTgsSwitchStore, useUserStore } from '../../../store/zustand';
 import { flexboxCenter } from '../../../styles/commonStyles';
 import InputTempMessage from '../../userMessages/InputTempMessage';
 
 const DefaultTemp = ({ defaultTemp }) => {
-  const unitsState = useSelector(selectSettingsOfEss);
-  const { unitsMeasurement } = unitsState.buttonsOfSettings;
+  const unitsMeasurement = useSettingsStore((state) => state.unitsMeasurement);
   const [displayMessage, setDisplayMessage] = useState(false);
 
-  const userState = useSelector(selectUserState);
-  const { isEssSwitch } = userState;
-  const settingState = useSelector(selectSettingsOfTgsTes);
-  const { thermocouple } = settingState;
-  const systemData = useSelector(selectTgsSwitch);
-  const { settings } = systemData;
+  const isEssSwitch = useUserStore((state) => state.isEssSwitch);
+  const thermocouple = useTgsSettingsStore((state) => state.thermocouple);
+  const settings = useTgsSwitchStore((state) => state.settings);
   const location = useLocation();
   const [disabled, setDisabled] = useState(false);
   useEffect(() => {

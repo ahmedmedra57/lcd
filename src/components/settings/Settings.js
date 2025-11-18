@@ -3,8 +3,7 @@ import styled from 'styled-components';
 import { flexboxCenter } from '../../styles/commonStyles';
 import Titles from './headings/Titles';
 import SettingsOptionsAndInterfaceMode from './settingsOptions/SettingsOptionsAndInterfaceMode';
-import { useSelector } from 'react-redux';
-import { selectSettingsOfEss } from '../../store/slices/settingsOfEssSlice';
+import { useSettingsStore } from '../../store/zustand';
 import TitleOfAllSettings from './headings/TitleOfAllSettings';
 import ContainerOfMetricImperialAndMeasurementTitle from './settingsOptions/units/ContainerOfMetricImperialAndMeasurementTitle';
 import ContainerOfWindFactor from './settingsOptions/windFactorTrigger/ContainerOfWindFactor';
@@ -15,14 +14,14 @@ import TitleOfSelectUnitsOfMeasurement from './settingsOptions/units/TitleOfSele
 import SettingsProvider from '../../context/ContextOfSettings';
 
 const Settings = () => {
-  const state = useSelector(selectSettingsOfEss);
-  const mode = state.interfaceMode;
+  const mode = useSettingsStore((state) => state.interfaceMode);
+  const allSettingsOptions = useSettingsStore((state) => state.allSettingsOptions);
   const {
     settingsOptionsUnits,
     settingsOptionsWindFactor,
     settingsOptionsSnowFactor,
     settingsOptionsForceAndCommand,
-  } = state.allSettingsOptions;
+  } = allSettingsOptions;
 
   const flexStart = true;
 

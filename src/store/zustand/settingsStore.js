@@ -135,6 +135,10 @@ const useSettingsStore = create(
 
         // Units Measurement
         setUnitsMeasurement: (unit) => set({ unitsMeasurement: unit }),
+        setUnitsMeasurementFromBoolean: (isFahrenheit) =>
+          set({
+            unitsMeasurement: isFahrenheit ? TEMP_UNIT.FAHRENHEIT : TEMP_UNIT.CELSIUS,
+          }),
         toggleUnitsMeasurement: () =>
           set((state) => ({
             unitsMeasurement:

@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { selectFaults } from "../../store/slices/faultsSlice";
-import { selectSettingsOfEss } from "../../store/slices/settingsOfEssSlice";
-import { selectTgsSwitch } from "../../store/slices/tgsSwitchSlice";
-import { selectUserState } from "../../store/slices/userSlice";
+import { useFaultsStore } from "../../store/faultsStore";
+import { useSettingsStore } from "../../store/settingsStore";
+import { useTgsSwitchStore } from "../../store/tgsSwitchStore";
+import { useUserStore } from "../../store/userStore";
 
 import { flexboxCenter } from "../../styles/commonStyles";
 import ApplyButtonInvisibleDiv from "../settings/settingsOptions/editAndApplyMessageBoxes/ApplyButtonInvisibleDiv";
@@ -12,20 +11,18 @@ import ApplyButtonInvisibleDiv from "../settings/settingsOptions/editAndApplyMes
 import SidebarButton from "./SidebarButton";
 
 const Sidebar = () => {
-  const faultsState = useSelector(selectFaults);
+  const { ess, tgs } = useFaultsStore();
   const faults =
-    faultsState.ess.message.length > 0 || faultsState.tgs.message.length > 0;
+    ess.message.length > 0 || tgs.message.length > 0;
 
-  const userState = useSelector(selectUserState);
-  const state = useSelector(selectSettingsOfEss);
-  const systemData = useSelector(selectTgsSwitch);
-  const { settings, electricalFaults, gasFaults } = systemData;
-  const mode = state.interfaceMode;
-  const applyState = state.buttonsOfSettings.settingsApplyButton;
-  const { isTesSwitch } = userState;
-  const tesSwitch = userState.isTesSwitch;
-  const essSwitch = userState.isEssSwitch;
-  const initialState = userState.isEssSwitch
+  const { isTesSwitch, isEssSwitch } = useUserStore();
+  const { interfaceMode, buttonsOfSettings } = useSettingsStore();
+  const { settings, electricalFaults, gasFaults } = useTgsSwitchStore();
+  const mode = interfaceMode;
+  const applyState = buttonsOfSettings.settingsApplyButton;
+  const tesSwitch = isTesSwitch;
+  const essSwitch = isEssSwitch;
+  const initialState = isEssSwitch
     ? {
         ess: true,
         alarm: false,
@@ -95,13 +92,13 @@ const Sidebar = () => {
 
   const alarmSrc = useMemo(() => {
     if (essSwitch) {
-      return faultsState.ess.message.length > 0 ? alarmFaults : alarmNoFaults;
+      return ess.message.length > 0 ? alarmFaults : alarmNoFaults;
     }
-    return faultsState.ess.message.length > 0 ||
-      faultsState.tgs.message.length > 0
+    return ess.message.length > 0 ||
+      tgs.message.length > 0
       ? alarmFaults
       : alarmNoFaults;
-  }, [settings, faultsState.ess.message, faultsState.tgs.message, isActivated]);
+  }, [settings, ess.message, tgs.message, isActivated, essSwitch, alarmFaults, alarmNoFaults]);
 
   const settingSrc = isActivated.setting
     ? mode? "/static/images/setting_light_active.svg" : "/static/images/setting-button-active.svg"

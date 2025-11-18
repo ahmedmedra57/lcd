@@ -7,11 +7,10 @@ import GasTypeConfirmButton from './GasTypeConfirmButton';
 import GasTypeHeader from './GasTypeHeader';
 import SelectGasType from './SelectGasType';
 import { updateDeviceInfo } from '../../../../../helpers/helpers';
-import { useSelector } from 'react-redux';
-import { selectTgsSwitch } from '../../../../../store/slices/tgsSwitchSlice';
+import { useTgsSwitchStore } from '../../../../../store/zustand';
 
 function ContainerSelectGasType() {
-  const { gasInfo } = useSelector(selectTgsSwitch);
+  const gasInfo = useTgsSwitchStore((state) => state.gasInfo);
   const gasType = ['lp-propane', 'ng-natural gas'];
 
   // useContext

@@ -1,17 +1,11 @@
 import { useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import styled, { css } from 'styled-components';
 import {
   convertCelsiusToFahrenheit,
   isAnotherSystemRunning,
   updateDeviceInfo,
 } from '../../../../helpers/helpers';
-import {
-  activateTgsConflictMessage,
-  selectTgsSwitch,
-  setDevicesConflicts,
-} from '../../../../store/slices/tgsSwitchSlice';
-import { selectUserState } from '../../../../store/slices/userSlice';
+import { useTgsSwitchStore, useUserStore } from '../../../../store/zustand';
 import {
   activeHole,
   activeLayer1,
@@ -24,12 +18,17 @@ import InputTempMessage from '../../../userMessages/InputTempMessage';
 import { useNavigate } from 'react-router-dom';
 
 const SnowSensor = ({ deviceInfo, isDisabled, setDisplayModeFaultMessageBox }) => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const systemData = useSelector(selectTgsSwitch);
-  const { settings, currentRunSystem, EBP, electricalInfo, gasInfo } = systemData;
-  const userState = useSelector(selectUserState);
-  const { isEssSwitch, isGas } = userState;
+  const settings = useTgsSwitchStore((state) => state.settings);
+  const currentRunSystem = useTgsSwitchStore((state) => state.currentRunSystem);
+  const EBP = useTgsSwitchStore((state) => state.EBP);
+  const electricalInfo = useTgsSwitchStore((state) => state.electricalInfo);
+  const gasInfo = useTgsSwitchStore((state) => state.gasInfo);
+  const activateTgsConflictMessage = useTgsSwitchStore((state) => state.activateTgsConflictMessage);
+  const setDevicesConflicts = useTgsSwitchStore((state) => state.setDevicesConflicts);
+
+  const isEssSwitch = useUserStore((state) => state.isEssSwitch);
+  const isGas = useUserStore((state) => state.isGas);
   const [displayMessageBox, setDisplayMessageBox] = useState(false);
   const [displayMessageBoxConfirm, setDisplayMessageBoxConfirm] = useState(false);
   const [message, setMessage] = useState(['']);
@@ -81,15 +80,13 @@ const SnowSensor = ({ deviceInfo, isDisabled, setDisplayModeFaultMessageBox }) =
       return;
     }
     if (isAnotherSystemRunning(isGas ? 'electrical' : 'gas', currentRunSystem)) {
-      dispatch(activateTgsConflictMessage());
-      dispatch(
-        setDevicesConflicts({
-          currentSwitch: isGas ? 'tes-typhoon electric system' : 'tgs-typhoon gas system',
-          DesiredSwitch: isGas ? 'tgs-typhoon gas system' : 'tes-typhoon electrical system',
-          systemTarget: isGas ? 'gas' : 'electrical',
-          commandTarget: 'snow_enabled',
-        })
-      );
+      activateTgsConflictMessage();
+      setDevicesConflicts({
+        currentSwitch: isGas ? 'tes-typhoon electric system' : 'tgs-typhoon gas system',
+        DesiredSwitch: isGas ? 'tgs-typhoon gas system' : 'tes-typhoon electrical system',
+        systemTarget: isGas ? 'gas' : 'electrical',
+        commandTarget: 'snow_enabled',
+      });
       return;
     }
     const newValue = (isReady === true) ? 0 : 1;

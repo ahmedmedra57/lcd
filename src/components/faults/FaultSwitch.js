@@ -1,16 +1,5 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  handleDisplayForceMessageBox,
-  handleDisplayForceSelectionBox,
-  handleEsAttendButtonClick,
-  handleEsFaultsReset,
-  handleForceButtonClick,
-  handleGsAttendButtonClick,
-  handleGsFaultsReset,
-  selectFaults,
-  setReceivedThermocoupleSetting,
-} from '../../store/slices/faultsSlice';
+import { useFaultsStore } from '../../store/zustand';
 
 import { flexboxCenter } from '../../styles/commonStyles';
 import styled, { css } from 'styled-components';
@@ -36,13 +25,20 @@ const FaultSwitch = ({
   const [displayCommentBox, setDisplayCommentBox] = useState(false);
   const [faultsIndexNumber, setFaultsIndexNumber] = useState(null);
   const [selectedTcNo,setSelectedTcNo]=useState(null)
-  const faultsState = useSelector(selectFaults);
-  const { receivedThermocoupleSetting } = faultsState;
-  const { displayForceSelectionBox, displayForceMessageBox } = faultsState.ess;
+  const receivedThermocoupleSetting = useFaultsStore((state) => state.receivedThermocoupleSetting);
+  const displayForceSelectionBox = useFaultsStore((state) => state.ess.displayForceSelectionBox);
+  const displayForceMessageBox = useFaultsStore((state) => state.ess.displayForceMessageBox);
+  const handleDisplayForceMessageBox = useFaultsStore((state) => state.handleDisplayForceMessageBox);
+  const handleDisplayForceSelectionBox = useFaultsStore((state) => state.handleDisplayForceSelectionBox);
+  const handleEsAttendButtonClick = useFaultsStore((state) => state.handleEsAttendButtonClick);
+  const handleEsFaultsReset = useFaultsStore((state) => state.handleEsFaultsReset);
+  const handleForceButtonClick = useFaultsStore((state) => state.handleForceButtonClick);
+  const handleGsAttendButtonClick = useFaultsStore((state) => state.handleGsAttendButtonClick);
+  const handleGsFaultsReset = useFaultsStore((state) => state.handleGsFaultsReset);
+  const setReceivedThermocoupleSetting = useFaultsStore((state) => state.setReceivedThermocoupleSetting);
   const [attendFaultsNumber,setAttendFaultsNumber]=useState(null);
   const isFaults = message.length > 0;
   const mode = JSON.parse(localStorage.getItem("themeMode"));
-  const dispatch = useDispatch();
   const imgSrcNormal = isTesSwitch
     ? name === 'ess'
       ? '/static/images/fault-ess-normal.svg'
@@ -105,26 +101,26 @@ const FaultSwitch = ({
     if (buttonName === 'attend') {
       // display comment box
       if (switchName === 'tgs') {
-        dispatch(handleGsAttendButtonClick(faultsTypeIdx));
+        handleGsAttendButtonClick(faultsTypeIdx);
       } else {
-        dispatch(handleEsAttendButtonClick(faultsTypeIdx));
+        handleEsAttendButtonClick(faultsTypeIdx);
       }
       setAttendFaultsNumber(faultNumber-1)
       setFaultsIndexNumber(faultsTypeIdx);
       setDisplayCommentBox(true);
     } else if (buttonName === 'force') {
       // 1. make the button click state true for the styling
-      dispatch(handleForceButtonClick(true));
+      handleForceButtonClick(true);
       setSelectedTcNo(faultNumber)
       // 2. display select force box
-      dispatch(handleDisplayForceSelectionBox(true));
+      handleDisplayForceSelectionBox(true);
     } else {
       // buttonName === 'reset'
       // 1. send to reset to backend
       // 2. remove all the faults in the faults slice    
-      setResetBtnActivated(true)  
+      setResetBtnActivated(true)
       if (switchName === 'tes'||switchName === 'ess') {
-        dispatch(handleEsFaultsReset(column));
+        handleEsFaultsReset(column);
         resetFault('electrical_command', {
           [faultKey(faultMessageArray[0] + " " + faultMessageArray[1]).noKey]:
             faultNumber - 1,
@@ -133,11 +129,11 @@ const FaultSwitch = ({
         });
 
         if ((faultMessageArray[0] + " " + faultMessageArray[1]) === 'THERMOCOUPLE FAILURE') {
-          dispatch(setReceivedThermocoupleSetting(faultNumber - 1));
+          setReceivedThermocoupleSetting(faultNumber - 1);
         }
       } else {
         // switchName === 'tgs'
-        dispatch(handleGsFaultsReset(column));
+        handleGsFaultsReset(column);
         if ((faultMessageArray[0] + " " + faultMessageArray[1]) === 'THERMOCOUPLE FAILURE') {
           resetFault('gas_command', { thermocouple_fault_reset: 0 });
         } else {
@@ -219,16 +215,16 @@ const FaultSwitch = ({
       {displayForceSelectionBox && (
         <SelectForce
           title='thermocouple failure'
-          handleClose={() => dispatch(handleDisplayForceSelectionBox(false))}
+          handleClose={() => handleDisplayForceSelectionBox(false)}
           handleAlertMessageBox={() =>
-            dispatch(handleDisplayForceMessageBox(true))
+            handleDisplayForceMessageBox(true)
           }
           selectedTcNo={selectedTcNo}
         />
       )}
       {displayForceMessageBox && (
         <SettingConfirmedMessage
-          onClose={() => dispatch(handleDisplayForceMessageBox(false))}
+          onClose={() => handleDisplayForceMessageBox(false)}
           title='thermocouple failure'
           alert={true}
           src={'/static/images/heater-off-alert.svg'}

@@ -1,15 +1,12 @@
 import styled, { css } from 'styled-components';
-import { useSelector, useDispatch } from 'react-redux';
-import { selectSettingsOfEss } from '../../../store/slices/settingsOfEssSlice';
+import { useSettingsStore } from '../../../store/zustand';
 import Button from './Button';
 import ApplyButtonInvisibleDiv from './editAndApplyMessageBoxes/ApplyButtonInvisibleDiv';
 
 function EditCancelApplyButtons({ handleClick, buttonsName }) {
-  const state = useSelector(selectSettingsOfEss);
-  const mode = state.interfaceMode;
-  const dispatch = useDispatch();
-  const editState = state.buttonsOfSettings.settingsEditButton;
-  const settingsApplyButton = state.buttonsOfSettings.settingsApplyButton;
+  const mode = useSettingsStore((state) => state.interfaceMode);
+  const editState = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const settingsApplyButton = useSettingsStore((state) => state.buttonsOfSettings.settingsApplyButton);
 
   return (
     <ContainerButtons mode={mode}>

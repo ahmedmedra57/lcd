@@ -1,15 +1,14 @@
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
-import { selectSettingsOfEss } from '../../../store/slices/settingsOfEssSlice';
+import { useSettingsStore } from '../../../store/zustand';
 
 function TitleOfAllSettings() {
-  const state = useSelector(selectSettingsOfEss);
+  const allSettingsOptions = useSettingsStore((state) => state.allSettingsOptions);
   const {
     settingsOptionsUnits,
     settingsOptionsWindFactor,
     settingsOptionsSnowFactor,
     settingsOptionsForceAndCommand,
-  } = state.allSettingsOptions;
+  } = allSettingsOptions;
 
   const settingsTitles = settingsOptionsUnits
     ? 'units settings'

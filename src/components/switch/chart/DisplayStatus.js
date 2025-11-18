@@ -1,24 +1,21 @@
-import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { selectUserState } from '../../../store/slices/userSlice';
+import { useUserStore } from '../../../store/userStore';
 
 import styled from 'styled-components';
 
 import DisplayBox from './../DisplayBox';
 
-import { selectSettingsOfEss } from '../../../store/slices/settingsOfEssSlice';
+import { useSettingsStore } from '../../../store/settingsStore';
 import { convertCelsiusToFahrenheit } from '../../../helpers/helpers';
 import { useMemo } from 'react';
-import { selectTgsSwitch } from '../../../store/slices/tgsSwitchSlice';
+import { useTgsSwitchStore } from '../../../store/tgsSwitchStore';
 
 const DisplayStatus = ({ deviceInfo, deviceType }) => {
   // Add conditional statement to assignment values
-  const unitsState = useSelector(selectSettingsOfEss);
-  const { unitsMeasurement } = unitsState.buttonsOfSettings;
-  const systemData = useSelector(selectTgsSwitch);
-  const { settings } = systemData;
-  const state = useSelector(selectUserState);
-  const { isEssSwitch } = state;
+  const { buttonsOfSettings } = useSettingsStore();
+  const { unitsMeasurement } = buttonsOfSettings;
+  const { settings } = useTgsSwitchStore();
+  const { isEssSwitch } = useUserStore();
   const location = useLocation();
 
   const onSwtich = useMemo(() => {

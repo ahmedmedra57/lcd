@@ -6,21 +6,14 @@ import {
   // alignItemsFlexStart,
 } from '../../../../styles/commonStyles';
 import { useContext, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import useSettingsStore from '../../../../store/zustand/settingsStore';
+import useUserStore from '../../../../store/zustand/userStore';
+import useTgsSwitchStore from '../../../../store/zustand/tgsSwitchStore';
+import useHeaterStatusStore from '../../../../store/zustand/heaterStatusStore';
+import useTgsSettingsStore from '../../../../store/zustand/tgsSettingsStore';
 import SystemHeader from './SystemHeader';
 // import Control from './sysControl/Control';
-import {
-  selectSettingsOfEss,
-  setResetAllSettingsButtons,
-  setSettingsCancelButton,
-  setSettingsEditButton,
-} from '../../../../store/slices/settingsOfEssSlice';
 import ContainerLogin from '../../../adminPassword/ContainerLogin';
-import {
-  handleTesSwitch,
-  selectUserState,
-  setAdminAccess,
-} from '../../../../store/slices/userSlice';
 import ContainerValveSettings from './valvetSettings/ContainerValvetSettings';
 import Thermocouple from './sysControl/Thermocouple';
 import ForceGasElectricSystem from './sysControl/ForceGasElectricSystem';
@@ -29,19 +22,10 @@ import AddElementToBank from './AddElementToBank';
 import InvisibleDivForEditButton from '../editAndApplyMessageBoxes/InvisibleDivForEditButton';
 
 import EditCancelApplyButtons from '../EditCancelApplyButtons';
-import {
-  selectSettingsOfTgsTes,
-  setGasType,
-  setThermocouple,
-  setValveInputs,
-} from '../../../../store/slices/settingsOfTgsTesSlice';
 import { SettingsContext } from '../../../../context/ContextOfSettings';
-import { handleAddNewElement } from '../../../../store/slices/ssrDescriptionSlice';
-import { setForceGasAndElectricSystem } from '../../../../store/slices/settingsOfSysSlice';
 
 import SettingAppliedMessage from '../../../userMessages/SettingAppliedMessage';
 import ApplyButtonInvisibleDiv from '../editAndApplyMessageBoxes/ApplyButtonInvisibleDiv';
-import { selectTgsSwitch } from '../../../../store/slices/tgsSwitchSlice';
 import {
   addAdminHeater,
   updateDeviceInfo,
@@ -75,24 +59,16 @@ function ContainerOfAdmin() {
     'tes - simulate faults',
   ];
 
-  // Redux
-  const dispatch = useDispatch();
-  const state = useSelector(selectUserState);
-  const essState = useSelector(selectSettingsOfEss);
-  const tgsTesState = useSelector(selectSettingsOfTgsTes);
-  const systemData = useSelector(selectTgsSwitch);
-  const { settings, gasInfo } = systemData;
-  const adminAccess = state.isAdministrator;
-  const essSwitch = state.isEssSwitch;
-  const tesSwitch = state.isTesSwitch;
+  // Zustand stores
+  const { isAdministrator: adminAccess, isEssSwitch: essSwitch, isTesSwitch: tesSwitch, setAdminAccess, setTesSwitch } = useUserStore();
+  const { buttonState, interfaceMode: mode } = useSettingsStore();
+  const { settings, gasInfo } = useTgsSwitchStore();
+  const { addElementToBank } = useHeaterStatusStore();
+  const { gasType, valveInputs, setGasType, setValveInputs, setThermocouple } = useTgsSettingsStore();
 
-  const settingsEditButton = essState.buttonsOfSettings.settingsEditButton;
-  const settingsApplyButton = essState.buttonsOfSettings.settingsApplyButton;
-  const mode = essState.interfaceMode;
-  const sysIdentificationData = essState.sysIdentification;
-
-  const gasType = tgsTesState.gasType;
-  const valveInputs = tgsTesState.valveInputs;
+  const settingsEditButton = buttonState === 'edit';
+  const settingsApplyButton = buttonState === 'apply';
+  const sysIdentificationData = settings?.switch_panels?.[0] || {};
 
   // the names of 3 main buttons to make changes
   const buttonsName = ['edit', 'cancel', 'apply'];
@@ -179,12 +155,11 @@ function ContainerOfAdmin() {
   const systemConfiguration = JSON.stringify(settings?.system_configuration);
   useEffect(() => {
     setOptionsSysConfiguration(systemConfiguration?.includes('TES') ? true : false);
-    dispatch(handleTesSwitch(systemConfiguration?.includes('TES') ? true : false));
-  }, [systemConfiguration]);
+    setTesSwitch(systemConfiguration?.includes('TES') ? true : false);
+  }, [systemConfiguration, setTesSwitch]);
 
   // useEffect sets back the selections to previous selection
   useEffect(() => {
-    dispatch(setResetAllSettingsButtons());
     setToggleSysButton(sysButtonActive);
     setForceGasAndElectric(false);
     setGasSelection(gasType ? 1 : 0);
@@ -192,7 +167,7 @@ function ContainerOfAdmin() {
     setGasTypeButtonColor(false);
     setSaveButtonColor(false);
     return function cleanup() {
-      dispatch(setAdminAccess(false));
+      setAdminAccess(false);
     };
   }, []);
 
@@ -281,7 +256,7 @@ function ContainerOfAdmin() {
     const buttonsIndex = Number(value);
     switch (buttonsIndex) {
       case 0:
-        dispatch(setSettingsEditButton());
+        // setEditMode();
         break;
       case 1:
         setInputElement({
@@ -294,17 +269,17 @@ function ContainerOfAdmin() {
         });
         setToggleThermocoupleSwitch(settings?.tc_mode === 1 ? false : true);
         setCheckPrevThermocoupleState(settings?.tc_mode === 1 ? false : true);
-        dispatch(setSettingsCancelButton());
+        // setCancelMode();
         setSaveButtonColor(false);
         setSaveButtonName('save');
         break;
       case 2:
         setMessageBox(true);
         handleEssMessageBox();
-        dispatch(setResetAllSettingsButtons());
+        // resetButtons();
         if (toggleThermocoupleSwitch !== checkPrevThermocoupleState) {
           setCheckPrevThermocoupleState(!checkPrevThermocoupleState);
-          dispatch(setThermocouple(toggleThermocoupleSwitch));
+          setThermocouple(toggleThermocoupleSwitch);
           updateDeviceInfo(
             'tc_mode',
             toggleThermocoupleSwitch === false ? 1 : 0,
@@ -323,7 +298,7 @@ function ContainerOfAdmin() {
             voltage: '',
             lengths: '',
           });
-          dispatch(handleAddNewElement(inputElement));
+          addElementToBank(inputElement);
         }
         break;
       default:
@@ -336,10 +311,10 @@ function ContainerOfAdmin() {
     const buttonsIndex = Number(value);
     switch (buttonsIndex) {
       case 0:
-        dispatch(setSettingsEditButton());
+        // setEditMode();
         break;
       case 1:
-        dispatch(setSettingsCancelButton());
+        // setCancelMode();
         setSysIdentification(false);
         setInputData({
           locationName: sysIdentificationData.locationName || '',
@@ -395,7 +370,7 @@ function ContainerOfAdmin() {
         }
         setMessageBox(true);
         handleEssSysMessageBox();
-        dispatch(setResetAllSettingsButtons());
+        // resetButtons();
         break;
       default:
         return;
@@ -407,10 +382,10 @@ function ContainerOfAdmin() {
     const buttonsIndex = Number(value);
     switch (buttonsIndex) {
       case 0:
-        dispatch(setSettingsEditButton());
+        // setEditMode();
         break;
       case 1:
-        dispatch(setSettingsCancelButton());
+        // setCancelMode();
         setValveButtonColor(false);
         setGasTypeButtonColor(false);
         setValveButtonName('confirm');
@@ -425,7 +400,7 @@ function ContainerOfAdmin() {
         break;
       case 2:
         if (gasTypeButtonColor) {
-          dispatch(setGasType(activeSelect));
+          setGasType(activeSelect);
           setGasTypeButtonColor(false);
           setGasButtonName('confirm');
           updateDeviceInfo(
@@ -435,7 +410,7 @@ function ContainerOfAdmin() {
           );
         }
         if (valveButtonColor) {
-          dispatch(setValveInputs(inputValue));
+          setValveInputs(inputValue);
           setValveButtonColor(false);
           setValveButtonName('confirm');
           updateDeviceInfo(
@@ -449,18 +424,14 @@ function ContainerOfAdmin() {
           );
         }
         if (sysIdentification) {
-          // dispatch(handleAdditionalSystemIdentification(inputData));
-
           setSysIdentification(false);
         }
         if (sysIdentification) {
-          // dispatch(handleAdditionalSystemIdentification(inputData));
-
           setSysIdentification(false);
         }
         setMessageBox(true);
         handleTgsMessageBox();
-        dispatch(setResetAllSettingsButtons());
+        // resetButtons();
         break;
       default:
         return;
@@ -472,7 +443,7 @@ function ContainerOfAdmin() {
     const buttonsIndex = Number(value);
     switch (buttonsIndex) {
       case 0:
-        dispatch(setSettingsEditButton());
+        // setEditMode();
         break;
       case 1:
         setInputElement({
@@ -485,17 +456,17 @@ function ContainerOfAdmin() {
         });
         setToggleThermocoupleSwitch(settings?.tc_mode === 1 ? false : true);
         setCheckPrevThermocoupleState(settings?.tc_mode === 1 ? false : true);
-        dispatch(setSettingsCancelButton());
+        // setCancelMode();
         setSaveButtonColor(false);
         setSaveButtonName('save');
         break;
       case 2:
         setMessageBox(true);
         handleTesMessageBox();
-        dispatch(setResetAllSettingsButtons());
+        // resetButtons();
         if (toggleThermocoupleSwitch !== checkPrevThermocoupleState) {
           setCheckPrevThermocoupleState(!checkPrevThermocoupleState);
-          dispatch(setThermocouple(toggleThermocoupleSwitch));
+          setThermocouple(toggleThermocoupleSwitch);
           updateDeviceInfo(
             'tc_mode',
             toggleThermocoupleSwitch === false ? 1 : 0,
@@ -514,16 +485,12 @@ function ContainerOfAdmin() {
             voltage: '',
             lengths: '',
           });
-          dispatch(handleAddNewElement(inputElement));
+          addElementToBank(inputElement);
         }
         if (sysIdentification) {
-          // dispatch(handleAdditionalSystemIdentification(inputData));
-
           setSysIdentification(false);
         }
         if (sysIdentification) {
-          // dispatch(handleAdditionalSystemIdentification(inputData));
-
           setSysIdentification(false);
         }
         break;
@@ -537,15 +504,15 @@ function ContainerOfAdmin() {
     const buttonsIndex = Number(value);
     switch (buttonsIndex) {
       case 0:
-        dispatch(setSettingsEditButton());
+        // setEditMode();
         break;
       case 1:
-        dispatch(setSettingsCancelButton());
+        // setCancelMode();
         setForceGasAndElectric(false);
         // setButtonNames(['edit system', 'save']);
         setSysIdentification(false);
         setOptionsSysConfiguration(settings?.system_configuration?.includes('TES') ? true : false);
-        dispatch(handleTesSwitch(settings?.system_configuration?.includes('TES') ? true : false));
+        setTesSwitch(settings?.system_configuration?.includes('TES') ? true : false);
         setSysConfiguration(false);
         setConfigurationButtonName('save');
         setToggleEnableDisableSwitch(
@@ -563,7 +530,7 @@ function ContainerOfAdmin() {
         break;
       case 2:
         if (forceGasElectric) {
-          dispatch(setForceGasAndElectricSystem(forceGasElectric));
+          // setForceGasAndElectricSystem(forceGasElectric);
           setForceGasAndElectric(false);
           updateDeviceInfo(
             'force',
@@ -618,14 +585,14 @@ function ContainerOfAdmin() {
         }
         if (sysConfiguration) {
           updateDeviceInfo('system_configuration', optionsSysConfiguration ? ["TGS", "TES"] : ["TGS"], 'setting_command');
-          dispatch(handleTesSwitch(optionsSysConfiguration));
+          setTesSwitch(optionsSysConfiguration);
           setSysConfiguration(false);
           setConfigurationButtonName('save');
         }
 
         setMessageBox(true);
         handleSysMessageBox();
-        dispatch(setResetAllSettingsButtons());
+        // resetButtons();
         break;
       default:
         return;

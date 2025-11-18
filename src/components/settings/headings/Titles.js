@@ -1,10 +1,8 @@
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
-import { selectSettingsOfEss } from '../../../store/slices/settingsOfEssSlice';
+import { useSettingsStore } from '../../../store/zustand';
 
 function Titles({ name }) {
-  const state = useSelector(selectSettingsOfEss);
-  const mode = state.interfaceMode;
+  const mode = useSettingsStore((state) => state.interfaceMode);
 
   return (
     <>

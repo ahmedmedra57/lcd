@@ -2,12 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { flexboxCenter } from '../../styles/commonStyles';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  setAdminAccess,
-  selectUserState,
-  handlePasswordPropagation,
-} from '../../store/slices/userSlice';
+import useUserStore from '../../store/zustand/userStore';
 import { useRef } from 'react';
 import { useEffect } from 'react';
 import InputKeyboard from '../keyboard/InputKeyboard';
@@ -18,12 +13,9 @@ function ContainerLogin({ setIsSettingOpen, isReadyToClose }) {
   const [passwordInput, setPasswordInput] = useState('');
   const [showErrorMessage, setShowErrorMessage] = useState(false);
 
-  // redux
-  const state = useSelector(selectUserState);
-  const adminAccess = state.isAdministrator;
+  // zustand
+  const { isAdministrator: adminAccess, adminPassword, setAdminAccess } = useUserStore();
   const [openKeyboard, setOpenKeyboard] = useState(false);
-  const { adminPassword } = state;
-  const dispatch = useDispatch();
   const inputRef = useRef();
 
   useEffect(() => {
@@ -44,7 +36,7 @@ function ContainerLogin({ setIsSettingOpen, isReadyToClose }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (passwordInput === adminPassword.toLowerCase()) {
-      dispatch(setAdminAccess(true));
+      setAdminAccess(true);
       setShowErrorMessage(false);
       isReadyToClose && setIsSettingOpen(true);
     } else {
@@ -55,7 +47,7 @@ function ContainerLogin({ setIsSettingOpen, isReadyToClose }) {
 
   const handleKeyboardSubmit = () => {
     if (passwordInput === adminPassword.toLowerCase()) {
-      dispatch(setAdminAccess(true));
+      setAdminAccess(true);
       setShowErrorMessage(false);
       isReadyToClose && setIsSettingOpen(true);
     } else {

@@ -2,13 +2,12 @@ import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../../../../styles/commonStyles';
 import { useState, useContext } from 'react';
 import ValveConfirmButton from './ValveConfirmButton';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectSettingsOfEss } from '../../../../../store/slices/settingsOfEssSlice';
+import { useSettingsStore } from '../../../../../store/zustand';
+import { useSystemIdentificationStore } from '../../../../../store/zustand';
+import { useTgsTesSettingsStore } from '../../../../../store/zustand';
+import { useUserStore } from '../../../../../store/zustand';
 import InputKeyPad from '../../../../keyboard/InputKeyPad';
 import { SettingsContext } from '../../../../../context/ContextOfSettings';
-import { selectSystemIdentification } from '../../../../../store/slices/settingSystemIdentificationSlice';
-import { selectSettingsOfTgsTes } from '../../../../../store/slices/settingsOfTgsTesSlice';
-import { selectUserState } from '../../../../../store/slices/userSlice';
 import { updateDeviceInfo } from '../../../../../helpers/helpers';
 
 function ValveSettings({ setWarningMessage, setInputValue, inputValue }) {
@@ -30,17 +29,12 @@ function ValveSettings({ setWarningMessage, setInputValue, inputValue }) {
   const [inputFocus, setInputFocus] = useState(null);
   const [options, setOptions] = useState('');
 
-  const dispatch = useDispatch();
-  const state = useSelector(selectSettingsOfEss);
-  const systemIdentification = useSelector(selectSystemIdentification);
-  const tgsTesSettingState = useSelector(selectSettingsOfTgsTes);
-  const userState = useSelector(selectUserState);
-  const mode = state.interfaceMode;
-  const editState = state.buttonsOfSettings.settingsEditButton;
-  const { locationName, switchName, application, switchSize, heatingSystem } =
-    systemIdentification.sysIdentification;
-  const { gasType } = tgsTesSettingState;
-  const { isEssSwitch, isTesSwitch } = userState;
+  const mode = useSettingsStore((state) => state.interfaceMode);
+  const editState = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const { locationName, switchName, application, switchSize, heatingSystem } = useSystemIdentificationStore((state) => state.sysIdentification);
+  const gasType = useTgsTesSettingsStore((state) => state.gasType);
+  const isEssSwitch = useUserStore((state) => state.isEssSwitch);
+  const isTesSwitch = useUserStore((state) => state.isTesSwitch);
 
   // Ess, Tgs and TgsTes names of the machine. it will indicate which machine depending on input datas of the system identification
   const EssSwitchName =

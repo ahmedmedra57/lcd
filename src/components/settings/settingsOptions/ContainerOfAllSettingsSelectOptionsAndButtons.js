@@ -1,47 +1,18 @@
 import styled from 'styled-components';
 import { useContext, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import {
+  useSettingsStore,
+  useTgsSettingsStore,
+  useUserStore,
+  useForceAndCommandStore,
+  useEssSwitchStore,
+  useTgsSwitchStore
+} from '../../../store/zustand';
 import { flexboxCenter } from '../../../styles/commonStyles';
 import TitleOfSettingsOptions from './TitleOfSettingsOptions';
 import AllTheSelectionsOfSettingsOptions from './AllTheSelectionsOfSettingsOptions';
-import {
-  selectSettingsOfEss,
-  setSettingsEditButton,
-  setSettingsCancelButton,
-  setSettingsApplyUnitsButton,
-  setSettingsApplyWindFactorTriggerButton,
-  setSettingsApplySnowSensorTriggerButton,
-  setSettingsApplyForceCommandButton,
-  setEditButtonToFalse,
-  setCancelButtonToFalse,
-  setApplyButtonToFalse,
-  setApplyButtonToTrue,
-} from '../../../store/slices/settingsOfEssSlice';
-import {
-  setTgsSettingsEditButton,
-  setTgsSettingsCancelButton,
-  setTgsSettingsApplyUnitsButton,
-  setTgsSettingsApplySnowSensorButton,
-  setTgsSettingsApplyForceAndCommandButton,
-  setTgsSettingsApplyAdminButton,
-} from '../../../store/slices/settingsOfTgsSlice';
-import {
-  setTgsTesSettingsEditButton,
-  setTgsTesSettingsCancelButton,
-  setTgsTesSettingsApplyUnitsButton,
-  setTgsTesSettingsApplySnowSensorButton,
-  setTgsTesSettingsApplyForceAndCommandButton,
-  setTgsTesSettingsApplyAdminButton,
-} from '../../../store/slices/settingsOfTgsTesSlice';
 import EditCancelApplyButtons from './EditCancelApplyButtons';
-import {
-  handleTesSwitch,
-  selectUserState,
-} from '../../../store/slices/userSlice';
 import { SettingsContext } from '../../../context/ContextOfSettings';
-import { handleSnowSensorDefaultTemp } from '../../../store/slices/essSwitchSlice';
-import { selectForceAndCommand } from '../../../store/slices/forceAndCommandSlice';
-import { handleTgsSnowSensorDefaultTemp } from '../../../store/slices/tgsSwitchSlice';
 import ApplyButtonInvisibleDiv from './editAndApplyMessageBoxes/ApplyButtonInvisibleDiv';
 
 function ContainerOfAllSettingsSelectOptionsAndButtons() {
@@ -67,23 +38,19 @@ function ContainerOfAllSettingsSelectOptionsAndButtons() {
   const buttonsName = ['edit', 'cancel', 'apply'];
   const [settingsState, setSettingsState] = useState('units');
 
-  // redux
-  const dispatch = useDispatch();
-  const state = useSelector(selectSettingsOfEss);
-  const mode = state.interfaceMode;
-  const applyState = state.buttonsOfSettings.settingsApplyButton;
-  const essTesState = useSelector(selectUserState);
-  const essState = essTesState.isEssSwitch;
-  const tesState = essTesState.isTesSwitch;
-  const forceCommandState = useSelector(selectForceAndCommand);
-  const essHeaterTemp = forceCommandState.essHeaterTemp;
-  const essEncloseTemp = forceCommandState.essEncloseTemp;
-  const essOutsideTemp = forceCommandState.essOutsideTemp;
-  const tgsTesOutsideTemp = forceCommandState.tgsTesOutsideTemp;
-  const burningChamberTemp = forceCommandState.burningChamberTemp;
-  const tgsHeaterTemp = forceCommandState.tgsHeaterTemp;
-  const tgsTesEncloseTemp = forceCommandState.tgsTesEncloseTemp;
-  const tesHeaterTemp = forceCommandState.tesHeaterTemp;
+  // zustand
+  const mode = useSettingsStore((state) => state.interfaceMode);
+  const applyState = useSettingsStore((state) => state.buttonsOfSettings.settingsApplyButton);
+  const essState = useUserStore((state) => state.isEssSwitch);
+  const tesState = useUserStore((state) => state.isTesSwitch);
+  const essHeaterTemp = useForceAndCommandStore((state) => state.essHeaterTemp);
+  const essEncloseTemp = useForceAndCommandStore((state) => state.essEncloseTemp);
+  const essOutsideTemp = useForceAndCommandStore((state) => state.essOutsideTemp);
+  const tgsTesOutsideTemp = useForceAndCommandStore((state) => state.tgsTesOutsideTemp);
+  const burningChamberTemp = useForceAndCommandStore((state) => state.burningChamberTemp);
+  const tgsHeaterTemp = useForceAndCommandStore((state) => state.tgsHeaterTemp);
+  const tgsTesEncloseTemp = useForceAndCommandStore((state) => state.tgsTesEncloseTemp);
+  const tesHeaterTemp = useForceAndCommandStore((state) => state.tesHeaterTemp);
 
   
 

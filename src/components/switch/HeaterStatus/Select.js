@@ -7,9 +7,8 @@ import {
 import SelectButton from './SelectButton';
 import RadioBox from './RadioBox';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { selector } from '../../../store/slices/heaterStatusSlice';
-import { selectTgsSwitch } from '../../../store/slices/tgsSwitchSlice';
+import useHeaterStatusStore from '../../../store/zustand/heaterStatusStore';
+import useTgsSwitchStore from '../../../store/zustand/tgsSwitchStore';
 import { updateSettingsValue } from '../../../helpers/helpers';
 const select = [
   'tc-01',
@@ -25,13 +24,12 @@ const select = [
   'tc-11',
 ];
 const Select = ({ data, id, isEnable, isClicked, handleOpenSelectBox }) => {
-  const dispatch = useDispatch();
-  const systemData = useSelector(selectTgsSwitch);
-  const { settings } = systemData;
+  const { setSSRSelector } = useHeaterStatusStore();
+  const { settings } = useTgsSwitchStore();
   const [checked, setChecked] = useState(data || select[0]);
   const mode = JSON.parse(localStorage.getItem("themeMode"));
   const onSelectHandler = () => {
-    dispatch(selector({ id: `ssr${id}`, data: checked }));
+    setSSRSelector(`ssr${id}`, checked);
     const newValue = settings?.heater_thermocouple_map.map((value, index) => {
       if (index === id - 1) {
         return Number(checked.slice(3));

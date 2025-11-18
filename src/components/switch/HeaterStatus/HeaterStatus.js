@@ -1,12 +1,8 @@
 // APIs
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { selectSSRState } from "../../../store/slices/heaterStatusSlice";
-import { selectFaults } from "../../../store/slices/faultsSlice";
-import {
-  handleDisplaySSRDetails,
-  selectUserState,
-} from "../../../store/slices/userSlice";
+import { useHeaterStatusStore } from "../../../store/heaterStatusStore";
+import { useFaultsStore } from "../../../store/faultsStore";
+import { useUserStore } from "../../../store/userStore";
 
 // Styling
 import styled, { css } from "styled-components";
@@ -17,30 +13,22 @@ import ApplyButton from "../controls/ApplyButton";
 import SSRButton from "./SSRButton";
 import SSRDetail from "./SSRDetail";
 import ContainerLogin from "../../adminPassword/ContainerLogin";
-import {
-  selectTgsSwitch,
-  setSSRSettings,
-} from "../../../store/slices/tgsSwitchSlice";
-import { selectDescription } from "../../../store/slices/ssrDescriptionSlice";
+import { useTgsSwitchStore } from "../../../store/tgsSwitchStore";
 
 const HeaterStatus = () => {
-  const ssrState = useSelector(selectSSRState);
-  const faultsState = useSelector(selectFaults);
-  const userState = useSelector(selectUserState);
-  const { isExpanded, isAdministrator } = userState;
-  const systemData = useSelector(selectTgsSwitch);
+  const ssrState = useHeaterStatusStore((state) => state);
+  const { receivedThermocoupleSetting } = useFaultsStore();
+  const { isExpanded, isAdministrator, handleDisplaySSRDetails } = useUserStore();
   const {
     electricalInfo,
     electricalFaults,
     settings,
     ssr_setting,
     ssr_update,
-  } = systemData;
+  } = useTgsSwitchStore();
   const isFaults =
     electricalFaults.length > 0 && electricalInfo?.on_switch === 1;
-  const descriptionState = useSelector(selectDescription);
-  const { elementsOptions } = descriptionState;
-  const dispatch = useDispatch();
+  const { elementsOptions } = useHeaterStatusStore((state) => state.description);
 
   const [isUpdating, setIsUpdating] = useState(false);
   const [localHeaters, setLocalHeaters] = useState(settings?.activated_heaters);
@@ -253,8 +241,8 @@ const HeaterStatus = () => {
 
   const onExpand = useCallback((event) => {
     event?.preventDefault();
-    dispatch(handleDisplaySSRDetails());
-  }, [dispatch]);
+    handleDisplaySSRDetails();
+  }, [handleDisplaySSRDetails]);
 
   const handleSettingOption = () => {
     window.alert("setting");

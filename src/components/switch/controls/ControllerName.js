@@ -1,14 +1,13 @@
 import styled, { css } from 'styled-components';
 import { updateDeviceInfo } from '../../../helpers/helpers';
-import { selectTgsSwitch } from '../../../store/slices/tgsSwitchSlice';
-import { useSelector } from "react-redux";
+import { useTgsSwitchStore } from '../../../store/zustand';
 
 const gas='gas';
 const electrical='electrical';
 
 const ControllerName = ({ name, imgSrc, isEnable, type }) => {
-  const systemData = useSelector(selectTgsSwitch);
-  const { electricalInfo, gasInfo } = systemData;
+  const electricalInfo = useTgsSwitchStore((state) => state.electricalInfo);
+  const gasInfo = useTgsSwitchStore((state) => state.gasInfo);
   const triggerSnowSensor=()=>{
     const newGasValue=gasInfo?.snow_trigger===1?0:1;
     const newElectricalValue=electricalInfo?.snow_trigger===1?0:1;

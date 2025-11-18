@@ -1,10 +1,9 @@
-import { useSelector } from 'react-redux';
 import { useEffect, useMemo, useState } from 'react';
-import { selectFaults } from '../../store/slices/faultsSlice';
+import { useFaultsStore } from '../../store/faultsStore';
+import { useTgsSwitchStore } from '../../store/tgsSwitchStore';
 import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../styles/commonStyles';
 import { countdownTimer } from '../../helpers/helpers';
-import { selectTgsSwitch } from '../../store/slices/tgsSwitchSlice';
 
 const FaultsDetailButton = ({
   name,
@@ -15,11 +14,10 @@ const FaultsDetailButton = ({
   buttonNum,
   faultContents,
 }) => {
-  const faultsState = useSelector(selectFaults);
-  const { receivedThermocoupleSetting } = faultsState;
-  const { isForceButtonClicked } = faultsState.ess;
-  const { attendButtonClicked } = name === 'tgs' ? faultsState.tgs : faultsState.ess;
-  const { ssr_setting } = useSelector(selectTgsSwitch);
+  const { receivedThermocoupleSetting, ess, tgs } = useFaultsStore();
+  const { isForceButtonClicked } = ess;
+  const { attendButtonClicked } = name === 'tgs' ? tgs : ess;
+  const { ssr_setting } = useTgsSwitchStore();
   const titleFault = faultContents.split(' ').slice(0,2).join(' ');
 
   const [countdown, setCountdown] = useState(null);

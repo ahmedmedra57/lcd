@@ -1,14 +1,8 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Label } from 'recharts';
 
 import styled, { css } from 'styled-components';
-import {
-  handleEsAttendButtonClick,
-  handleEsRecordActionTaken,
-  handleGsAttendButtonClick,
-  selectFaults,
-} from '../../store/slices/faultsSlice';
+import { useFaultsStore } from '../../store/faultsStore';
 import { flexboxCenter } from '../../styles/commonStyles';
 import InputKeyboard from '../keyboard/InputKeyboard';
 import SettingConfirmedMessage from '../userMessages/SettingConfirmedMessage';
@@ -17,9 +11,9 @@ import CommentButton from './CommentButton';
 import { socket } from '../../adapters/socket';
 
 const FaultsComments = ({ handleClose, faultsIndexNumber, name,attendFaultsNumber }) => {
-  const faultsState = useSelector(selectFaults);
+  const { tgs, ess, handleEsAttendButtonClick, handleEsRecordActionTaken, handleGsAttendButtonClick } = useFaultsStore();
   const { faultsTypes, actionTaken } =
-    name === 'tgs' ? faultsState.tgs : faultsState.ess;
+    name === 'tgs' ? tgs : ess;
 
 
   const initialInputState = {
@@ -33,7 +27,6 @@ const FaultsComments = ({ handleClose, faultsIndexNumber, name,attendFaultsNumbe
   const [activateMessageBox, setActivateMessageBox] = useState(false);
   const [message, setMessage] = useState(null);
 
-  const dispatch = useDispatch();
   const faultType = faultsTypes[faultsIndexNumber];
   const faultTypeToSendFormat = (faultType) => {
     switch (faultType) {
@@ -61,7 +54,7 @@ const FaultsComments = ({ handleClose, faultsIndexNumber, name,attendFaultsNumbe
     if (userName && comments) {
       if (name === `tgs`) {
         // 1. dispatch remove attend button clicked
-        dispatch(handleGsAttendButtonClick(null));
+        handleGsAttendButtonClick(null);
         // 2. dispatch to tgs with faultsIndexNumber
         await socket.send(
           JSON.stringify({
@@ -75,9 +68,9 @@ const FaultsComments = ({ handleClose, faultsIndexNumber, name,attendFaultsNumbe
         );
       } else {
         // 1. dispatch remove attend button clicked
-        dispatch(handleEsAttendButtonClick(null));
+        handleEsAttendButtonClick(null);
         // 2. dispatch to tes with faultsIndexNumber
-        dispatch(handleEsRecordActionTaken({ faultsIndexNumber, inputData }));
+        handleEsRecordActionTaken({ faultsIndexNumber, inputData });
         await socket.send(
           JSON.stringify({
             attend: {

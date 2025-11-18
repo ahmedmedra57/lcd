@@ -12,23 +12,20 @@ import moment from 'moment';
 
 import { flexboxCenter } from '../../../styles/commonStyles';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
-import { selectSystemIdentification } from '../../../store/slices/settingSystemIdentificationSlice';
-import { selectSettingsOfEss } from '../../../store/slices/settingsOfEssSlice';
-import { selectTgsSwitch } from '../../../store/slices/tgsSwitchSlice';
+import { useSystemIdentificationStore } from '../../../store/systemIdentificationStore';
+import { useSettingsStore } from '../../../store/settingsStore';
+import { useTgsSwitchStore } from '../../../store/tgsSwitchStore';
 import { useMemo } from 'react';
-import { selectUserState } from '../../../store/slices/userSlice';
+import { useUserStore } from '../../../store/userStore';
 import { convertCelsiusToFahrenheit } from '../../../helpers/helpers';
 import { useTheme } from 'styled-components';
 
 const Chart = () => {
-  const unitsState = useSelector(selectSettingsOfEss);
-  const { unitsMeasurement } = unitsState.buttonsOfSettings;
-  const systemData = useSelector(selectTgsSwitch);
-  const { outsideGraphData, enclosureGraphData, heaterGraphData, gasGraphData, settings } = systemData;
-  const sysState = useSelector(selectSystemIdentification);
-  const { sysIdentification } = sysState;
-  const { isGas } = useSelector(selectUserState)
+  const { buttonsOfSettings } = useSettingsStore();
+  const { unitsMeasurement } = buttonsOfSettings;
+  const { outsideGraphData, enclosureGraphData, heaterGraphData, gasGraphData, settings } = useTgsSwitchStore();
+  const { sysIdentification } = useSystemIdentificationStore();
+  const { isGas } = useUserStore();
   const theme = useTheme();
 
   const isThermocouple = useMemo(() => {

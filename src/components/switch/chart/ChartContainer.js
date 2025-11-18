@@ -1,7 +1,6 @@
-import { useSelector } from 'react-redux';
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { selectFaults } from '../../../store/slices/faultsSlice';
+import { useFaultsStore } from '../../../store/faultsStore';
 
 import { flexboxCenter } from '../../../styles/commonStyles';
 import styled, { css } from 'styled-components';
@@ -17,18 +16,17 @@ import DisplayEnergyConsumption from '../DisplayEnergyConsumption';
 function ChartContainer( { mode, ...rest } ) {
   const deviceType = rest?.deviceType;
   const deviceInfo = rest?.deviceInfo;
-  const faultsState = useSelector(selectFaults);
-  const { receivedThermocoupleSetting } = faultsState;
+  const { receivedThermocoupleSetting, ess, tgs } = useFaultsStore();
 
   const navigate = useNavigate();
-  const displayForce = receivedThermocoupleSetting.length > 0 
-                        && Array.isArray(deviceInfo.thermocouple_fault) 
+  const displayForce = receivedThermocoupleSetting.length > 0
+                        && Array.isArray(deviceInfo.thermocouple_fault)
                         && deviceInfo.thermocouple_fault?.includes(1);
   const location = useLocation();
   // const [faultsMessages, setFaultsMessages] = useState([]);
 
-  const essFault = faultsState.ess.message.length > 0;
-  const tgsFault = faultsState.tgs.message.length > 0;
+  const essFault = ess.message.length > 0;
+  const tgsFault = tgs.message.length > 0;
 
   const isFaults =
     rest?.deviceType === 'electrical'

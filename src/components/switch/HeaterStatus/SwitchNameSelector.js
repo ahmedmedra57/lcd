@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import styled, { css } from "styled-components";
-import { changeSwitchName } from "../../../store/slices/heaterStatusSlice";
+import useHeaterStatusStore from "../../../store/zustand/heaterStatusStore";
 import { flexboxCenter } from "../../../styles/commonStyles";
 import InputKeyboard from "../../keyboard/InputKeyboard";
 import SwitchNameButton from "./SwitchNameButton";
@@ -11,7 +10,7 @@ import { updateHeaterSSr } from "../../../helpers/helpers";
 
 const SwitchNameSelector = ({ id, data, switchNamesList }) => {
   // id is the column number to identify the column e.g 1 === first column
-  const dispatch = useDispatch();
+  const { setSSRSwitchName } = useHeaterStatusStore();
   const switchSystemName = switchNamesList?.find((item) => item?.switch_system_id === data?.switch_system_id)
 
   const [isClicked, setIsClicked] = useState(false);
@@ -62,14 +61,9 @@ const SwitchNameSelector = ({ id, data, switchNamesList }) => {
   // };
 
   const handleDispatchSwitchName = () => {
-    // dispatch with switchInputName and checked states WITH ID
+    // update switch name in Zustand store
+    setSSRSwitchName(`ssr${id}`, switchName || '');
 
-    dispatch(
-      changeSwitchName({
-        id: `ssr${id}`,
-        name: switchName || '',
-      })
-    );
     switchName &&
       updateHeaterSSr({
         ssr_setting: {

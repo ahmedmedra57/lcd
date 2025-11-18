@@ -1,5 +1,4 @@
-import { useSelector } from 'react-redux';
-import { selectSystemIdentification } from '../store/slices/settingSystemIdentificationSlice';
+import { useSystemIdentificationStore } from '../store/systemIdentificationStore';
 
 import styled from 'styled-components';
 import {
@@ -8,22 +7,19 @@ import {
 } from '../styles/commonStyles';
 
 import DateAndWeather from './DateAndWeather';
-import { selectSettingsOfTgsTes } from '../store/slices/settingsOfTgsTesSlice';
-import { selectUserState } from '../store/slices/userSlice';
-import { selectSettingsOfEss } from '../store/slices/settingsOfEssSlice';
-import { selectTgsSwitch } from '../store/slices/tgsSwitchSlice';
+import { useTgsTesSettingsStore } from '../store/tgsTesSettingsStore';
+import { useUserStore } from '../store/userStore';
+import { useSettingsStore } from '../store/settingsStore';
+import { useTgsSwitchStore } from '../store/tgsSwitchStore';
 
 const Header = () => {
-  const systemIdentificationState = useSelector(selectSystemIdentification);
-  const userState = useSelector(selectUserState);
-  const tgsTesSettingState = useSelector(selectSettingsOfTgsTes);
-  const state = useSelector(selectSettingsOfEss);
-  const systemData = useSelector(selectTgsSwitch);
-  const { settings } = systemData;
-  const mode = state.interfaceMode;
-  const sysState = systemIdentificationState.sysIdentification;
-  const { isEssSwitch, isTesSwitch } = userState;
-  const { gasType } = tgsTesSettingState;
+  const { sysIdentification } = useSystemIdentificationStore();
+  const { isEssSwitch, isTesSwitch } = useUserStore();
+  const { gasType } = useTgsTesSettingsStore();
+  const { interfaceMode } = useSettingsStore();
+  const { settings } = useTgsSwitchStore();
+  const mode = interfaceMode;
+  const sysState = sysIdentification;
 
   
 

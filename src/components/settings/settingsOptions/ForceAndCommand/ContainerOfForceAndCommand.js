@@ -1,36 +1,22 @@
 import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../../../styles/commonStyles';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import {
-  selectSettingsOfEss,
-  setAts,
-  setResetAllSettingsButtons,
-  setSettingsCancelButton,
-  setSettingsEditButton,
-  setTelemetry,
-} from '../../../../store/slices/settingsOfEssSlice';
+  useSettingsStore,
+  useTgsSettingsStore,
+  useUserStore,
+  useForceAndCommandStore,
+  useTgsSwitchStore
+} from '../../../../store/zustand';
 import SystemHeaderForceAndCommand from './SysHeaderForceAndCommand';
 import SelectAts from './selectArts/SelectAts';
 import SelectTc from './selectTc/SelectTc';
-import { selectUserState } from '../../../../store/slices/userSlice';
 import InvisibleDivForEditButton from '../editAndApplyMessageBoxes/InvisibleDivForEditButton';
 import EditCancelApplyButtons from '../EditCancelApplyButtons';
 import SettingAppliedMessage from '../../../userMessages/SettingAppliedMessage';
 import { useContext } from 'react';
 import { SettingsContext } from '../../../../context/ContextOfSettings';
-import {
-  selectSettingsOfTgsTes,
-  setTesAts,
-  setTgsAts,
-  setTgsTesTelemetry,
-} from '../../../../store/slices/settingsOfTgsTesSlice';
 import ApplyButtonInvisibleDiv from '../editAndApplyMessageBoxes/ApplyButtonInvisibleDiv';
-import {
-  selectForceAndCommand,
-  setTgsTesTcTemp,
-} from '../../../../store/slices/forceAndCommandSlice';
-import { selectTgsSwitch } from '../../../../store/slices/tgsSwitchSlice';
 import {
   updateDeviceInfo,
   updateSettingsValues,
@@ -65,32 +51,38 @@ function ContainerOfForceAndCommand() {
   // the names of 3 main buttons to make changes
   const buttonsName = ['edit', 'cancel', 'apply'];
 
-  // redux
-  const dispatch = useDispatch();
-  const stateOfEssTgs = useSelector(selectUserState);
-  const tgsTesState = useSelector(selectSettingsOfTgsTes);
-  const state = useSelector(selectSettingsOfEss);
-  const TcState = useSelector(selectForceAndCommand);
-  const systemData = useSelector(selectTgsSwitch);
-  const { settings, electricalInfo, gasInfo } = systemData;
-  const essSwitch = stateOfEssTgs.isEssSwitch;
-  const tesSwitch = stateOfEssTgs.isTesSwitch;
-  const mode = state.interfaceMode;
-  const settingsEditButton = state.buttonsOfSettings.settingsEditButton;
-  const settingsApplyButton = state.buttonsOfSettings.settingsApplyButton;
-  // states for select ATS in Ess, Tgs and Tes of force and commands
-  const atsEssState = state.selectAtsState;
-  const atsTesState = tgsTesState.allSelects.selectAtsTesState;
-  const atsTgsState = tgsTesState.allSelects.selectAtsTgsState;
+  // zustand
+  const essSwitch = useUserStore((state) => state.isEssSwitch);
+  const tesSwitch = useUserStore((state) => state.isTesSwitch);
+  const mode = useSettingsStore((state) => state.interfaceMode);
+  const settingsEditButton = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const settingsApplyButton = useSettingsStore((state) => state.buttonsOfSettings.settingsApplyButton);
+  const atsEssState = useSettingsStore((state) => state.selectAtsState);
+  const atsTesState = useTgsSettingsStore((state) => state.allSelects.selectAtsTesState);
+  const atsTgsState = useTgsSettingsStore((state) => state.allSelects.selectAtsTgsState);
+  const settings = useTgsSwitchStore((state) => state.settings);
+  const electricalInfo = useTgsSwitchStore((state) => state.electricalInfo);
+  const gasInfo = useTgsSwitchStore((state) => state.gasInfo);
+
+  // Zustand actions
+  const setAts = useSettingsStore((state) => state.setAts);
+  const setResetAllSettingsButtons = useSettingsStore((state) => state.setResetAllSettingsButtons);
+  const setSettingsCancelButton = useSettingsStore((state) => state.setSettingsCancelButton);
+  const setSettingsEditButton = useSettingsStore((state) => state.setSettingsEditButton);
+  const setTelemetry = useSettingsStore((state) => state.setTelemetry);
+  const setTesAts = useTgsSettingsStore((state) => state.setTesAts);
+  const setTgsAts = useTgsSettingsStore((state) => state.setTgsAts);
+  const setTgsTesTelemetry = useTgsSettingsStore((state) => state.setTgsTesTelemetry);
+
   // states of Tc telemetry of Ess and Tgs/Tes
-  const essHeater = TcState.essHeaterTemp;
-  const essEnclose = TcState.essEncloseTemp;
-  const essOutside = TcState.essOutsideTemp;
-  const burningChamber = TcState.burningChamberTemp;
-  const tgsHeater = TcState.tgsHeaterTemp;
-  const tesHeater = TcState.tesHeaterTemp;
-  const tgsTesEnclose = TcState.tgsTesEncloseTemp;
-  const tgsTesOutside = TcState.tgsTesOutsideTemp;
+  const essHeater = useForceAndCommandStore((state) => state.essHeaterTemp);
+  const essEnclose = useForceAndCommandStore((state) => state.essEncloseTemp);
+  const essOutside = useForceAndCommandStore((state) => state.essOutsideTemp);
+  const burningChamber = useForceAndCommandStore((state) => state.burningChamberTemp);
+  const tgsHeater = useForceAndCommandStore((state) => state.tgsHeaterTemp);
+  const tesHeater = useForceAndCommandStore((state) => state.tesHeaterTemp);
+  const tgsTesEnclose = useForceAndCommandStore((state) => state.tgsTesEncloseTemp);
+  const tgsTesOutside = useForceAndCommandStore((state) => state.tgsTesOutsideTemp);
 
   // useContext
   const {
@@ -210,8 +202,8 @@ function ContainerOfForceAndCommand() {
 
   // set the last saved states of select Ats
   useEffect(() => {
-    dispatch(setResetAllSettingsButtons());
-  }, []);
+    setResetAllSettingsButtons();
+  }, [setResetAllSettingsButtons]);
 
   // sets each button tgs, tes, sys or ess to either blue or green
   useEffect(() => {
@@ -274,15 +266,15 @@ function ContainerOfForceAndCommand() {
     }
   }, [options]);
 
-  // handles Ess dispatch once pressed on Apply button, Edit button or Cancel button
+  // handles Ess actions once pressed on Apply button, Edit button or Cancel button
   const handleEssDispatches = (value) => {
     const buttonsIndex = Number(value);
     switch (buttonsIndex) {
       case 0:
-        dispatch(setSettingsEditButton());
+        setSettingsEditButton();
         break;
       case 1:
-        dispatch(setSettingsCancelButton());
+        setSettingsCancelButton();
         setEssAtsConfirmButton(typeof electricalInfo?.EBP === 'number' ? true : false);
         setEssAtsSelectButton(typeof electricalInfo?.EBP === 'number' ? true : false);
         setEssAtsState(electricalInfo?.EBP);
@@ -290,12 +282,12 @@ function ContainerOfForceAndCommand() {
       case 2:
         if (essAtsState !== prevEssAtsState) {
           typeof essAtsState === 'number' && setEssAtsConfirmButton(true);
-          dispatch(setAts(essAtsState));
+          setAts(essAtsState);
           updateDeviceInfo('EBP', essAtsState, 'electrical_command');
         }
         setMessageBox(true);
         handleEssMessageBox();
-        dispatch(setResetAllSettingsButtons());
+        setResetAllSettingsButtons();
         break;
       default:
         return;
@@ -373,43 +365,43 @@ function ContainerOfForceAndCommand() {
     };
     updateSettingsValues(settings, newValues);
   };
-  // handles Ess: Sys dispatch once pressed on Apply button, Edit button or Cancel button
+  // handles Ess: Sys actions once pressed on Apply button, Edit button or Cancel button
   const handleEssSysDispatches = (value) => {
     const buttonsIndex = Number(value);
     switch (buttonsIndex) {
       case 0:
-        dispatch(setSettingsEditButton());
+        setSettingsEditButton();
         break;
       case 1:
-        dispatch(setSettingsCancelButton());
+        setSettingsCancelButton();
         setDefaultValuesForCheckedBoxes();
         break;
       case 2:
         // send values to framework
         // if (temperatureSelection === 1 && (essHeater || essEnclose)) {
-        dispatch(setTelemetry({ essHeater, essEnclose, essOutside }));
+        setTelemetry({ essHeater, essEnclose, essOutside });
         updateValues('EssSys');
         // } else {
-        //   dispatch(setTelemetry({ essHeater, essEnclose, essOutside: null }));
+        //   setTelemetry({ essHeater, essEnclose, essOutside: null });
         //   updateValues('EssSys');
         // }
         // checkedBoxes
-        dispatch(setResetAllSettingsButtons());
+        setResetAllSettingsButtons();
         break;
       default:
         return;
     }
   };
 
-  // handles the Tgs dispatch once pressed on Apply button, Edit button or Cancel button
+  // handles the Tgs actions once pressed on Apply button, Edit button or Cancel button
   const handleTgsDispatches = (value) => {
     const buttonsIndex = Number(value);
     switch (buttonsIndex) {
       case 0:
-        dispatch(setSettingsEditButton());
+        setSettingsEditButton();
         break;
       case 1:
-        dispatch(setSettingsCancelButton());
+        setSettingsCancelButton();
         setTgsAtsConfirmButton(typeof gasInfo?.EBP === 'number' ? true : false);
         setTgsAtsSelectButton(typeof gasInfo?.EBP === 'number' ? true : false);
         setTgsAtsState(gasInfo?.EBP);
@@ -417,27 +409,27 @@ function ContainerOfForceAndCommand() {
       case 2:
         if (tgsAtsState !== prevTgsAtsState) {
           !isNaN(+tgsAtsState) && setTgsAtsConfirmButton(true);
-          dispatch(setTgsAts(tgsAtsState));
+          setTgsAts(tgsAtsState);
           updateDeviceInfo('EBP', tgsAtsState, 'gas_command');
         }
         setMessageBox(true);
         handleTgsMessageBox();
-        dispatch(setResetAllSettingsButtons());
+        setResetAllSettingsButtons();
         break;
       default:
         return;
     }
   };
 
-  // handles the Tes dispatch once pressed on Apply button, Edit button or Cancel button
+  // handles the Tes actions once pressed on Apply button, Edit button or Cancel button
   const handleTesDispatches = (value) => {
     const buttonsIndex = Number(value);
     switch (buttonsIndex) {
       case 0:
-        dispatch(setSettingsEditButton());
+        setSettingsEditButton();
         break;
       case 1:
-        dispatch(setSettingsCancelButton());
+        setSettingsCancelButton();
         setTesAtsConfirmButton(typeof electricalInfo?.EBP === 'number' ? true : false);
         setTesAtsSelectButton(typeof electricalInfo?.EBP === 'number' ? true : false);
         setTesAtsState(electricalInfo?.EBP);
@@ -445,28 +437,28 @@ function ContainerOfForceAndCommand() {
       case 2:
         if (tesAtsState !== prevTesAtsState) {
           !isNaN(+tesAtsState) && setTesAtsConfirmButton(true);
-          dispatch(setTesAts(tesAtsState));
+          setTesAts(tesAtsState);
           updateDeviceInfo('EBP', tesAtsState, 'electrical_command');
         }
         setMessageBox(true);
         handleTesMessageBox();
-        dispatch(setResetAllSettingsButtons());
+        setResetAllSettingsButtons();
         break;
       default:
         return;
     }
   };
 
-  // handles the Tgs Tes Sys dispatch once pressed on Apply button, Edit button or Cancel button
+  // handles the Tgs Tes Sys actions once pressed on Apply button, Edit button or Cancel button
 
   const handleTgsTesSysDispatches = (value) => {
     const buttonsIndex = Number(value);
     switch (buttonsIndex) {
       case 0:
-        dispatch(setSettingsEditButton());
+        setSettingsEditButton();
         break;
       case 1:
-        dispatch(setSettingsCancelButton());
+        setSettingsCancelButton();
         setDefaultValuesForCheckedBoxes();
         break;
       case 2:
@@ -474,29 +466,25 @@ function ContainerOfForceAndCommand() {
           temperatureSelection === 1 &&
           (burningChamber || tgsHeater || tesHeater || tgsTesEnclose)
         ) {
-          dispatch(
-            setTgsTesTelemetry({
-              burningChamber,
-              tgsHeater,
-              tesHeater,
-              tgsTesEnclose,
-              tgsTesOutside,
-            })
-          );
+          setTgsTesTelemetry({
+            burningChamber,
+            tgsHeater,
+            tesHeater,
+            tgsTesEnclose,
+            tgsTesOutside,
+          });
           updateValues('TgsTesSys');
         } else {
           updateValues('TgsTesSys');
-          dispatch(
-            setTgsTesTelemetry({
-              burningChamber,
-              tgsHeater,
-              tesHeater,
-              tgsTesEnclose,
-              tgsTesOutside: null,
-            })
-          );
+          setTgsTesTelemetry({
+            burningChamber,
+            tgsHeater,
+            tesHeater,
+            tgsTesEnclose,
+            tgsTesOutside: null,
+          });
         }
-        dispatch(setResetAllSettingsButtons());
+        setResetAllSettingsButtons();
         break;
       default:
         return;

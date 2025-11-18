@@ -1,5 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
-import { selectUserState, setIsGas, setIsInhand } from "../../store/slices/userSlice";
+import { useUserStore } from "../../store/userStore";
 import { useLocation } from "react-router-dom";
 
 import styled, { css } from "styled-components";
@@ -11,20 +10,17 @@ import HeaterStatus from "./HeaterStatus/HeaterStatus";
 import TgsControlBox from "./controls/tgsControlBox";
 import { useEffect } from "react";
 import LoadingRouter from "../loading/LoadingRouter";
-import { selectChart } from "../../store/slices/chartSlice";
+import { useChartStore } from "../../store/chartStore";
 
 const Switch = ({ ...rest }) => {
-  const userState = useSelector(selectUserState);
-  const state = useSelector(selectChart);
+  const { isEssSwitch, isInhand, isGas, setIsGas, setIsInhand } = useUserStore();
+  const { wifiState } = useChartStore();
   const mode = JSON.parse(localStorage.getItem("themeMode"));
-  const { wifiState } = state;
-  const { isEssSwitch, isInhand, isGas } = userState;
   const location = useLocation();
-  const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(setIsGas(rest.deviceType === "gas" ? true : false));
-    dispatch(setIsInhand(!rest.deviceInfo.inhand ? false : true));
-  }, [rest.deviceType, rest.deviceInfo.inhand]);
+    setIsGas(rest.deviceType === "gas" ? true : false);
+    setIsInhand(!rest.deviceInfo.inhand ? false : true);
+  }, [rest.deviceType, rest.deviceInfo.inhand, setIsGas, setIsInhand]);
 
   // only display Heater status ' in ESS Switch '
   const isActivated = isEssSwitch ? true : false;

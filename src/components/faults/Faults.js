@@ -1,6 +1,5 @@
-import { useDispatch, useSelector } from "react-redux";
-import { selectUserState } from "../../store/slices/userSlice";
-import { handleEsFaultsReset, handleGsFaultsReset, selectFaults } from "../../store/slices/faultsSlice";
+import { useUserStore } from "../../store/userStore";
+import { useFaultsStore } from "../../store/faultsStore";
 
 import styled from "styled-components";
 
@@ -9,22 +8,18 @@ import FaultSwitch from "./FaultSwitch";
 import { useEffect } from "react";
 
 const Faults = () => {
-  const dispatch = useDispatch();
-  const userState = useSelector(selectUserState);
-  const { isEssSwitch, isTesSwitch } = userState;
-
-  const faultsState = useSelector(selectFaults);
-  const { ess, tgs } = faultsState;
+  const { isEssSwitch, isTesSwitch } = useUserStore();
+  const { ess, tgs, handleEsFaultsReset, handleGsFaultsReset } = useFaultsStore();
 
   useEffect(() => {
     // reset ess faults
-    dispatch(handleEsFaultsReset(null));
-  }, [ess.message]);
+    handleEsFaultsReset(null);
+  }, [ess.message, handleEsFaultsReset]);
 
   useEffect(() => {
     // reset tgs faults
-    dispatch(handleGsFaultsReset(null));
-  }, [tgs.message]);
+    handleGsFaultsReset(null);
+  }, [tgs.message, handleGsFaultsReset]);
 
   return (
     <Wrapper>

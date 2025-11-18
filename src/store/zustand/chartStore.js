@@ -29,6 +29,7 @@ const useChartStore = create(
       setEbpState: (state) => set({ ebpState: state }),
       toggleEbpState: () => set((state) => ({ ebpState: !state.ebpState })),
       setEbpAvailable: (available) => set({ isEbpAvailable: available }),
+      setEBP: (ebp) => set({ ebpState: ebp, isEbpAvailable: ebp != null }),
 
       // Alarm State
       setAlarmState: (state) => set({ alarmState: state }),

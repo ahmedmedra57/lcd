@@ -2,11 +2,8 @@ import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../../../../styles/commonStyles';
 import RadioBox from '../RadioBox';
 import TcConfirmButton from '../TcConfirmButton';
-import { useSelector } from 'react-redux';
-import { selectSettingsOfEss } from '../../../../../store/slices/settingsOfEssSlice';
+import { useSettingsStore, useTgsSwitchStore, useUserStore } from '../../../../../store/zustand';
 import { useState, useCallback } from 'react';
-import { selectTgsSwitch } from '../../../../../store/slices/tgsSwitchSlice';
-import { selectUserState } from '../../../../../store/slices/userSlice';
 
 let types = {
   '0': "blower_temp_ch",
@@ -35,13 +32,10 @@ function CurrentEncloseAndBurningTemp({
   // useState
   const [zIndex, setZIndex] = useState();
   const [selectBoxCss, setSelectBoxCss] = useState(false)
-  const userState = useSelector(selectUserState);
-  const isEssSwitch = userState.isEssSwitch;
-  // redux
-  const state = useSelector(selectSettingsOfEss);
-  const editState = state.buttonsOfSettings.settingsEditButton;
-  const systemData = useSelector(selectTgsSwitch);
-  const { settings } = systemData;
+  const isEssSwitch = useUserStore((state) => state.isEssSwitch);
+  // zustand
+  const editState = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const settings = useTgsSwitchStore((state) => state.settings);
   // redux state for radioBox Selection
   const tgsTesEncloseTemp = selectTcState.tgsTesEncloseTemp.select;
   const tgsTesOutsideTemp = selectTcState.tgsTesOutsideTemp.select;

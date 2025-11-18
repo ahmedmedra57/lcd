@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { handleSSRDetails } from '../../../store/slices/heaterStatusSlice';
-import { selectSettingsOfEss } from '../../../store/slices/settingsOfEssSlice';
-import { selectDescription } from '../../../store/slices/ssrDescriptionSlice';
-import { setAdminAccess } from '../../../store/slices/userSlice';
+import useHeaterStatusStore from '../../../store/zustand/heaterStatusStore';
+import useSettingsStore from '../../../store/zustand/settingsStore';
+import useUserStore from '../../../store/zustand/userStore';
+import useTgsSwitchStore from '../../../store/zustand/tgsSwitchStore';
 
 import styled, { css } from 'styled-components';
 import {
@@ -19,7 +18,6 @@ import PartNumberSuggestion from './PartNumberSuggestion';
 import SettingButton from './SettingButton';
 import SSRDetailButtonContainer from './SSRDetailButtonContainer';
 import { updateHeaterSSr } from '../../../helpers/helpers';
-import { selectTgsSwitch, setSSRSettings } from '../../../store/slices/tgsSwitchSlice';
 
 const AdminSSRItemDetails = ({
   isEnable,
@@ -31,8 +29,7 @@ const AdminSSRItemDetails = ({
   handleButtonClick,
   id,
 }) => {
-  const descriptionState = useSelector(selectDescription);
-  const { partNumberSuggestions, elementsOptions } = descriptionState;
+  const { elementBank: { partNumberSuggestions, elementsOptions }, updateSSRSpecs } = useHeaterStatusStore();
   const { specs } = data;
 
   const initialInputState = useMemo(() => {
@@ -66,11 +63,9 @@ const AdminSSRItemDetails = ({
 
   const [activateMessageBox, setActivateMessageBox] = useState(false);
   const [message, setMessage] = useState(null);
-  const dispatch = useDispatch();
-  const systemData = useSelector(selectTgsSwitch);
-  const { ssr_setting } = systemData;
-  const unitsState = useSelector(selectSettingsOfEss);
-  const { unitsMeasurement } = unitsState.buttonsOfSettings;
+  const { ssrSettings: ssr_setting, setSSRSettings } = useTgsSwitchStore();
+  const { setAdminAccess } = useUserStore();
+  const { unitsMeasurement } = useSettingsStore();
 
   useEffect(() => {
     if (inputDetails[0].partNumber !== '') {
@@ -124,13 +119,7 @@ const AdminSSRItemDetails = ({
   const handleSendMessage = async (idx) => {
     if (elementSpec[idx].current) {
       const elementData = elementSpec.filter((el) => Object.keys(el).length !== 0);
-      dispatch(
-        handleSSRDetails({
-          data: elementData,
-          id: `ssr${id}`,
-          unit: unitsMeasurement,
-        })
-      );
+      updateSSRSpecs(`ssr${id}`, elementData);
     for (const el of elementData) {
   const oldEl = initialInputState[elementData.indexOf(el)];
   if (el.partNumber && (!oldEl || oldEl.partNumber !== el.partNumber)) {
@@ -165,13 +154,7 @@ const AdminSSRItemDetails = ({
       setActivateMessageBox(true);
     } else {
       if (initialInputState.filter(el => el.partNumber !== '').length !== 0) {
-        dispatch(
-          handleSSRDetails({
-            data: [],
-            id: `ssr${id}`,
-            unit: unitsMeasurement,
-          })
-        );
+        updateSSRSpecs(`ssr${id}`, []);
         initialInputState.filter((element) => element.partNumber !== '').map(el => {
           updateHeaterSSr({
             ssr_setting: {
@@ -266,7 +249,7 @@ const AdminSSRItemDetails = ({
                           .filter((el) => el !== null)
         return index === id - 1 ? { ...item, Heaters: [...item.Heaters, ...heaters] } : item
       });
-      dispatch(setSSRSettings(newList));
+      setSSRSettings(newList);
     }
   };
 
@@ -465,7 +448,7 @@ const AdminSSRItemDetails = ({
             setActivateMessageBox(false);
             if (!message) {
               setIsSettingOpen(false);
-              dispatch(setAdminAccess(false));
+              setAdminAccess(false);
             }
           }}
           title='ssr details settings'

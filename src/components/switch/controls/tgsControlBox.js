@@ -1,15 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import {
-  selectTgsSwitch,
-  deactivateTgsConflictMessage,
-  deActivatedisplayTGSScheduleModal,
-} from '../../../store/slices/tgsSwitchSlice';
-import {
-  activateEsSwitchStatus,
-  selectEssSwitch,
-} from '../../../store/slices/essSwitchSlice';
-import { selectFaults } from '../../../store/slices/faultsSlice';
+  useTgsSwitchStore,
+  useEssSwitchStore,
+  useFaultsStore,
+} from '../../../store/zustand';
 import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../../styles/commonStyles';
 import ConflictMessage from '../../userMessages/ConflictMessage';
@@ -19,24 +13,26 @@ import TgsHeatingSchedule from './HeatingSchedule/TgsHeatingSchedule';
 import FanOnly from './instantHeat/FanOnly';
 import DisplayBox from '../DisplayBox';
 import { useLocation } from "react-router-dom";
-import { selectSettingsOfEss } from "../../../store/slices/settingsOfEssSlice";
+import { useSettingsStore } from "../../../store/zustand";
 import InstantHeat from "./instantHeat/InstantHeat";
 import SnowSensor from "./snowSensor/SnowSensor";
 import WindFactor from "./windFactor/WindFactor";
-import { selectUserState } from "../../../store/slices/userSlice";
+import { useUserStore } from "../../../store/zustand";
 
 const TgsControlBox = ({ ...rest }) => {
-  const userState = useSelector(selectUserState);
-  const { isGas } = userState;
-  const state = useSelector(selectTgsSwitch);
-  const { displayConflictMessage, devicesConflicts, gasInfo, electricalInfo, settings, gasFaults } =
-    state;
+  const isGas = useUserStore((state) => state.isGas);
+  const displayConflictMessage = useTgsSwitchStore((state) => state.displayConflictMessage);
+  const devicesConflicts = useTgsSwitchStore((state) => state.devicesConflicts);
+  const gasInfo = useTgsSwitchStore((state) => state.gasInfo);
+  const electricalInfo = useTgsSwitchStore((state) => state.electricalInfo);
+  const settings = useTgsSwitchStore((state) => state.settings);
+  const gasFaults = useTgsSwitchStore((state) => state.gasFaults);
+  const deactivateTgsConflictMessage = useTgsSwitchStore((state) => state.deactivateTgsConflictMessage);
+  const deActivatedisplayTGSScheduleModal = useTgsSwitchStore((state) => state.deActivatedisplayTGSScheduleModal);
 
-  const faultsState = useSelector(selectFaults);
-  const unitsState = useSelector(selectSettingsOfEss);
-  const mode = unitsState.interfaceMode;
-
-  const { unitsMeasurement } = unitsState.buttonsOfSettings;
+  const faultsState = useFaultsStore();
+  const mode = useSettingsStore((state) => state.interfaceMode);
+  const unitsMeasurement = useSettingsStore((state) => state.buttonsOfSettings.unitsMeasurement);
   const location = useLocation();
 
   const essFault =
@@ -59,16 +55,12 @@ const TgsControlBox = ({ ...rest }) => {
     return gasFaultsList(gasInfo).headerFaults?.map((fault) => fault.split(' ').slice(0, 2).join(' '));
   }, [gasInfo]);
 
-  const esState = useSelector(selectEssSwitch);
-  const {
-    instantHeat,
-    snowSensor,
-    optionalConstantTemp,
-    heatingSchedule,
-    windFactor,
-  } = esState;
-
-  const dispatch = useDispatch();
+  const instantHeat = useEssSwitchStore((state) => state.instantHeat);
+  const snowSensor = useEssSwitchStore((state) => state.snowSensor);
+  const optionalConstantTemp = useEssSwitchStore((state) => state.optionalConstantTemp);
+  const heatingSchedule = useEssSwitchStore((state) => state.heatingSchedule);
+  const windFactor = useEssSwitchStore((state) => state.windFactor);
+  const activateEsSwitchStatus = useEssSwitchStore((state) => state.activateEsSwitchStatus);
 
   const [disabledBox, setDisabledBox] = useState(false);
   const [displayFaultsMessageBox, setDisplayFaultsMessageBox] = useState(false);
@@ -76,20 +68,20 @@ const TgsControlBox = ({ ...rest }) => {
 
   // Check if es is activated
   useEffect(() => {
-    instantHeat.isActivated && dispatch(activateEsSwitchStatus());
-    // snowSensor.isReady && dispatch(activateEsSwitchStatus());
-    snowSensor.isActivated && dispatch(activateEsSwitchStatus());
-    optionalConstantTemp.apply && dispatch(activateEsSwitchStatus());
-    // heatingSchedule.isReady && dispatch(activateEsSwitchStatus());
-    heatingSchedule.isActivated && dispatch(activateEsSwitchStatus());
-    // windFactor.isReady && dispatch(activateEsSwitchStatus());
-    windFactor.isActivated && dispatch(activateEsSwitchStatus());
-  }, [esState]);
+    instantHeat.isActivated && activateEsSwitchStatus();
+    // snowSensor.isReady && activateEsSwitchStatus();
+    snowSensor.isActivated && activateEsSwitchStatus();
+    optionalConstantTemp.apply && activateEsSwitchStatus();
+    // heatingSchedule.isReady && activateEsSwitchStatus();
+    heatingSchedule.isActivated && activateEsSwitchStatus();
+    // windFactor.isReady && activateEsSwitchStatus();
+    windFactor.isActivated && activateEsSwitchStatus();
+  }, [instantHeat, snowSensor, optionalConstantTemp, heatingSchedule, windFactor, activateEsSwitchStatus]);
 
   // Conflict message handlers
   const handleCancelConflictMessage = () => {
     // change display conflict message state into false
-    dispatch(deactivateTgsConflictMessage());
+    deactivateTgsConflictMessage();
   };
 
   const handleConfirmConflictMessage = () => {
@@ -116,8 +108,8 @@ const TgsControlBox = ({ ...rest }) => {
       isGas ? tgsUpdateSchedule(devicesConflicts?.extraData) : updateSchedule(devicesConflicts?.extraData);
     }
     
-    dispatch(deactivateTgsConflictMessage());
-    dispatch(deActivatedisplayTGSScheduleModal());
+    deactivateTgsConflictMessage();
+    deActivatedisplayTGSScheduleModal();
 
   };
   

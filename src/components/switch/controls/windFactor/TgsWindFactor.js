@@ -1,10 +1,5 @@
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  activateTgsConflictMessage,
-  selectTgsSwitch,
-  tgsWindFactor,
-} from '../../../../store/slices/tgsSwitchSlice';
-import { selectEssSwitch } from '../../../../store/slices/essSwitchSlice';
+import { useTgsSwitchStore } from '../../../../store/zustand';
+import { useEssSwitchStore } from '../../../../store/zustand';
 
 import {
   flexboxCenter,
@@ -19,11 +14,11 @@ import { useMemo } from 'react';
 
 const TgsWindFactor = () => {
   // off || ready || activated
-  const state = useSelector(selectTgsSwitch);
-  const dispatch = useDispatch();
+  const gasInfo = useTgsSwitchStore((state) => state.gasInfo);
+  const tgsWindFactor = useTgsSwitchStore((state) => state.tgsWindFactor);
+  const activateTgsConflictMessage = useTgsSwitchStore((state) => state.activateTgsConflictMessage);
 
-  const esState = useSelector(selectEssSwitch);
-  const { isEsSwitchActivated, gasInfo } = esState;
+  const isEsSwitchActivated = useEssSwitchStore((state) => state.isEsSwitchActivated);
 
   const isReady = useMemo(() => {
     return gasInfo?.wind_enabled === 1
@@ -35,7 +30,7 @@ const TgsWindFactor = () => {
 
   const handleWindFactor = () => {
     if (!isEsSwitchActivated) {
-      dispatch(tgsWindFactor());
+      tgsWindFactor();
       if (isReady === true) {
         updateDeviceInfo('wind', 0, 'gas_command');
       } else {
@@ -43,7 +38,7 @@ const TgsWindFactor = () => {
       }
     } else {
       // Activate Conflict Message Box
-      dispatch(activateTgsConflictMessage());
+      activateTgsConflictMessage();
     }
   };
 

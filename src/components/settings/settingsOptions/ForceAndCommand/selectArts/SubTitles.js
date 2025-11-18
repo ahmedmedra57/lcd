@@ -1,10 +1,8 @@
-import { useSelector } from 'react-redux';
+import { useUserStore } from '../../../../../store/zustand';
 import styled from 'styled-components';
-import { selectUserState } from '../../../../../store/slices/userSlice';
 
 function SubTitles({ propIndex }) {
-  const state = useSelector(selectUserState);
-  const essSwitch = state.isEssSwitch;
+  const essSwitch = useUserStore((state) => state.isEssSwitch);
   return (
     <div>
       {' '}

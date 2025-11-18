@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import styled, { css } from 'styled-components';
-import { selectSettingsOfEss } from '../../../store/slices/settingsOfEssSlice';
-import { selectTgsSwitch } from '../../../store/slices/tgsSwitchSlice';
+import useSettingsStore from '../../../store/zustand/settingsStore';
+import useTgsSwitchStore from '../../../store/zustand/tgsSwitchStore';
 
 import {
   flexboxCenter,
@@ -24,11 +23,9 @@ const SSRItemDetails = ({
   openPasswordBox,
   overAmp,
 }) => {
-  const unitsState = useSelector(selectSettingsOfEss);
-  const { unitsMeasurement } = unitsState.buttonsOfSettings;
+  const { unitsMeasurement } = useSettingsStore();
 
-  const systemData = useSelector(selectTgsSwitch);
-  const { electricalInfo } = systemData;
+  const { electricalInfo } = useTgsSwitchStore();
 
   const ssrCurrent = useMemo(() => {
     return electricalInfo?.ssr_current || [];

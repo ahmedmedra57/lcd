@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useContext, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { SettingsContext } from '../../../../context/ContextOfSettings';
 import {
@@ -8,26 +7,15 @@ import {
   convertFahrenheitToCelsius,
   updateDeviceInfo,
 } from '../../../../helpers/helpers';
-import {
-  selectSettingsOfEss,
-  setResetAllSettingsButtons,
-  setSettingsCancelButton,
-  setSettingsEditButton,
-} from '../../../../store/slices/settingsOfEssSlice';
-import {
-  selectSettingsOfTgsTes,
-  setTgsTesSettingsApplyWindFactor,
-} from '../../../../store/slices/settingsOfTgsTesSlice';
+import { useSettingsStore } from '../../../../store/zustand';
+import { useTgsTesSettingsStore } from '../../../../store/zustand';
+import { useUserStore } from '../../../../store/zustand';
 import { flexboxCenter } from '../../../../styles/commonStyles';
 import InputKeyPad from '../../../keyboard/InputKeyPad';
 import SettingAppliedMessage from '../../../userMessages/SettingAppliedMessage';
 import InvisibleDivForEditButton from '../editAndApplyMessageBoxes/InvisibleDivForEditButton';
 import EditCancelApplyButtons from '../EditCancelApplyButtons';
 import WindFactor from './WindFactor';
-import {
-  selectUserState,
-  setAdminAccess,
-} from '../../../../store/slices/userSlice';
 import ContainerLogin from '../../../adminPassword/ContainerLogin';
 
 function ContainerOfWindFactor() {
@@ -76,21 +64,22 @@ function ContainerOfWindFactor() {
   const [messageBox, setMessageBox] = useState(false);
   const [messageBoxContent, setMessageBoxContent] = useState({});
 
-  // Redux
-  const dispatch = useDispatch();
-  const state = useSelector(selectSettingsOfEss);
-  const tgsTesState = useSelector(selectSettingsOfTgsTes);
-  const logInState = useSelector(selectUserState);
-  const adminAccess = logInState.isAdministrator;
-  const unitsMeasurement = state.buttonsOfSettings.unitsMeasurement;
-  const settingsEditButton = state.buttonsOfSettings.settingsEditButton;
-  const { low, med, high, extreme } = tgsTesState.windFactorTemp;
+  // Zustand
+  const unitsMeasurement = useSettingsStore((state) => state.buttonsOfSettings.unitsMeasurement);
+  const settingsEditButton = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
+  const setSettingsEditButton = useSettingsStore((state) => state.setSettingsEditButton);
+  const setSettingsCancelButton = useSettingsStore((state) => state.setSettingsCancelButton);
+  const setResetAllSettingsButtons = useSettingsStore((state) => state.setResetAllSettingsButtons);
+  const { low, med, high, extreme } = useTgsTesSettingsStore((state) => state.windFactorTemp);
+  const setTgsTesSettingsApplyWindFactor = useTgsTesSettingsStore((state) => state.setTgsTesSettingsApplyWindFactor);
+  const adminAccess = useUserStore((state) => state.isAdministrator);
+  const setAdminAccess = useUserStore((state) => state.setAdminAccess);
 
   useEffect(() => {
     return function cleanup() {
-      dispatch(setAdminAccess(false));
+      setAdminAccess(false);
     };
-  }, []);
+  }, [setAdminAccess]);
 
   useEffect(() => {
     if (low > 0 || med > 0 || high > 0 || extreme > 0) {
@@ -117,10 +106,10 @@ function ContainerOfWindFactor() {
     const buttonsIndex = Number(value);
     switch (buttonsIndex) {
       case 0:
-        dispatch(setSettingsEditButton());
+        setSettingsEditButton();
         break;
       case 1:
-        dispatch(setSettingsCancelButton());
+        setSettingsCancelButton();
         setWindFactor({
           lowWind: low > 0 ? low : '',
           medWind: med > 0 ? med : '',
@@ -135,7 +124,7 @@ function ContainerOfWindFactor() {
           typeof windFactor.medWind === 'number' &&
           typeof windFactor.extremeWind === 'number'
         ) {
-          dispatch(setResetAllSettingsButtons());
+          setResetAllSettingsButtons();
           const data = unitsMeasurement
             ? [
                 convertFahrenheitToCelsius(windFactor.lowWind, 'f'),
@@ -150,7 +139,7 @@ function ContainerOfWindFactor() {
                 windFactor.extremeWind,
               ];
           updateDeviceInfo('wind_threshold', data, 'setting_command');
-          dispatch(setTgsTesSettingsApplyWindFactor({ windFactor }));
+          setTgsTesSettingsApplyWindFactor({ windFactor });
         }
         setMessageBox(true);
         handleWindFactorMessageBox();

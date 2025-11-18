@@ -1,19 +1,12 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSettingsStore } from '../../../../store/zustand';
 import styled from 'styled-components';
-import {
-  selectSettingsOfEss,
-  setSettingsCancelButton,
-  setSettingsClearButton,
-  setSettingsEditButton,
-} from '../../../../store/slices/settingsOfEssSlice';
 import SettingClearOkMessage from './SettingClearOkMessage';
 
 function ApplyButtonInvisibleDiv() {
-  // redux
-  const dispatch = useDispatch();
-  const state = useSelector(selectSettingsOfEss);
-  const clearState = state.buttonsOfSettings.settingsClearButton;
+  // zustand
+  const clearState = useSettingsStore((state) => state.buttonsOfSettings.settingsClearButton);
+  const setSettingsCancelButton = useSettingsStore((state) => state.setSettingsCancelButton);
 
   const [display, setDisplay] = useState(false);
 
@@ -29,7 +22,7 @@ function ApplyButtonInvisibleDiv() {
 
   const clearMessageBox = (event) => {
     event.stopPropagation();
-    return dispatch(setSettingsCancelButton()), setDisplay(false);
+    return setSettingsCancelButton(), setDisplay(false);
   };
 
   const applyTitle = 'settings options';

@@ -1,11 +1,4 @@
-import { activateTgsConflictMessage, selectTgsSwitch, setDevicesConflicts } from '../../../../store/slices/tgsSwitchSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  activateEsConflictMessage,
-  constantTemp,
-} from '../../../../store/slices/essSwitchSlice';
-import { selectSettingsOfTgsTes } from '../../../../store/slices/settingsOfTgsTesSlice';
-import { selectSettingsOfEss } from '../../../../store/slices/settingsOfEssSlice';
+import { useTgsSwitchStore, useEssSwitchStore, useTgsSettingsStore, useSettingsStore, useUserStore } from '../../../../store/zustand';
 
 import styled, { css } from 'styled-components';
 import {
@@ -26,21 +19,26 @@ import {
   isAnotherSystemRunning,
   updateDeviceInfo,
 } from '../../../../helpers/helpers';
-import { selectUserState } from '../../../../store/slices/userSlice';
 import { useNavigate } from 'react-router-dom';
 
 const ConstantHeat = ({ isDisabled, setDisplayModeFaultMessageBox }) => {
   // Global states
-  const settingState = useSelector(selectSettingsOfTgsTes);
-  const { thermocouple } = settingState;
-  const unitsState = useSelector(selectSettingsOfEss);
-  const { unitsMeasurement } = unitsState.buttonsOfSettings;
-  const tgsState = useSelector(selectTgsSwitch);
-  const { isTgsSwitchActivated, settings, electricalInfo, gasInfo, currentRunSystem, EBP } = tgsState;
-  const { isEssSwitch, isGas } = useSelector(selectUserState);
+  const thermocouple = useTgsSettingsStore((state) => state.thermocouple);
+  const unitsMeasurement = useSettingsStore((state) => state.buttonsOfSettings.unitsMeasurement);
+  const isTgsSwitchActivated = useTgsSwitchStore((state) => state.isTgsSwitchActivated);
+  const settings = useTgsSwitchStore((state) => state.settings);
+  const electricalInfo = useTgsSwitchStore((state) => state.electricalInfo);
+  const gasInfo = useTgsSwitchStore((state) => state.gasInfo);
+  const currentRunSystem = useTgsSwitchStore((state) => state.currentRunSystem);
+  const EBP = useTgsSwitchStore((state) => state.EBP);
+  const activateTgsConflictMessage = useTgsSwitchStore((state) => state.activateTgsConflictMessage);
+  const setDevicesConflicts = useTgsSwitchStore((state) => state.setDevicesConflicts);
+  const isEssSwitch = useUserStore((state) => state.isEssSwitch);
+  const isGas = useUserStore((state) => state.isGas);
+  const constantTemp = useEssSwitchStore((state) => state.constantTemp);
+  const activateEsConflictMessage = useEssSwitchStore((state) => state.activateEsConflictMessage);
 
   // Local states
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isThermocoupleTrue, setIsThermocoupleTrue] = useState(true);
   const [displayKeypad, setDisplayKeypad] = useState(false);
@@ -142,16 +140,14 @@ const ConstantHeat = ({ isDisabled, setDisplayModeFaultMessageBox }) => {
       setIsActivated(false);
     } else {
       if (isAnotherSystemRunning('gas', currentRunSystem)) {
-        dispatch(activateTgsConflictMessage());
-        dispatch(
-          setDevicesConflicts({
-            currentSwitch: 'tgs-typhoon gas system',
-            DesiredSwitch: 'tes-typhoon electrical system',
-            systemTarget: 'electrical',
-            commandTarget: 'on_constant',
-            extraData: convertFahrenheitToCelsius(temp, settings?.unit),
-          })
-        );
+        activateTgsConflictMessage();
+        setDevicesConflicts({
+          currentSwitch: 'tgs-typhoon gas system',
+          DesiredSwitch: 'tes-typhoon electrical system',
+          systemTarget: 'electrical',
+          commandTarget: 'on_constant',
+          extraData: convertFahrenheitToCelsius(temp, settings?.unit),
+        });
         return;
       }
       updateDeviceInfo('on_constant', 1, 'electrical_command');
@@ -193,16 +189,14 @@ const ConstantHeat = ({ isDisabled, setDisplayModeFaultMessageBox }) => {
       return;
     }
     if (isAnotherSystemRunning('gas', currentRunSystem)) {
-      dispatch(activateTgsConflictMessage());
-      dispatch(
-        setDevicesConflicts({
-          currentSwitch: 'tgs-typhoon gas system',
-          DesiredSwitch: 'tes-typhoon electrical system',
-          systemTarget: 'electrical',
-          commandTarget: 'on_constant',
-          extraData: convertFahrenheitToCelsius(temp, settings?.unit),
-        })
-      );
+      activateTgsConflictMessage();
+      setDevicesConflicts({
+        currentSwitch: 'tgs-typhoon gas system',
+        DesiredSwitch: 'tes-typhoon electrical system',
+        systemTarget: 'electrical',
+        commandTarget: 'on_constant',
+        extraData: convertFahrenheitToCelsius(temp, settings?.unit),
+      });
       return;
     }
     if (!isThermocoupleTrue) {
@@ -260,7 +254,7 @@ const ConstantHeat = ({ isDisabled, setDisplayModeFaultMessageBox }) => {
     // 2 === check input
     // 3 === instant heat working
     if (option === 1) {
-      dispatch(activateEsConflictMessage());
+      activateEsConflictMessage();
     } else if (option === 2) {
       setDisplayMessageBox(true);
     } else {
@@ -270,7 +264,7 @@ const ConstantHeat = ({ isDisabled, setDisplayModeFaultMessageBox }) => {
   // dispatch handler
   const handleDispatch = (temp) => {
     if (!isTgsSwitchActivated) {
-      dispatch(constantTemp({ temp, unitsMeasurement }));
+      constantTemp({ temp, unitsMeasurement });
     } else {
       handleMessageBox(1);
     }

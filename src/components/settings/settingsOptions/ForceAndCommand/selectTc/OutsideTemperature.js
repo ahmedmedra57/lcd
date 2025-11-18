@@ -1,13 +1,10 @@
 import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../../../../styles/commonStyles';
 import { useContext, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { selectSettingsOfEss } from '../../../../../store/slices/settingsOfEssSlice';
-import { selectUserState } from '../../../../../store/slices/userSlice';
+import { useSettingsStore, useUserStore, useTgsSwitchStore } from '../../../../../store/zustand';
 import RadioBox from '../RadioBox';
 import TcConfirmButton from '../TcConfirmButton';
 import { SettingsContext } from '../../../../../context/ContextOfSettings';
-import { selectTgsSwitch } from '../../../../../store/slices/tgsSwitchSlice';
 
 function OutsideTemperature({
   handleChecked,
@@ -35,15 +32,13 @@ function OutsideTemperature({
   const [selectBoxCss, setSelectBoxCss] = useState(false);
   const [activeIndex,setActiveIndex]=useState(0);
 
-  // redux
-  const state = useSelector(selectSettingsOfEss);
-  const mode = state.interfaceMode;
+  // zustand
+  const mode = useSettingsStore((state) => state.interfaceMode);
   const whiteTriangle = mode? './static/images/whiteTriangle_light.svg':'./static/images/whiteTriangle.svg';
   const greyTriangle = mode? './static/images/greyTriangle_light.svg':'./static/images/greyTriangle.svg';
-  const userState = useSelector(selectUserState);
-  const essSwitch = userState.isEssSwitch;
-  const { settings } = useSelector(selectTgsSwitch);
-  const editState = state.buttonsOfSettings.settingsEditButton;
+  const essSwitch = useUserStore((state) => state.isEssSwitch);
+  const settings = useTgsSwitchStore((state) => state.settings);
+  const editState = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
 
   const essOutsideTemp = selectTcState.essOutsideTemp.select;
   const tgsTesOutsideTemp = selectTcState.tgsTesOutsideTemp.select;

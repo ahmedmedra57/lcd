@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSettingsStore } from '../../../../store/zustand';
 import styled, { css } from 'styled-components';
-import { selectSettingsOfEss } from '../../../../store/slices/settingsOfEssSlice';
 import { flexboxCenter } from '../../../../styles/commonStyles';
 import ButtonCloseAndExpand from '../ForceAndCommand/ButtonCloseAndExpand';
 
@@ -18,8 +17,7 @@ function SystemHeader({
 }) {
   const tesSwitchFalse = !tesSwitch && index === 1 && !essSwitch;
 
-  const state = useSelector(selectSettingsOfEss);
-  const mode = state.interfaceMode;
+  const mode = useSettingsStore((state) => state.interfaceMode);
 
   return (
     <Wrapper

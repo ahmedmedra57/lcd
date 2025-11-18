@@ -6,10 +6,7 @@ import Sidebar from "./components/sidebar/Sidebar";
 import Switch from "./components/switch/Switch";
 import Settings from "./components/settings/Settings";
 import Faults from "./components/faults/Faults";
-import { useDispatch, useSelector } from "react-redux";
-import { selectSettingsOfEss, setInterfaceMode } from "./store/slices/settingsOfEssSlice";
-import { selectTgsSwitch } from "./store/slices/tgsSwitchSlice";
-import { handleTesSwitch, selectUserState } from "./store/slices/userSlice";
+import { useSettingsStore, useTgsSwitchStore, useUserStore } from "./store/zustand";
 import { useEffect, useMemo } from "react";
 import MainLoadingPage from "./components/loading/MainLoadingPage";
 import { calculatedTime } from "./helpers/helpers";
@@ -19,14 +16,14 @@ import GlobalStyle from "./styles/GlobalStyles";
 import { TIMEOUTS } from "./constants";
 
 const MainPage = () => {
-  // redux
-  const dispatch = useDispatch();
-  const userState = useSelector(selectUserState);
-  const { isEssSwitch, isGas } = userState;
-  const state = useSelector(selectSettingsOfEss);
-  const mode = state.interfaceMode;
-  const systemData = useSelector(selectTgsSwitch);
-  const { gasInfo, electricalInfo, settings } = systemData;
+  // Zustand stores
+  const isEssSwitch = useUserStore((state) => state.isEssSwitch);
+  const isGas = useUserStore((state) => state.isGas);
+  const handleTesSwitch = useUserStore((state) => state.handleTesSwitch);
+  const mode = useSettingsStore((state) => state.interfaceMode);
+  const gasInfo = useTgsSwitchStore((state) => state.gasInfo);
+  const electricalInfo = useTgsSwitchStore((state) => state.electricalInfo);
+  const settings = useTgsSwitchStore((state) => state.settings);
 
   const LoadingTime = useMemo(() => {
     return isGas
@@ -42,10 +39,8 @@ const MainPage = () => {
   // Handle system configuration changes
   const systemConfiguration = JSON.stringify(settings?.system_configuration);
   useEffect(() => {
-    dispatch(
-      handleTesSwitch(systemConfiguration?.includes("TES") ? true : false)
-    );
-  }, [systemConfiguration, dispatch]);
+    handleTesSwitch(systemConfiguration?.includes("TES") ? true : false);
+  }, [systemConfiguration, handleTesSwitch]);
 
   return (
     <ThemeProvider theme={mode ? lightTheme : darkTheme}>

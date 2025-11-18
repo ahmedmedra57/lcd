@@ -1,12 +1,10 @@
 import styled from 'styled-components';
 import { flexboxCenter } from '../../../../../styles/commonStyles';
-import { useSelector } from 'react-redux';
-import { selectSettingsOfEss } from '../../../../../store/slices/settingsOfEssSlice';
+import { useSettingsStore } from '../../../../../store/zustand';
 
 const MessageButton = ({ name, buttonHandler }) => {
-  const state = useSelector(selectSettingsOfEss);
-  const mode = state.interfaceMode;
-  const editState = state.buttonsOfSettings.settingsEditButton;
+  const mode = useSettingsStore((state) => state.interfaceMode);
+  const editState = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
 
   return (
     <WrapperHole onClick={editState && buttonHandler}>

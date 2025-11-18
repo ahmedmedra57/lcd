@@ -1,6 +1,5 @@
-import { useSelector } from 'react-redux';
+import { useUserStore } from '../../../../store/zustand';
 import styled from 'styled-components';
-import { selectUserState } from '../../../../store/slices/userSlice';
 function TcConfirmButton({
   onConfirm,
   essOutsideTemp,
@@ -12,8 +11,7 @@ function TcConfirmButton({
   tesHeaterTemp,
   tgsTesEncloseTemp,
 }) {
-  const userState = useSelector(selectUserState);
-  const essSwitch = userState.isEssSwitch;
+  const essSwitch = useUserStore((state) => state.isEssSwitch);
 
   return (
     <Wrapper>

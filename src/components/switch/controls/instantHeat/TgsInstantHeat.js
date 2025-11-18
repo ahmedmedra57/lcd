@@ -5,17 +5,8 @@ import {
   useMemo,
   useCallback,
 } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-  selectTgsSwitch,
-  tgsInstantHeat,
-  fanOnlyToggler,
-  activateTgsConflictMessage,
-  setDevicesConflicts,
-} from '../../../../store/slices/tgsSwitchSlice';
-import { selectEssSwitch } from '../../../../store/slices/essSwitchSlice';
-import { selectSettingsOfEss } from '../../../../store/slices/settingsOfEssSlice';
+import { useTgsSwitchStore, useEssSwitchStore, useSettingsStore, useUserStore } from '../../../../store/zustand';
 
 import {
   activeHole,
@@ -34,23 +25,22 @@ import {
   isTargetAlreadyRunning,
   updateDeviceInfo,
 } from '../../../../helpers/helpers';
-import { selectUserState } from "../../../../store/slices/userSlice";
 
 const TgsInstantHeat = () => {
-  const state = useSelector(selectTgsSwitch);
-  const dispatch = useDispatch();
-  const { isActivated, isF } = state.instantHeat;
-  const { gasInfo, settings, currentRunSystem } = state;
+  const isActivated = useTgsSwitchStore((state) => state.instantHeat.isActivated);
+  const isF = useTgsSwitchStore((state) => state.instantHeat.isF);
+  const gasInfo = useTgsSwitchStore((state) => state.gasInfo);
+  const settings = useTgsSwitchStore((state) => state.settings);
+  const currentRunSystem = useTgsSwitchStore((state) => state.currentRunSystem);
+  const tgsInstantHeat = useTgsSwitchStore((state) => state.tgsInstantHeat);
+  const activateTgsConflictMessage = useTgsSwitchStore((state) => state.activateTgsConflictMessage);
+  const setDevicesConflicts = useTgsSwitchStore((state) => state.setDevicesConflicts);
   const inputRef = useRef();
   const navigate = useNavigate();
 
-  const unitsState = useSelector(selectSettingsOfEss);
-  const { unitsMeasurement } = unitsState.buttonsOfSettings;
-  // Check es switch
-  const esState = useSelector(selectEssSwitch);
-  const { isEsSwitchActivated } = esState;
-  const userState = useSelector(selectUserState);
-  const { isEssSwitch } = userState;
+  const unitsMeasurement = useSettingsStore((state) => state.buttonsOfSettings.unitsMeasurement);
+  const isEsSwitchActivated = useEssSwitchStore((state) => state.isEsSwitchActivated);
+  const isEssSwitch = useUserStore((state) => state.isEssSwitch);
 
   const [openKeyPad, setOpenKeyPad] = useState(false);
   const [activateMessageBox, setActivateMessageBox] = useState(false);
@@ -96,16 +86,14 @@ const TgsInstantHeat = () => {
     }
     if (isAnotherSystemRunning('electrical', currentRunSystem)) {
       // Activate Conflict Message Box
-      dispatch(activateTgsConflictMessage());
-      dispatch(
-        setDevicesConflicts({
-          currentSwitch: 'tes-typhoon electric system',
-          DesiredSwitch: 'tgs-typhoon gas system',
-          systemTarget: 'gas',
-          commandTarget: 'on_switch',
-          extraData: convertFahrenheitToCelsius(temp, settings?.unit),
-        })
-      );
+      activateTgsConflictMessage();
+      setDevicesConflicts({
+        currentSwitch: 'tes-typhoon electric system',
+        DesiredSwitch: 'tgs-typhoon gas system',
+        systemTarget: 'gas',
+        commandTarget: 'on_switch',
+        extraData: convertFahrenheitToCelsius(temp, settings?.unit),
+      });
     } else {
       setOpenKeyPad(false);
       // if (instantHeatTemp === 0 && !instantButtonToggler) {
@@ -113,7 +101,7 @@ const TgsInstantHeat = () => {
         if (temp >= 0) {
           updateDeviceInfo("threshold_temp", convertFahrenheitToCelsius(temp,settings?.unit), "gas_command");
           updateDeviceInfo("on_switch", newGasOnSwitch, "gas_command");
-          dispatch(tgsInstantHeat({ temp, unitsMeasurement }));
+          tgsInstantHeat({ temp, unitsMeasurement });
         } else {
           // input temp less than 77°F
           // message box
@@ -127,7 +115,7 @@ const TgsInstantHeat = () => {
         }
       } else {
         if (temp >= 0) {
-          dispatch(tgsInstantHeat({ temp, unitsMeasurement }));
+          tgsInstantHeat({ temp, unitsMeasurement });
           inputRef.current.value = `${temp}°C`;
         } else {
           // input temp less than 77°F
@@ -162,7 +150,7 @@ const TgsInstantHeat = () => {
           setIsJustTempRequired(false);
           return;
         }
-        dispatch(tgsInstantHeat({ temp, unitsMeasurement }));
+        tgsInstantHeat({ temp, unitsMeasurement });
         // inputRef.current.value = `${temp}°F`;
       } else {
         // input temp less than 77°F
@@ -194,7 +182,7 @@ const TgsInstantHeat = () => {
       // }
     } else {
       // Activate Conflict Message Box
-      dispatch(activateTgsConflictMessage());
+      activateTgsConflictMessage();
     }
   };
   const onInputHandler = async () => {
@@ -206,20 +194,18 @@ const TgsInstantHeat = () => {
     }
     if (isAnotherSystemRunning('electrical', currentRunSystem)) {
       // show conflict message
-      dispatch(activateTgsConflictMessage());
-      dispatch(
-        setDevicesConflicts({
-          currentSwitch: 'tes-typhoon electric system',
-          DesiredSwitch: 'tgs-typhoon gas system',
-          systemTarget: 'gas',
-          commandTarget: 'on_switch',
-          extraData: convertFahrenheitToCelsius(temp, settings?.unit),
-        })
-      );
+      activateTgsConflictMessage();
+      setDevicesConflicts({
+        currentSwitch: 'tes-typhoon electric system',
+        DesiredSwitch: 'tgs-typhoon gas system',
+        systemTarget: 'gas',
+        commandTarget: 'on_switch',
+        extraData: convertFahrenheitToCelsius(temp, settings?.unit),
+      });
     } else {
       if (temp > 0) {
         updateDeviceInfo("on_switch", newGasOnSwitch, "gas_command");
-        dispatch(tgsInstantHeat(0));
+        tgsInstantHeat(0);
       } else {
         inputRef.current.focus();
         setOpenKeyPad(true);

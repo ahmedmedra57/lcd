@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { selectSettingsOfEss } from '../../../../../store/slices/settingsOfEssSlice';
+import { useSettingsStore } from '../../../../../store/zustand';
 import { flexboxCenter } from '../../../../../styles/commonStyles';
 import SaveButton from './SaveButton';
 import { updateDeviceInfo } from '../../../../../helpers/helpers';
@@ -12,8 +11,7 @@ function ForceGasElectricSystem({
   handleSave,
   buttonColor,
 }) {
-  const state = useSelector(selectSettingsOfEss);
-  const editState = state.buttonsOfSettings.settingsEditButton;
+  const editState = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
 
   useEffect(() => {
     handleSave(false);

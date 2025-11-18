@@ -1,16 +1,13 @@
-import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
-import { selectUserState } from '../../../store/slices/userSlice';
+import { useUserStore } from '../../../store/userStore';
 
 import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../../styles/commonStyles';
 
 const ChartInfoContainer = () => {
   // Sytem title will be chaged by state from store
-  const userState = useSelector(selectUserState);
-
-  const { isEssSwitch } = userState;
+  const { isEssSwitch } = useUserStore();
   const location = useLocation();
 
   const source = isEssSwitch

@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { flexboxCenter } from '../../../../../styles/commonStyles';
-import { useSelector } from 'react-redux';
-import { selectSettingsOfEss } from '../../../../../store/slices/settingsOfEssSlice';
+import { useSettingsStore } from '../../../../../store/zustand';
 import SelectBox from './SelectBox';
 import SubTitles from './SubTitles';
 import ConfirmButton from '../../ConfirmButton';
@@ -35,9 +34,8 @@ function SelectAts({
   // states
   const [switchImage, setSwitchImage] = useState(switchOffImage);
 
-  // redux
-  const state = useSelector(selectSettingsOfEss);
-  const mode = state.interfaceMode;
+  // zustand
+  const mode = useSettingsStore((state) => state.interfaceMode);
 
   // functions
   const handleImages = () => {

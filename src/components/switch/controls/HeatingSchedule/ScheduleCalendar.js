@@ -24,14 +24,9 @@ import {
 } from '../../../../helpers/helpers';
 import { v4 as uuidv4 } from 'uuid';
 import moment from 'moment';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectUserState } from '../../../../store/slices/userSlice';
-import {
-  activateTgsConflictMessage,
-  selectTgsSwitch,
-  setDevicesConflicts,
-} from '../../../../store/slices/tgsSwitchSlice';
-import { selectEssSwitch } from '../../../../store/slices/essSwitchSlice';
+import { useUserStore } from '../../../../store/userStore';
+import { useTgsSwitchStore } from '../../../../store/tgsSwitchStore';
+import { useEssSwitchStore } from '../../../../store/essSwitchStore';
 import { useNavigate } from 'react-router-dom';
 
 const ScheduleCalendar = ({
@@ -44,7 +39,6 @@ const ScheduleCalendar = ({
   tempInput,
   setTempInput,
 }) => {
-  const dispatch = useDispatch();
   const [isFirstSchedule, setIsFirstSchedule] = useState(
     scheduleList[0].start.date ? true : false
   );
@@ -62,11 +56,9 @@ const ScheduleCalendar = ({
   const [displayMessageBoxConfirm, setDisplayMessageBoxConfirm] =
     useState(false);
   const navigate = useNavigate();
-  
+
   const [editable, setEditable] = useState(true);
-  const userState = useSelector(selectUserState);
-  const { isEssSwitch, isGas } = userState;
-  const devicesState = useSelector(selectTgsSwitch);
+  const { isEssSwitch, isGas } = useUserStore();
   const {
     settings,
     EBP,
@@ -74,9 +66,10 @@ const ScheduleCalendar = ({
     gasInfo,
     currentRunSystem,
     heatingScheduleList: gasHeatingScheduleList,
-  } = devicesState;
-  const { heatingScheduleList: electricalHeatingScheduleList } =
-    useSelector(selectEssSwitch);
+    activateTgsConflictMessage,
+    setDevicesConflicts,
+  } = useTgsSwitchStore();
+  const { heatingScheduleList: electricalHeatingScheduleList } = useEssSwitchStore();
   const mode = JSON.parse(localStorage.getItem("themeMode"));
   const currHour = moment().format('hh');
   const currMinutes = moment().format('mm');
@@ -451,20 +444,18 @@ const ScheduleCalendar = ({
         if (!isEssSwitch && (isAnotherSystemRunning(isGas ? 'electrical' : 'gas', currentRunSystem)
           || (isGas && electricalHeatingScheduleList[0].start?.date)
           || (!isGas && gasHeatingScheduleList[0].start?.date))) {
-          dispatch(activateTgsConflictMessage());
-          dispatch(
-            setDevicesConflicts({
-              currentSwitch: isGas
-                ? 'tes-typhoon electric system'
-                : 'tgs-typhoon gas system',
-              DesiredSwitch: isGas
-                ? 'tgs-typhoon gas system'
-                : 'tes-typhoon electrical system',
-              systemTarget: isGas ? 'gas' : 'electrical',
-              commandTarget: 'schedule',
-              extraData: data,
-            })
-          );
+          activateTgsConflictMessage();
+          setDevicesConflicts({
+            currentSwitch: isGas
+              ? 'tes-typhoon electric system'
+              : 'tgs-typhoon gas system',
+            DesiredSwitch: isGas
+              ? 'tgs-typhoon gas system'
+              : 'tes-typhoon electrical system',
+            systemTarget: isGas ? 'gas' : 'electrical',
+            commandTarget: 'schedule',
+            extraData: data,
+          });
           return;
         }
         if (scheduleList[0].inputTemp) {
