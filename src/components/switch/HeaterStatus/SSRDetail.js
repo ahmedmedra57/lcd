@@ -6,7 +6,7 @@ import ToggleSWitch from './ToggleSwitch';
 import Select from './Select';
 import SSRInfoContainer from './SSRInfoContainer';
 import SwitchNameSelector from './SwitchNameSelector';
-import useHeaterStatusStore from '../../../store/zustand/heaterStatusStore';
+import { useHeaterStatusStore } from '../../../store/zustand';
 
 const SSRDetail = ({ data, id, isSelected, handleOpenSelectBox, switchNamesList, localHeaters, setLocalHeaters, isUpdating, setIsUpdating }) => {
   const { setSSRSwitchName } = useHeaterStatusStore();

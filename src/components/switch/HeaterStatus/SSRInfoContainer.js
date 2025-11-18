@@ -1,6 +1,5 @@
-import useSettingsStore from '../../../store/zustand/settingsStore';
+import { useSettingsStore, useUserStore } from '../../../store/zustand';
 import { useState, useEffect } from 'react';
-import useUserStore from '../../../store/zustand/userStore';
 
 import { flexboxCenter } from '../../../styles/commonStyles';
 import styled, { css } from 'styled-components';

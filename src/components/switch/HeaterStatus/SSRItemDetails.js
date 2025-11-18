@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import styled, { css } from 'styled-components';
-import useSettingsStore from '../../../store/zustand/settingsStore';
-import useTgsSwitchStore from '../../../store/zustand/tgsSwitchStore';
+import { useSettingsStore, useTgsSwitchStore } from '../../../store/zustand';
 
 import {
   flexboxCenter,

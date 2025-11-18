@@ -1,8 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import useHeaterStatusStore from '../../../store/zustand/heaterStatusStore';
-import useSettingsStore from '../../../store/zustand/settingsStore';
-import useUserStore from '../../../store/zustand/userStore';
-import useTgsSwitchStore from '../../../store/zustand/tgsSwitchStore';
+import { useHeaterStatusStore, useSettingsStore, useUserStore, useTgsSwitchStore } from '../../../store/zustand';
 
 import styled, { css } from 'styled-components';
 import {

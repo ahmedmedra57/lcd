@@ -7,8 +7,7 @@ import {
 import SelectButton from './SelectButton';
 import RadioBox from './RadioBox';
 
-import useHeaterStatusStore from '../../../store/zustand/heaterStatusStore';
-import useTgsSwitchStore from '../../../store/zustand/tgsSwitchStore';
+import { useHeaterStatusStore, useTgsSwitchStore } from '../../../store/zustand';
 import { updateSettingsValue } from '../../../helpers/helpers';
 const select = [
   'tc-01',

@@ -3,8 +3,7 @@ import styled, { css } from "styled-components";
 
 import { flexboxCenter } from "../../../styles/commonStyles";
 import { updateSettingsValues } from "../../../helpers/helpers";
-import useTgsSwitchStore from "../../../store/zustand/tgsSwitchStore";
-import useHeaterStatusStore from "../../../store/zustand/heaterStatusStore";
+import { useTgsSwitchStore, useHeaterStatusStore } from "../../../store/zustand";
 import { useEffect } from "react";
 
 const ToggleSWitch = ({ data, id, localHeaters, setLocalHeaters, isUpdating, setIsUpdating }) => {

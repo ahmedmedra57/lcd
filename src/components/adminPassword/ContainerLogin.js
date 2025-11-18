@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { flexboxCenter } from '../../styles/commonStyles';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import useUserStore from '../../store/zustand/userStore';
+import { useUserStore } from '../../store/zustand';
 import { useRef } from 'react';
 import { useEffect } from 'react';
 import InputKeyboard from '../keyboard/InputKeyboard';

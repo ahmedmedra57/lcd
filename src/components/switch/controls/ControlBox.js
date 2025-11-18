@@ -1,8 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import useTgsSwitchStore from '../../../store/zustand/tgsSwitchStore';
-import useUserStore from '../../../store/zustand/userStore';
-import useFaultsStore from '../../../store/zustand/faultsStore';
-import useSettingsStore from '../../../store/zustand/settingsStore';
+import { useTgsSwitchStore, useUserStore, useFaultsStore, useSettingsStore } from '../../../store/zustand';
 import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../../styles/commonStyles';
 import ConstantHeat from './optionalConstantTemp/ConstantHeat';

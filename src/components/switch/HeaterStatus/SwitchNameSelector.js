@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
-import useHeaterStatusStore from "../../../store/zustand/heaterStatusStore";
+import { useHeaterStatusStore } from "../../../store/zustand";
 import { flexboxCenter } from "../../../styles/commonStyles";
 import InputKeyboard from "../../keyboard/InputKeyboard";
 import SwitchNameButton from "./SwitchNameButton";

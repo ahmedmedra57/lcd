@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../styles/commonStyles';
 import { useEffect, useState } from 'react';
-import useTgsSwitchStore from '../../store/zustand/tgsSwitchStore';
+import { useTgsSwitchStore } from '../../store/zustand';
 import { calculatedTime } from '../../helpers/helpers';
 
 const LoadingIcon = ({ isCenterPosition }) => {

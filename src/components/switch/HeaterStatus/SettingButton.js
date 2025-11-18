@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import useUserStore from '../../../store/zustand/userStore';
+import { useUserStore } from '../../../store/zustand';
 import { flexboxCenter } from '../../../styles/commonStyles';
 import HoverMessageBox from './HoverMessageBox';
 

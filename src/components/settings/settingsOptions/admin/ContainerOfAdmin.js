@@ -6,11 +6,7 @@ import {
   // alignItemsFlexStart,
 } from '../../../../styles/commonStyles';
 import { useContext, useEffect, useState } from 'react';
-import useSettingsStore from '../../../../store/zustand/settingsStore';
-import useUserStore from '../../../../store/zustand/userStore';
-import useTgsSwitchStore from '../../../../store/zustand/tgsSwitchStore';
-import useHeaterStatusStore from '../../../../store/zustand/heaterStatusStore';
-import useTgsSettingsStore from '../../../../store/zustand/tgsSettingsStore';
+import { useSettingsStore, useUserStore, useTgsSwitchStore, useHeaterStatusStore, useTgsSettingsStore } from '../../../../store/zustand';
 import SystemHeader from './SystemHeader';
 // import Control from './sysControl/Control';
 import ContainerLogin from '../../../adminPassword/ContainerLogin';

@@ -1,8 +1,6 @@
 import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../styles/commonStyles';
-import useUserStore from '../store/zustand/userStore';
-import useSettingsStore from '../store/zustand/settingsStore';
-import useTgsSwitchStore from '../store/zustand/tgsSwitchStore';
+import { useUserStore, useSettingsStore, useTgsSwitchStore } from '../store/zustand';
 import { useMemo } from 'react';
 import { convertCelsiusToFahrenheit } from '../helpers/helpers'
 

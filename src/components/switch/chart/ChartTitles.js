@@ -2,10 +2,7 @@ import React,{useMemo} from "react";
 import { useLocation } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { electricalFaultsList, gasFaultsList } from "../../../helpers/helpers";
-import useChartStore from "../../../store/zustand/chartStore";
-import useFaultsStore from "../../../store/zustand/faultsStore";
-import useTgsSwitchStore from "../../../store/zustand/tgsSwitchStore";
-import useUserStore from "../../../store/zustand/userStore";
+import { useChartStore, useFaultsStore, useTgsSwitchStore, useUserStore } from "../../../store/zustand";
 import { flexboxCenter } from "../../../styles/commonStyles";
 
 const electrical = "electrical";
