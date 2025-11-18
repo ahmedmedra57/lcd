@@ -24,9 +24,11 @@ import {
 } from '../../../../helpers/helpers';
 import { v4 as uuidv4 } from 'uuid';
 import moment from 'moment';
-import { useUserStore } from '../../../../store/userStore';
-import { useTgsSwitchStore } from '../../../../store/tgsSwitchStore';
-import { useEssSwitchStore } from '../../../../store/essSwitchStore';
+import {
+  useUserStore,
+  useTgsSwitchStore,
+  useEssSwitchStore
+} from '../../../../store/zustand';
 import { useNavigate } from 'react-router-dom';
 
 const ScheduleCalendar = ({

@@ -1,9 +1,11 @@
 import { useLocation } from 'react-router-dom';
 
-import { useEssSwitchStore } from '../../store/essSwitchStore';
-import { useSettingsStore } from '../../store/settingsStore';
-import { useTgsSwitchStore } from '../../store/tgsSwitchStore';
-import { useUserStore } from '../../store/userStore';
+import {
+  useEssSwitchStore,
+  useSettingsStore,
+  useTgsSwitchStore,
+  useUserStore
+} from '../../store/zustand';
 
 import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../styles/commonStyles';

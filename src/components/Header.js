@@ -1,5 +1,3 @@
-import { useSystemIdentificationStore } from '../store/systemIdentificationStore';
-
 import styled from 'styled-components';
 import {
   flexboxCenter,
@@ -7,15 +5,18 @@ import {
 } from '../styles/commonStyles';
 
 import DateAndWeather from './DateAndWeather';
-import { useTgsTesSettingsStore } from '../store/tgsTesSettingsStore';
-import { useUserStore } from '../store/userStore';
-import { useSettingsStore } from '../store/settingsStore';
-import { useTgsSwitchStore } from '../store/tgsSwitchStore';
+import {
+  useSystemIdentificationStore,
+  useTgsSettingsStore,
+  useUserStore,
+  useSettingsStore,
+  useTgsSwitchStore
+} from '../store/zustand';
 
 const Header = () => {
   const { sysIdentification } = useSystemIdentificationStore();
   const { isEssSwitch, isTesSwitch } = useUserStore();
-  const { gasType } = useTgsTesSettingsStore();
+  const { gasType } = useTgsSettingsStore();
   const { interfaceMode } = useSettingsStore();
   const { settings } = useTgsSwitchStore();
   const mode = interfaceMode;

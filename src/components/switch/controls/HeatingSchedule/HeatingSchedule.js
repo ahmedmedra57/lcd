@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useEssSwitchStore } from '../../../../store/essSwitchStore';
-import { useSettingsStore } from '../../../../store/settingsStore';
-import { useTgsSwitchStore } from '../../../../store/tgsSwitchStore';
+import {
+  useEssSwitchStore,
+  useSettingsStore,
+  useTgsSwitchStore
+} from '../../../../store/zustand';
 
 // styles
 import styled, { css } from 'styled-components';

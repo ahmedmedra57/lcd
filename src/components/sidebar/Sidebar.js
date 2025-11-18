@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import { useFaultsStore } from "../../store/faultsStore";
-import { useSettingsStore } from "../../store/settingsStore";
-import { useTgsSwitchStore } from "../../store/tgsSwitchStore";
-import { useUserStore } from "../../store/userStore";
+import {
+  useFaultsStore,
+  useSettingsStore,
+  useTgsSwitchStore,
+  useUserStore
+} from "../../store/zustand";
 
 import { flexboxCenter } from "../../styles/commonStyles";
 import ApplyButtonInvisibleDiv from "../settings/settingsOptions/editAndApplyMessageBoxes/ApplyButtonInvisibleDiv";

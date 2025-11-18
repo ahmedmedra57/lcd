@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { forceFaultHandler } from '../../helpers/helpers';
-import { useEssSwitchStore } from '../../store/essSwitchStore';
-import { useFaultsStore } from '../../store/faultsStore';
-import { useTimerStore } from '../../store/timerStore';
+import {
+  useEssSwitchStore,
+  useFaultsStore,
+  useTimerStore
+} from '../../store/zustand';
 
 import { flexboxCenter } from '../../styles/commonStyles';
 

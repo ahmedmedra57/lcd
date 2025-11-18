@@ -1,14 +1,16 @@
 import { useLocation } from 'react-router-dom';
-import { useUserStore } from '../../../store/userStore';
+import {
+  useUserStore,
+  useSettingsStore,
+  useTgsSwitchStore
+} from '../../../store/zustand';
 
 import styled from 'styled-components';
 
 import DisplayBox from './../DisplayBox';
 
-import { useSettingsStore } from '../../../store/settingsStore';
 import { convertCelsiusToFahrenheit } from '../../../helpers/helpers';
 import { useMemo } from 'react';
-import { useTgsSwitchStore } from '../../../store/tgsSwitchStore';
 
 const DisplayStatus = ({ deviceInfo, deviceType }) => {
   // Add conditional statement to assignment values

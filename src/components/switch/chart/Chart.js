@@ -12,11 +12,13 @@ import moment from 'moment';
 
 import { flexboxCenter } from '../../../styles/commonStyles';
 import styled from 'styled-components';
-import { useSystemIdentificationStore } from '../../../store/systemIdentificationStore';
-import { useSettingsStore } from '../../../store/settingsStore';
-import { useTgsSwitchStore } from '../../../store/tgsSwitchStore';
+import {
+  useSystemIdentificationStore,
+  useSettingsStore,
+  useTgsSwitchStore,
+  useUserStore
+} from '../../../store/zustand';
 import { useMemo } from 'react';
-import { useUserStore } from '../../../store/userStore';
 import { convertCelsiusToFahrenheit } from '../../../helpers/helpers';
 import { useTheme } from 'styled-components';
 

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useFaultsStore } from '../../../store/faultsStore';
+import { useFaultsStore } from '../../../store/zustand';
 
 import { flexboxCenter } from '../../../styles/commonStyles';
 import styled, { css } from 'styled-components';

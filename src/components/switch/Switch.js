@@ -1,4 +1,4 @@
-import { useUserStore } from "../../store/userStore";
+import { useUserStore, useChartStore } from "../../store/zustand";
 import { useLocation } from "react-router-dom";
 
 import styled, { css } from "styled-components";
@@ -10,7 +10,6 @@ import HeaterStatus from "./HeaterStatus/HeaterStatus";
 import TgsControlBox from "./controls/tgsControlBox";
 import { useEffect } from "react";
 import LoadingRouter from "../loading/LoadingRouter";
-import { useChartStore } from "../../store/chartStore";
 
 const Switch = ({ ...rest }) => {
   const { isEssSwitch, isInhand, isGas, setIsGas, setIsInhand } = useUserStore();

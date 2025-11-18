@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Label } from 'recharts';
 
 import styled, { css } from 'styled-components';
-import { useFaultsStore } from '../../store/faultsStore';
+import { useFaultsStore } from '../../store/zustand';
 import { flexboxCenter } from '../../styles/commonStyles';
 import InputKeyboard from '../keyboard/InputKeyboard';
 import SettingConfirmedMessage from '../userMessages/SettingConfirmedMessage';

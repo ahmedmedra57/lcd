@@ -7,10 +7,13 @@ import {
 } from '../../../../../styles/commonStyles';
 import { useCallback, useState } from 'react';
 import SelectBox from './SelectBox';
-import { useSelectSystemUOSStore } from '../../../../../store/zustand';
-import { useUserStore } from '../../../../../store/zustand';
-import { useSSRDescriptionStore } from '../../../../../store/zustand';
-import { useChartStore } from '../../../../../store/zustand';
+// TODO: useSelectSystemUOSStore doesn't exist - needs to be implemented
+// import { useSelectSystemUOSStore } from '../../../../../store/zustand';
+import {
+  useUserStore,
+  useHeaterStatusStore,
+  useChartStore
+} from '../../../../../store/zustand';
 import { useEffect } from 'react';
 import { getNoLinkedBlowerDevices, getNoLinkedElectricalDevices } from '../../../../../services/systemIdentification';
 import { async } from 'q';
@@ -33,13 +36,16 @@ const NewSystemIdentification = ({
   const [greenContour, setGreenContour] = useState(false);
   const isEssSwitch = useUserStore((state) => state.isEssSwitch);
   const { setInputData } = useContext(SettingsContext)
-  const elementsOptions = useSSRDescriptionStore((state) => state.elementsOptions);
+  const elementsOptions = useHeaterStatusStore((state) => state.description?.elementsOptions || []);
   const mode = JSON.parse(localStorage.getItem("themeMode"));
 
   // Zustand
-  const allLocations = useSelectSystemUOSStore((state) => state);
+  // TODO: useSelectSystemUOSStore doesn't exist - needs to be implemented
+  // const allLocations = useSelectSystemUOSStore((state) => state);
+  const allLocations = { locations: [] }; // Temporary placeholder
   const wifiState = useChartStore((state) => state.wifiState);
-  const handleLocationsSystemIdentification = useSelectSystemUOSStore((state) => state.handleLocationsSystemIdentification);
+  // const handleLocationsSystemIdentification = useSelectSystemUOSStore((state) => state.handleLocationsSystemIdentification);
+  const handleLocationsSystemIdentification = () => {}; // Temporary placeholder
 
   const getNoLinkedDevices = useCallback(() => {
     const fetchDataFunction = isEssSwitch

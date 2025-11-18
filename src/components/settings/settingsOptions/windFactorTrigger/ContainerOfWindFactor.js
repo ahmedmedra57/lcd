@@ -7,9 +7,11 @@ import {
   convertFahrenheitToCelsius,
   updateDeviceInfo,
 } from '../../../../helpers/helpers';
-import { useSettingsStore } from '../../../../store/zustand';
-import { useTgsTesSettingsStore } from '../../../../store/zustand';
-import { useUserStore } from '../../../../store/zustand';
+import {
+  useSettingsStore,
+  useTgsSettingsStore,
+  useUserStore
+} from '../../../../store/zustand';
 import { flexboxCenter } from '../../../../styles/commonStyles';
 import InputKeyPad from '../../../keyboard/InputKeyPad';
 import SettingAppliedMessage from '../../../userMessages/SettingAppliedMessage';
@@ -70,8 +72,8 @@ function ContainerOfWindFactor() {
   const setSettingsEditButton = useSettingsStore((state) => state.setSettingsEditButton);
   const setSettingsCancelButton = useSettingsStore((state) => state.setSettingsCancelButton);
   const setResetAllSettingsButtons = useSettingsStore((state) => state.setResetAllSettingsButtons);
-  const { low, med, high, extreme } = useTgsTesSettingsStore((state) => state.windFactorTemp);
-  const setTgsTesSettingsApplyWindFactor = useTgsTesSettingsStore((state) => state.setTgsTesSettingsApplyWindFactor);
+  const { low, med, high, extreme } = useTgsSettingsStore((state) => state.windFactorTemp);
+  const setTgsSettingsApplyWindFactor = useTgsSettingsStore((state) => state.setTgsSettingsApplyWindFactor);
   const adminAccess = useUserStore((state) => state.isAdministrator);
   const setAdminAccess = useUserStore((state) => state.setAdminAccess);
 
@@ -139,7 +141,7 @@ function ContainerOfWindFactor() {
                 windFactor.extremeWind,
               ];
           updateDeviceInfo('wind_threshold', data, 'setting_command');
-          setTgsTesSettingsApplyWindFactor({ windFactor });
+          setTgsSettingsApplyWindFactor({ windFactor });
         }
         setMessageBox(true);
         handleWindFactorMessageBox();

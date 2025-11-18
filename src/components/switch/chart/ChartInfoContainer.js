@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 
-import { useUserStore } from '../../../store/userStore';
+import { useUserStore } from '../../../store/zustand';
 
 import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../../styles/commonStyles';

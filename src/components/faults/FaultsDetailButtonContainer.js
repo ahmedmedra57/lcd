@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useFaultsStore } from '../../store/faultsStore';
+import { useFaultsStore } from '../../store/zustand';
 import FaultsDetailButton from './FaultsDetailButton';
 import { useMemo } from 'react';
 

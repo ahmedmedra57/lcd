@@ -1,8 +1,11 @@
 // APIs
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useHeaterStatusStore } from "../../../store/heaterStatusStore";
-import { useFaultsStore } from "../../../store/faultsStore";
-import { useUserStore } from "../../../store/userStore";
+import {
+  useHeaterStatusStore,
+  useFaultsStore,
+  useUserStore,
+  useTgsSwitchStore
+} from "../../../store/zustand";
 
 // Styling
 import styled, { css } from "styled-components";
@@ -13,7 +16,6 @@ import ApplyButton from "../controls/ApplyButton";
 import SSRButton from "./SSRButton";
 import SSRDetail from "./SSRDetail";
 import ContainerLogin from "../../adminPassword/ContainerLogin";
-import { useTgsSwitchStore } from "../../../store/tgsSwitchStore";
 
 const HeaterStatus = () => {
   const ssrState = useHeaterStatusStore((state) => state);

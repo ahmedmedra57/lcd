@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { useTgsSwitchStore } from '../../../../store/tgsSwitchStore';
-import { useSettingsStore } from '../../../../store/settingsStore';
-import { useEssSwitchStore } from '../../../../store/essSwitchStore';
+import {
+  useTgsSwitchStore,
+  useSettingsStore,
+  useEssSwitchStore
+} from '../../../../store/zustand';
 
 import styled, { css } from 'styled-components';
 import {

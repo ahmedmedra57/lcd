@@ -2,10 +2,12 @@ import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../../../../styles/commonStyles';
 import { useState, useContext } from 'react';
 import ValveConfirmButton from './ValveConfirmButton';
-import { useSettingsStore } from '../../../../../store/zustand';
-import { useSystemIdentificationStore } from '../../../../../store/zustand';
-import { useTgsTesSettingsStore } from '../../../../../store/zustand';
-import { useUserStore } from '../../../../../store/zustand';
+import {
+  useSettingsStore,
+  useSystemIdentificationStore,
+  useTgsSettingsStore,
+  useUserStore
+} from '../../../../../store/zustand';
 import InputKeyPad from '../../../../keyboard/InputKeyPad';
 import { SettingsContext } from '../../../../../context/ContextOfSettings';
 import { updateDeviceInfo } from '../../../../../helpers/helpers';
@@ -32,7 +34,7 @@ function ValveSettings({ setWarningMessage, setInputValue, inputValue }) {
   const mode = useSettingsStore((state) => state.interfaceMode);
   const editState = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
   const { locationName, switchName, application, switchSize, heatingSystem } = useSystemIdentificationStore((state) => state.sysIdentification);
-  const gasType = useTgsTesSettingsStore((state) => state.gasType);
+  const gasType = useTgsSettingsStore((state) => state.gasType);
   const isEssSwitch = useUserStore((state) => state.isEssSwitch);
   const isTesSwitch = useUserStore((state) => state.isTesSwitch);
 

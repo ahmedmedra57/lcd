@@ -1,7 +1,6 @@
 import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
-import { useFaultsStore } from '../../store/faultsStore';
-import { useTgsSwitchStore } from '../../store/tgsSwitchStore';
+import { useFaultsStore, useTgsSwitchStore } from '../../store/zustand';
 import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../styles/commonStyles';
 import { countdownTimer } from '../../helpers/helpers';

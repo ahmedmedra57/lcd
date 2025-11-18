@@ -1,5 +1,4 @@
-import { useUserStore } from "../../store/userStore";
-import { useFaultsStore } from "../../store/faultsStore";
+import { useUserStore, useFaultsStore } from "../../store/zustand";
 
 import styled from "styled-components";
 

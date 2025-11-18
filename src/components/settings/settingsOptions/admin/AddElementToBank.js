@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useSettingsStore } from '../../../../store/zustand';
-import { useSSRDescriptionStore } from '../../../../store/zustand';
+import { useSettingsStore, useHeaterStatusStore } from '../../../../store/zustand';
 
 import styled, { css } from 'styled-components';
 import { flexboxCenter } from '../../../../styles/commonStyles';
@@ -14,9 +13,9 @@ import SettingConfirmedMessage from '../../../userMessages/SettingConfirmedMessa
 const AddElementToBank = () => {
   // Global states
   const unitsMeasurement = useSettingsStore((state) => state.buttonsOfSettings.unitsMeasurement);
-  const partNumberSuggestions = useSSRDescriptionStore((state) => state.partNumberSuggestions);
-  const lastAddedElement = useSSRDescriptionStore((state) => state.lastAddedElement);
-  const ssrPartsDescription = useSSRDescriptionStore((state) => state);
+  const partNumberSuggestions = useHeaterStatusStore((state) => state.description?.partNumberSuggestions);
+  const lastAddedElement = useHeaterStatusStore((state) => state.description?.lastAddedElement);
+  const ssrPartsDescription = useHeaterStatusStore((state) => state.description);
 
   // useContext
   const {

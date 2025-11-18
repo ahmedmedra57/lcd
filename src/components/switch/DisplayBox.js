@@ -1,9 +1,11 @@
 import { useLocation } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-import { useSettingsStore } from '../../store/settingsStore';
-import { useTgsSwitchStore } from '../../store/tgsSwitchStore';
+import {
+  useSettingsStore,
+  useTgsSwitchStore,
+  useUserStore
+} from '../../store/zustand';
 
-import { useUserStore } from '../../store/userStore';
 import { flexboxCenter } from '../../styles/commonStyles';
 
 const DisplayBox = ({ currData, label, unit, name, option }) => {

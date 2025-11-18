@@ -2,11 +2,12 @@ import styled, { css } from 'styled-components';
 import { useEffect, useMemo, useState, useContext } from 'react';
 import { flexboxCenter } from '../../../../styles/commonStyles';
 import SnowFactor from './SnowFactor';
-import { useSettingsStore } from '../../../../store/zustand';
-import { useUserStore } from '../../../../store/zustand';
-import { useTgsTesSettingsStore } from '../../../../store/zustand';
-import { useTgsSettingsStore } from '../../../../store/zustand';
-import { useTgsSwitchStore } from '../../../../store/zustand';
+import {
+  useSettingsStore,
+  useUserStore,
+  useTgsSettingsStore,
+  useTgsSwitchStore
+} from '../../../../store/zustand';
 import { SettingsContext } from '../../../../context/ContextOfSettings';
 import InvisibleDivForEditButton from '../editAndApplyMessageBoxes/InvisibleDivForEditButton';
 import EditCancelApplyButtons from '../EditCancelApplyButtons';
@@ -47,13 +48,11 @@ function ContainerOfSnowSensor() {
   const settingsEditButton = useSettingsStore((state) => state.buttonsOfSettings.settingsEditButton);
   const unitsState = useSettingsStore((state) => state.buttonsOfSettings.unitsMeasurement);
   const { essTemp, isFEss } = useSettingsStore((state) => state.snowSensorTemp);
-  const { tgsTemp, tesTemp, isFTgsTes } = useTgsTesSettingsStore((state) => state.snowSensorTemp);
-  const { tgsTempOnly, isFTgs } = useTgsSettingsStore((state) => state.snowSensorTemp);
+  const { tgsTemp, tesTemp, isFTgsTes, tgsTempOnly, isFTgs } = useTgsSettingsStore((state) => state.snowSensorTemp);
   const setResetAllSettingsButtons = useSettingsStore((state) => state.setResetAllSettingsButtons);
   const setSettingsEditButton = useSettingsStore((state) => state.setSettingsEditButton);
   const setSettingsCancelButton = useSettingsStore((state) => state.setSettingsCancelButton);
   const setSettingsApplySnowSensorTriggerButton = useSettingsStore((state) => state.setSettingsApplySnowSensorTriggerButton);
-  const setTgsTesSettingsApplySnowSensorButton = useTgsTesSettingsStore((state) => state.setTgsTesSettingsApplySnowSensorButton);
   const setTgsSettingsApplySnowSensorButton = useTgsSettingsStore((state) => state.setTgsSettingsApplySnowSensorButton);
   // sets back previous data entered in the input fields either in imperial or metric. if it was metric before and user changes the units, the input(s) will be converted.
   useEffect(() => {
@@ -219,7 +218,7 @@ function ContainerOfSnowSensor() {
         }
         if(tgsSnowSensor||tesSnowSensor){
           setResetAllSettingsButtons();
-          setTgsTesSettingsApplySnowSensorButton({
+          setTgsSettingsApplySnowSensorButton({
             tgsSnowSensor,
             tesSnowSensor,
             isF: unitsState,
