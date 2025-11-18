@@ -94,13 +94,13 @@ const Sidebar = () => {
 
   const alarmSrc = useMemo(() => {
     if (essSwitch) {
-      return ess.message.length > 0 ? alarmFaults : alarmNoFaults;
+      return ess.messages.length > 0 ? alarmFaults : alarmNoFaults;
     }
-    return ess.message.length > 0 ||
-      tgs.message.length > 0
+    return ess.messages.length > 0 ||
+      tgs.messages.length > 0
       ? alarmFaults
       : alarmNoFaults;
-  }, [settings, ess.message, tgs.message, isActivated, essSwitch, alarmFaults, alarmNoFaults]);
+  }, [settings, ess.messages, tgs.messages, isActivated, essSwitch, alarmFaults, alarmNoFaults]);
 
   const settingSrc = isActivated.setting
     ? mode? "/static/images/setting_light_active.svg" : "/static/images/setting-button-active.svg"

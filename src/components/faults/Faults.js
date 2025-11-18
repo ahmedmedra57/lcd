@@ -13,12 +13,12 @@ const Faults = () => {
   useEffect(() => {
     // reset ess faults
     handleEsFaultsReset(null);
-  }, [ess.message, handleEsFaultsReset]);
+  }, [ess.messages, handleEsFaultsReset]);
 
   useEffect(() => {
     // reset tgs faults
     handleGsFaultsReset(null);
-  }, [tgs.message, handleGsFaultsReset]);
+  }, [tgs.messages, handleGsFaultsReset]);
 
   return (
     <Wrapper>
@@ -31,8 +31,8 @@ const Faults = () => {
           <FaultSwitch
             name="ess"
             title="electric switch system"
-            number={ess.message.length}
-            message={ess.message}
+            number={ess.messages.length}
+            message={ess.messages}
             comments={ess.comments}
             isTesSwitch={true}
           />
@@ -41,8 +41,8 @@ const Faults = () => {
             <FaultSwitch
               name="tgs"
               title="typhoon gas system"
-              number={tgs.message.length}
-              message={tgs.message}
+              number={tgs.messages.length}
+              message={tgs.messages}
               comments={tgs.comments}
               isTesSwitch={true}
             />
@@ -50,8 +50,8 @@ const Faults = () => {
               name="tes"
               isTesSwitch={isTesSwitch}
               title="typhoon electric system"
-              number={ess.message.length}
-              message={ess.message}
+              number={ess.messages.length}
+              message={ess.messages}
               comments={ess.comments}
             />
           </>

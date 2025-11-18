@@ -50,16 +50,16 @@ function ChartContainer( { mode, ...rest } ) {
 
   // useEffect(() => {
   //   if (location.pathname === '/') {
-  //     if (faultsState.tgs.message.length > 0) {
-  //       const messageArr = faultsState.tgs.message.map(
+  //     if (faultsState.tgs.messages.length > 0) {
+  //       const messageArr = faultsState.tgs.messages.map(
   //         (message) => message.split(' - ')[0]
   //       );
   //     } else {
   //       setFaultsMessages([]);
   //     }
   //   } else {
-  //     if (faultsState.ess.message.length > 0) {
-  //       const messageArr = faultsState.ess.message.map(
+  //     if (faultsState.ess.messages.length > 0) {
+  //       const messageArr = faultsState.ess.messages.map(
   //         (message) => message.split(' - ')[0]
   //       );
   //       setFaultsMessages([...messageArr]);
