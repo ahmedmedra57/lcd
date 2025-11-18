@@ -27,8 +27,7 @@ const TgsHeatingSchedule = ({ isDisabled, setDisplayModeFaultMessageBox }) => {
 
   const { isEsSwitchActivated } = useEssSwitchStore();
 
-  const { buttonsOfSettings } = useSettingsStore();
-  const { unitsMeasurement } = buttonsOfSettings;
+  const { unitsMeasurement } = useSettingsStore();
 
   // Local
   const IMG_SRC = '/static/images/heating-Schedule-Program-Logo.svg';

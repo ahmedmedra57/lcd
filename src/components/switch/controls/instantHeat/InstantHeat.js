@@ -29,7 +29,7 @@ const InstantHeat = ({ deviceInfo, isDisabled, setDisplayModeFaultMessageBox }) 
   const gasInfo = useTgsSwitchStore((state) => state.gasInfo);
   const activateTgsConflictMessage = useTgsSwitchStore((state) => state.activateTgsConflictMessage);
   const setDevicesConflicts = useTgsSwitchStore((state) => state.setDevicesConflicts);
-  const unitsMeasurement = useSettingsStore((state) => state.buttonsOfSettings.unitsMeasurement);
+  const unitsMeasurement = useSettingsStore((state) => state.unitsMeasurement);
   const isF = useEssSwitchStore((state) => state.instantHeat.isF);
   const instantHeat = useEssSwitchStore((state) => state.instantHeat);
   const thermocouple = useTgsSettingsStore((state) => state.thermocouple);

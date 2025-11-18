@@ -13,7 +13,7 @@ import ApplyButtonInvisibleDiv from "../settings/settingsOptions/editAndApplyMes
 import SidebarButton from "./SidebarButton";
 
 const Sidebar = () => {
-  const { ess, tgs } = useFaultsStore();
+  const { ess = { messages: [] }, tgs = { messages: [] } } = useFaultsStore();
   const faults =
     ess.messages.length > 0 || tgs.messages.length > 0;
 
@@ -94,13 +94,13 @@ const Sidebar = () => {
 
   const alarmSrc = useMemo(() => {
     if (essSwitch) {
-      return ess.messages.length > 0 ? alarmFaults : alarmNoFaults;
+      return ess?.messages?.length > 0 ? alarmFaults : alarmNoFaults;
     }
-    return ess.messages.length > 0 ||
-      tgs.messages.length > 0
+    return ess?.messages?.length > 0 ||
+      tgs?.messages?.length > 0
       ? alarmFaults
       : alarmNoFaults;
-  }, [settings, ess.messages, tgs.messages, isActivated, essSwitch, alarmFaults, alarmNoFaults]);
+  }, [settings, ess, tgs, isActivated, essSwitch, alarmFaults, alarmNoFaults]);
 
   const settingSrc = isActivated.setting
     ? mode? "/static/images/setting_light_active.svg" : "/static/images/setting-button-active.svg"
